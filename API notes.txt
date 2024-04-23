@@ -1,0 +1,61 @@
+Get
+- books/:isbn:route parameter, searches for isbn
+= Returns everything about the book.
+
+Put
+- books/
+	- Body {"isbn": (book isbn number),
+		"rating": (rating number 1 through 5)}
+= Updates the rating of the book with the passed isbn.
+
+Get
+- book/?author=(authorName)
+= Returns the book title, and author of all the books with the matching author.
+
+Get
+- book/?year=(year)
+= Returns the book title, the author and the year of all the books with the same name.
+
+Get
+- book/?title=(bookTitle)
+= Returns book title, the author and the rating.
+
+Get
+- book/?title=(bookTitle)&author=(authorName)
+= Returns the book title, and the author that match the passsed values.
+
+Get
+- book/?rating=(rating from 1 through 5)
+= Returns author name, and book name and the rating.
+
+Post
+- book/
+	- Body {"author": (authorName),
+		"isbn": (book isbn),
+		"publication year": (publication year between 0 and present),
+		"title": (book title)}
++ Role: admin-only.
+= Adds a new book to the database
+
+Get
+- book/getAll
+= Returns all the books along with their information.
+
+Delete
+- book/:isbn
++ Role: admin-only
+= Deletes the book with the selected isbn, and returns them
+
+Delete
+- book/?author=(authorName)&title=(title)
++ Role: Admin-only
+= Removes the book with the same title and author
+
+Put
+- book/
+	- Body {"author": (authorName),
+		"title": (bookTitle),
+		"rating": (rating from 1 through 5)}
+	-//Number of ratings 1-5
+= Updates the ratings of the selected author and title
+
