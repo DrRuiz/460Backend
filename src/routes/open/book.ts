@@ -12,8 +12,10 @@ const format = (resultRow) =>
 
 /**
  * @api {get} /book Request to retrieve all books
+ * 
  * @apiDescription Request to get all entries of all books
- * @apiName getAllBooks
+ * 
+ * @apiName GetAllBooks
  * @apiGroup Book
  *
  * @apiSuccess {String[]} entries Book entries with the following format:
@@ -51,9 +53,11 @@ bookRouter.get('/getAll', (request: Request, response: Response) => {
 });
 
 /**
- * @api {get} /book/?author=(authorName) Request to retrieve books
+ * @api {get} /book Request to retrieve books by author
+ * 
  * @apiDescription Request to get all entries related to the books with the provided <code>author</code>
- * @apiName getAllBooksByAuthor
+ * 
+ * @apiName GetBooksByAuthor
  * @apiGroup Book
  *
  * @apiQuery {string} auhor The name of the author whose books to retrieve
@@ -81,10 +85,11 @@ bookRouter.get('/getAll', (request: Request, response: Response) => {
 // });
 
 /**
- * @api {get} /book/?rating=(bookRating) Request to retrieve books
+ * @api {get} /book Request to retrieve books by rating
+ * 
  * @apiDescription Request to get all entries related to the books that have the provided <code>rating</code>
  *
- * @apiName getAllBooksWithTheRating
+ * @apiName GetBooksByRating
  * @apiGroup Book
  *
  * @apiQuery {int} rating The rating [0-5] of the books to retrieve
@@ -108,9 +113,24 @@ bookRouter.get('/getAll', (request: Request, response: Response) => {
  */
 
 /**
+ * @api {delete} /book Request to remove books by author
+ * 
+ * @apiDescription Request to remove all books with the specified <code>author</code>
+ * 
+ * @apiName DeleteBooksAuthor
+ * @apiGroup Book
+ * 
+ * @apiQuery {String} author The author's name
+ * 
+ * @apiError (400: Author does not exist) {String} message "Author does not exist."
+ */
+
+/**
  * @api {get} /book Request for an author's book
+ * 
  * @apiDescription Request for the specified book title by the specified author
- * @apiName getBooksByAuthorAndTitle
+ * 
+ * @apiName GetBooksAuthorTitle
  * @apiGroup Book
  *
  * @apiQuery {String} author The author's name
