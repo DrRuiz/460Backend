@@ -11,7 +11,7 @@ const format = (resultRow) =>
     ` - Average Rating: [${resultRow.rating_avg}] - Rating Count: [${resultRow.rating_count}] - Image URL: [${resultRow.image_url}]`;
 
 /**
- * @api {get} /book Request to get all information on all books
+ * @api {get} /book Request to retrieve all books
  * @apiDescription Request to get all entries of all books
  * @apiName getAllBooks
  * @apiGroup Book
@@ -31,7 +31,7 @@ const format = (resultRow) =>
  * 5 star ratings: [<code>rating_5</code>]
  * cover (large): [<code>large</code>]
  * cover (small): [<code>small</code>]"
- * 
+ *
  */
 bookRouter.get('/getAll', (request: Request, response: Response) => {
     const theQuery = 'SELECT * FROM books';
@@ -51,8 +51,8 @@ bookRouter.get('/getAll', (request: Request, response: Response) => {
 });
 
 /**
- * @api {get} /book/?author=(authorName) Request to get all information related to the books with the provided author name
- * @apiDescription Request to get all entries of the books with the provided <code>author<code>
+ * @api {get} /book/?author=(authorName) Request to retrieve books
+ * @apiDescription Request to get all entries related to the books with the provided <code>author</code>
  * @apiName getAllBooksByAuthor
  * @apiGroup Book
  *
@@ -73,17 +73,16 @@ bookRouter.get('/getAll', (request: Request, response: Response) => {
  * 5 star ratings: [<code>rating_5</code>]
  * cover (large): [<code>large</code>]
  * cover (small): [<code>small</code>]"
- * 
- * @apiError (404: No messages) {String} message "No books with <code>author</code> found"
+ *
+ * @apiError (404: not boks found) {String} message "No books with this <code>author</code> were found"
  */
 // bookRouter.get(, () => {
 
 // });
 
 /**
- * @api {get} /book/?rating=(bookRating) Request to get all information related to the books that have the provided rating
- *
- * @apiDescription Request to get all entries of books with the provided <code>rating<code>
+ * @api {get} /book/?rating=(bookRating) Request to retrieve books
+ * @apiDescription Request to get all entries related to the books that have the provided <code>rating</code>
  *
  * @apiName getAllBooksWithTheRating
  * @apiGroup Book
@@ -105,19 +104,20 @@ bookRouter.get('/getAll', (request: Request, response: Response) => {
  * 5 star ratings: [<code>rating_5</code>]
  * cover (large): [<code>large</code>]
  * cover (small): [<code>small</code>]"
- * 
+ *
  */
 
 /**
  * @api {get} /book Request for an author's book
- * 
  * @apiDescription Request for the specified book title by the specified author
- * 
+ * @apiName getBooksByAuthorAndTitle
+ * @apiGroup Book
+ *
  * @apiQuery {String} author The author's name
  * @apiQuery {String} title The title of the book
- * 
- * @apiSuccess (Success 200) {String[]} entry Specified entry with the form: (see above format)
- * 
+ *
+ * @apiSuccess {String[]} entry Specified entry with the form: (see above format)
+ *
  * @apiError (400: Author does not exist) {String} message "Author does not exist."
  * @apiError (400: Book does not exist) {String} message "Book title does not exist."
  * @apiError (400: Book and Author do not match) {String} message "Book not written by specified author.
