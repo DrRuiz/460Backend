@@ -12,9 +12,9 @@ const format = (resultRow) =>
 
 /**
  * @api {get} /book Request to retrieve all books
- * 
+ *
  * @apiDescription Request to get all entries of all books
- * 
+ *
  * @apiName GetAllBooks
  * @apiGroup Book
  *
@@ -54,13 +54,13 @@ bookRouter.get('/getAll', (request: Request, response: Response) => {
 
 /**
  * @api {get} /book Request to retrieve books by author
- * 
+ *
  * @apiDescription Request to get all entries related to the books with the provided <code>author</code>
- * 
+ *
  * @apiName GetBooksByAuthor
  * @apiGroup Book
  *
- * @apiQuery {string} auhor The name of the author whose books to retrieve
+ * @apiQuery {string} author The name of the author whose books to retrieve
  *
  * @apiSuccess {String[]} entries Book entries with the following format:
  * "isbn: {<code>isbn</code>}
@@ -78,15 +78,16 @@ bookRouter.get('/getAll', (request: Request, response: Response) => {
  * cover (large): [<code>large</code>]
  * cover (small): [<code>small</code>]"
  *
- * @apiError (404: not boks found) {String} message "No books with this <code>author</code> were found"
+ * @apiError (404: no books found) {String} message "No books with this <code>author</code> were found"
  */
-// bookRouter.get(, () => {
-
-// });
+bookRouter.get('/:author', (request: Request, response: Response) => {
+    const theQuery = 'SELECT name, message, priority FROM Books WHERE = $1';
+    const author = request.query.author;
+});
 
 /**
  * @api {get} /book Request to retrieve books by rating
- * 
+ *
  * @apiDescription Request to get all entries related to the books that have the provided <code>rating</code>
  *
  * @apiName GetBooksByRating
@@ -114,22 +115,24 @@ bookRouter.get('/getAll', (request: Request, response: Response) => {
 
 /**
  * @api {delete} /book Request to remove books by author
- * 
+ *
  * @apiDescription Request to remove all books with the specified <code>author</code>
- * 
+ *
  * @apiName DeleteBooksAuthor
  * @apiGroup Book
- * 
+ *
  * @apiQuery {String} author The author's name
- * 
+ *
  * @apiError (400: Author does not exist) {String} message "Author does not exist."
  */
 
+//Ryley methods start here #########################################
+
 /**
  * @api {get} /book Request for an author's book
- * 
+ *
  * @apiDescription Request for the specified book title by the specified author
- * 
+ *
  * @apiName GetBooksAuthorTitle
  * @apiGroup Book
  *
@@ -145,5 +148,38 @@ bookRouter.get('/getAll', (request: Request, response: Response) => {
 // bookRouter.get(, () => {
 
 // })
+
+/**
+ * @api {get} /book Request for books in a range of ratings.
+ *
+ * @apiDescription Request for all books with an average rating between the min and max values, inclusive.
+ *
+ * @apiName getAvgRatingRange
+ * @apiGroup Book
+ *
+ * @apiQuery {int} min The minimum average rating to select
+ * @apiQuery {int} max The maximum average rating to select
+ *
+ * @apiSuccess (Success 200) {String[]} entry Specified entry with the form: (COPY ABOVE FORMAT)
+ *
+ * @apiError (400: Minimum out of range) {String} message "Minimum rating is less than 0"
+ * @apiError (400: Maximum out of range) {String} message "Maximum rating is greater than 5"
+ */
+
+/**
+ * @api {post} /book Request to add a book.
+ *
+ *  @apiDescription Request to add a book with author name, isbn, publication year, and book title.
+ *
+ * @apiName putBook
+ * @apiGroup Book
+ *
+ * @apiBody {String} author Author's name
+ * @apiBody {int} isbn ISBN13 of the book
+ * @apiBody {int} publication Year of publication
+ * @apiBody {String} title Book title
+ *
+ * @apiSuccess (Success 201) {String} entry The String: "isbn: {<code>isbn</code>} - author: [<code>author</code>] - publish year: [<code>publication</code>] - title: [<code>title</code>]"
+ */
 
 export { bookRouter };
