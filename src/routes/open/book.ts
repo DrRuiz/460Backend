@@ -6,9 +6,13 @@ import { pool, validationFunctions } from '../../core/utilities';
 const bookRouter: Router = express.Router();
 
 const format = (resultRow) =>
-    `isbn: {${resultRow.isbn13}} - author: [${resultRow.authors}] - publish year: [${resultRow.publication_year}]` +
-    ` - original title: [${resultRow.original_title}] - title: [${resultRow.title}]` +
-    ` - Average Rating: [${resultRow.rating_avg}] - Rating Count: [${resultRow.rating_count}] - Image URL: [${resultRow.image_url}]`;
+    `Isbn: {${resultRow.isbn13}} - Author: [${resultRow.authors}] - Publish year: [${resultRow.publication_year}]` +
+    ` - Original title: [${resultRow.original_title}] - Title: [${resultRow.title}]` +
+    ` - Average Rating: [${resultRow.rating_avg}] - Rating Count: [${resultRow.rating_count}]` +
+    ` - 1 star ratings: - [${resultRow.rating_1_star}] - 2 star ratings: - [${resultRow.rating_2_star}]` +
+    ` - 3 star ratings: - [${resultRow.rating_3_star}] - 4 star ratings: - [${resultRow.rating_4_star}]` +
+    ` - 5 star ratings: - [${resultRow.rating_5_star}] - Cover (large): [${resultRow.image_url}]` +
+    ` - Cover (small): [${resultRow.image_small_url}]`;
 
 /**
  * @api {get} /book Request to retrieve all books
@@ -19,21 +23,20 @@ const format = (resultRow) =>
  * @apiGroup Book
  *
  * @apiSuccess {String[]} entries Book entries with the following format:
- * "isbn: {<code>isbn</code>}
- * author: [<code>author</code>]
- * publish year: [<code>publication</code>]
- * original title: [<code>original_title</code>]
- * title: [<code>title</code>]
- * average rating: [<code>average</code>]
- * total ratings: [<code>count</code>]
- * 1 star ratings: [<code>rating_1</code>]
- * 2 star ratings: [<code>rating_2</code>]
- * 3 star ratings: [<code>rating_3</code>]
- * 4 star ratings: [<code>rating_4</code>]
- * 5 star ratings: [<code>rating_5</code>]
- * cover (large): [<code>large</code>]
- * cover (small): [<code>small</code>]"
- *
+ * "Isbn: {<code>isbn13</code>} -
+ * Author: [<code>authors</code>] -
+ * Publish year: [<code>publication_year</code>] -
+ * Original title: [<code>original_title</code>] -
+ * Title: [<code>title</code>] -
+ * Average rating: [<code>rating_avg</code>] -
+ * Total ratings: [<code>rating_count</code>] -
+ * 1 star ratings: [<code>rating_1_star</code>] -
+ * 2 star ratings: [<code>rating_2_star</code>] -
+ * 3 star ratings: [<code>rating_3_star</code>] -
+ * 4 star ratings: [<code>rating_4_star</code>] -
+ * 5 star ratings: [<code>rating_5_star</code>] -
+ * Cover (large): [<code>image_url</code>] -
+ * Cover (small): [<code>image_small_url</code>]"
  */
 bookRouter.get('/getAll', (request: Request, response: Response) => {
     const theQuery = 'SELECT * FROM books';
@@ -63,20 +66,20 @@ bookRouter.get('/getAll', (request: Request, response: Response) => {
  * @apiQuery {string} author The name of the author whose books to retrieve
  *
  * @apiSuccess {String[]} entries Book entries with the following format:
- * "isbn: {<code>isbn</code>}
- * author: [<code>author</code>]
- * publish year: [<code>publication</code>]
- * original title: [<code>original_title</code>]
- * title: [<code>title</code>]
- * average rating: [<code>average</code>]
- * total ratings: [<code>count</code>]
- * 1 star ratings: [<code>rating_1</code>]
- * 2 star ratings: [<code>rating_2</code>]
- * 3 star ratings: [<code>rating_3</code>]
- * 4 star ratings: [<code>rating_4</code>]
- * 5 star ratings: [<code>rating_5</code>]
- * cover (large): [<code>large</code>]
- * cover (small): [<code>small</code>]"
+ * "Isbn: {<code>isbn13</code>} -
+ * Author: [<code>authors</code>] -
+ * Publish year: [<code>publication_year</code>] -
+ * Original title: [<code>original_title</code>] -
+ * Title: [<code>title</code>] -
+ * Average rating: [<code>rating_avg</code>] -
+ * Total ratings: [<code>rating_count</code>] -
+ * 1 star ratings: [<code>rating_1_star</code>] -
+ * 2 star ratings: [<code>rating_2_star</code>] -
+ * 3 star ratings: [<code>rating_3_star</code>] -
+ * 4 star ratings: [<code>rating_4_star</code>] -
+ * 5 star ratings: [<code>rating_5_star</code>] -
+ * Cover (large): [<code>image_url</code>] -
+ * Cover (small): [<code>image_small_url</code>]"
  *
  * @apiError (404: no books found) {String} message "No books with this <code>author</code> were found"
  */
@@ -96,21 +99,20 @@ bookRouter.get('/:author', (request: Request, response: Response) => {
  * @apiQuery {int} rating The rating [0-5] of the books to retrieve
  *
  * @apiSuccess {String[]} entries Book entries with the following format:
- * "isbn: {<code>isbn</code>}
- * author: [<code>author</code>]
- * publish year: [<code>publication</code>]
- * original title: [<code>original_title</code>]
- * title: [<code>title</code>]
- * average rating: [<code>average</code>]
- * total ratings: [<code>count</code>]
- * 1 star ratings: [<code>rating_1</code>]
- * 2 star ratings: [<code>rating_2</code>]
- * 3 star ratings: [<code>rating_3</code>]
- * 4 star ratings: [<code>rating_4</code>]
- * 5 star ratings: [<code>rating_5</code>]
- * cover (large): [<code>large</code>]
- * cover (small): [<code>small</code>]"
- *
+ * "Isbn: {<code>isbn13</code>} -
+ * Author: [<code>authors</code>] -
+ * Publish year: [<code>publication_year</code>] -
+ * Original title: [<code>original_title</code>] -
+ * Title: [<code>title</code>] -
+ * Average rating: [<code>rating_avg</code>] -
+ * Total ratings: [<code>rating_count</code>] -
+ * 1 star ratings: [<code>rating_1_star</code>] -
+ * 2 star ratings: [<code>rating_2_star</code>] -
+ * 3 star ratings: [<code>rating_3_star</code>] -
+ * 4 star ratings: [<code>rating_4_star</code>] -
+ * 5 star ratings: [<code>rating_5_star</code>] -
+ * Cover (large): [<code>image_url</code>] -
+ * Cover (small): [<code>image_small_url</code>]"
  */
 
 /**
@@ -123,10 +125,13 @@ bookRouter.get('/:author', (request: Request, response: Response) => {
  *
  * @apiQuery {String} author The author's name
  *
- * @apiError (400: Author does not exist) {String} message "Author does not exist."
+ * @apiSuccess {String[]} entries Removed entries with the following format:
+ * "Book Title: [<code>title</code>]"
+ *
+ * @apiError (404: Author does not exist) {String} message "Author does not exist."
  */
 
-//Ryley methods start here #########################################
+//Riley methods start here #########################################
 
 /**
  * @api {get} /book Request for an author's book
@@ -139,11 +144,25 @@ bookRouter.get('/:author', (request: Request, response: Response) => {
  * @apiQuery {String} author The author's name
  * @apiQuery {String} title The title of the book
  *
- * @apiSuccess {String[]} entry Specified entry with the form: (see above format)
+ * @apiSuccess {String[]} entries Specified entries with the following format:
+ * "Isbn: {<code>isbn13</code>} -
+ * Author: [<code>authors</code>] -
+ * Publish year: [<code>publication_year</code>] -
+ * Original title: [<code>original_title</code>] -
+ * Title: [<code>title</code>] -
+ * Average rating: [<code>rating_avg</code>] -
+ * Total ratings: [<code>rating_count</code>] -
+ * 1 star ratings: [<code>rating_1_star</code>] -
+ * 2 star ratings: [<code>rating_2_star</code>] -
+ * 3 star ratings: [<code>rating_3_star</code>] -
+ * 4 star ratings: [<code>rating_4_star</code>] -
+ * 5 star ratings: [<code>rating_5_star</code>] -
+ * Cover (large): [<code>image_url</code>] -
+ * Cover (small): [<code>image_small_url</code>]"
  *
- * @apiError (400: Author does not exist) {String} message "Author does not exist."
- * @apiError (400: Book does not exist) {String} message "Book title does not exist."
- * @apiError (400: Book and Author do not match) {String} message "Book not written by specified author.
+ * @apiError (404: Author does not exist) {String} message "Author does not exist."
+ * @apiError (404: Book does not exist) {String} message "Book title does not exist."
+ * @apiError (400: Book and Author do not match) {String} message "Book not written by specified author.""
  */
 // bookRouter.get(, () => {
 
@@ -160,7 +179,21 @@ bookRouter.get('/:author', (request: Request, response: Response) => {
  * @apiQuery {int} min The minimum average rating to select
  * @apiQuery {int} max The maximum average rating to select
  *
- * @apiSuccess (Success 200) {String[]} entry Specified entry with the form: (COPY ABOVE FORMAT)
+ * @apiSuccess {String[]} entries Specified entries with the following format:
+ * "Isbn: {<code>isbn13</code>} -
+ * Author: [<code>authors</code>] -
+ * Publish year: [<code>publication_year</code>] -
+ * Original title: [<code>original_title</code>] -
+ * Title: [<code>title</code>] -
+ * Average rating: [<code>rating_avg</code>] -
+ * Total ratings: [<code>rating_count</code>] -
+ * 1 star ratings: [<code>rating_1_star</code>] -
+ * 2 star ratings: [<code>rating_2_star</code>] -
+ * 3 star ratings: [<code>rating_3_star</code>] -
+ * 4 star ratings: [<code>rating_4_star</code>] -
+ * 5 star ratings: [<code>rating_5_star</code>] -
+ * Cover (large): [<code>image_url</code>] -
+ * Cover (small): [<code>image_small_url</code>]"
  *
  * @apiError (400: Minimum out of range) {String} message "Minimum rating is less than 0"
  * @apiError (400: Maximum out of range) {String} message "Maximum rating is greater than 5"
@@ -169,7 +202,7 @@ bookRouter.get('/:author', (request: Request, response: Response) => {
 /**
  * @api {post} /book Request to add a book.
  *
- *  @apiDescription Request to add a book with author name, isbn, publication year, and book title.
+ * @apiDescription Request to add a book with author name, isbn, publication year, and book title.
  *
  * @apiName putBook
  * @apiGroup Book
@@ -179,7 +212,9 @@ bookRouter.get('/:author', (request: Request, response: Response) => {
  * @apiBody {int} publication Year of publication
  * @apiBody {String} title Book title
  *
- * @apiSuccess (Success 201) {String} entry The String: "isbn: {<code>isbn</code>} - author: [<code>author</code>] - publish year: [<code>publication</code>] - title: [<code>title</code>]"
+ * @apiSuccess (Success 201) {String} entry The String:
+ * "isbn: {<code>isbn</code>} - author: [<code>author</code>] -
+ *  publish year: [<code>publication</code>] - title: [<code>title</code>]"
  */
 
 export { bookRouter };
