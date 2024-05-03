@@ -19,17 +19,17 @@ const format = (resultRow) => {
         original_title: resultRow.original_title as string,
         title: resultRow.title as string,
         ratings: {
-            average: resultRow.rating_avg,
-            count: resultRow.rating_count,
-            rating_1: resultRow.rating_1_star,
-            rating_2: resultRow.rating_2_star,
-            rating_3: resultRow.rating_3_star,
-            rating_4: resultRow.rating_4_star,
-            rating_5: resultRow.rating_5_star,
+            average: resultRow.rating_avg as number,
+            count: resultRow.rating_count as number,
+            rating_1: resultRow.rating_1_star as number,
+            rating_2: resultRow.rating_2_star as number,
+            rating_3: resultRow.rating_3_star as number,
+            rating_4: resultRow.rating_4_star as number,
+            rating_5: resultRow.rating_5_star as number,
         } as IRatings,
         icons: {
-            large: resultRow.image_url,
-            small: resultRow.image_small_url,
+            large: resultRow.image_url as string,
+            small: resultRow.image_small_url as string,
         } as IUrlIcon,
     };
     return out;
@@ -44,7 +44,7 @@ const format = (resultRow) => {
  * @apiGroup Book
  *
  * @apiSuccess {IBook[]} entries Book entries with the following format:
- * `isbn13: <code>isbn13</code>,
+ * "[isbn13: <code>isbn13</code>,
  * authors: <code>authors</code>,
  * publication: <code>publication_year</code>,
  * original_title: <code>original_title</code>,
@@ -59,9 +59,9 @@ const format = (resultRow) => {
  *     rating_5: <code>rating_5_star</code>,
  * },
  * icons: {
- *     large: <code>image_url</code>
- *     small: <code>image_small_url</code>
- * },`
+ *     large: <code>image_url</code>,
+ *     small: <code>image_small_url</code>,
+ * },]"
  */
 bookRouter.get('/getAll', (request: Request, response: Response) => {
     const theQuery = 'SELECT * FROM books';
@@ -91,7 +91,7 @@ bookRouter.get('/getAll', (request: Request, response: Response) => {
  * @apiQuery {string} author The name of the author whose books to retrieve
  *
  * @apiSuccess {IBook[]} entries Book entries with the following format:
- * `isbn13: <code>isbn13</code>,
+ * "[isbn13: <code>isbn13</code>,
  * authors: <code>authors</code>,
  * publication: <code>publication_year</code>,
  * original_title: <code>original_title</code>,
@@ -106,9 +106,9 @@ bookRouter.get('/getAll', (request: Request, response: Response) => {
  *     rating_5: <code>rating_5_star</code>,
  * },
  * icons: {
- *     large: <code>image_url</code>
- *     small: <code>image_small_url</code>
- * },`
+ *     large: <code>image_url</code>,
+ *     small: <code>image_small_url</code>,
+ * },]"
  *
  * @apiError (404: no books found) {String} message "No books with this <code>author</code> were found"
  */
@@ -128,7 +128,7 @@ bookRouter.get('/:author', (request: Request, response: Response) => {
  * @apiQuery {int} rating The rating [0-5] of the books to retrieve
  *
  * @apiSuccess {IBook[]} entries Book entries with the following format:
- * `isbn13: <code>isbn13</code>,
+ * "[isbn13: <code>isbn13</code>,
  * authors: <code>authors</code>,
  * publication: <code>publication_year</code>,
  * original_title: <code>original_title</code>,
@@ -143,9 +143,9 @@ bookRouter.get('/:author', (request: Request, response: Response) => {
  *     rating_5: <code>rating_5_star</code>,
  * },
  * icons: {
- *     large: <code>image_url</code>
- *     small: <code>image_small_url</code>
- * },`
+ *     large: <code>image_url</code>,
+ *     small: <code>image_small_url</code>,
+ * },]"
  */
 
 //Riley methods start here #########################################
@@ -161,8 +161,8 @@ bookRouter.get('/:author', (request: Request, response: Response) => {
  * @apiQuery {String} author The author's name
  * @apiQuery {String} title The title of the book
  *
- * @apiSuccess {IBook[]} entries Specified entries with the following format:
- * `isbn13: <code>isbn13</code>,
+ * @apiSuccess {IBook} entry Specified entry with the following format:
+ * "[isbn13: <code>isbn13</code>,
  * authors: <code>authors</code>,
  * publication: <code>publication_year</code>,
  * original_title: <code>original_title</code>,
@@ -177,13 +177,13 @@ bookRouter.get('/:author', (request: Request, response: Response) => {
  *     rating_5: <code>rating_5_star</code>,
  * },
  * icons: {
- *     large: <code>image_url</code>
- *     small: <code>image_small_url</code>
- * },`
+ *     large: <code>image_url</code>,
+ *     small: <code>image_small_url</code>,
+ * },]"
  *
  * @apiError (404: Author does not exist) {String} message "Author does not exist."
  * @apiError (404: Book does not exist) {String} message "Book title does not exist."
- * @apiError (400: Book and Author do not match) {String} message "Book not written by specified author.""
+ * @apiError (400: Book and Author do not match) {String} message "Book not written by specified author."
  */
 // bookRouter.get(, () => {
 
@@ -201,7 +201,7 @@ bookRouter.get('/:author', (request: Request, response: Response) => {
  * @apiQuery {int} max The maximum average rating to select
  *
  * @apiSuccess {IBook[]} entries Specified entries with the following format:
- * `isbn13: <code>isbn13</code>,
+ * "[isbn13: <code>isbn13</code>,
  * authors: <code>authors</code>,
  * publication: <code>publication_year</code>,
  * original_title: <code>original_title</code>,
@@ -216,12 +216,12 @@ bookRouter.get('/:author', (request: Request, response: Response) => {
  *     rating_5: <code>rating_5_star</code>,
  * },
  * icons: {
- *     large: <code>image_url</code>
- *     small: <code>image_small_url</code>
- * },`
+ *     large: <code>image_url</code>,
+ *     small: <code>image_small_url</code>,
+ * },]"
  *
- * @apiError (400: Minimum out of range) {String} message "Minimum rating is less than 0"
- * @apiError (400: Maximum out of range) {String} message "Maximum rating is greater than 5"
+ * @apiError (400: Minimum out of range) {String} message "Minimum rating is less than 0."
+ * @apiError (400: Maximum out of range) {String} message "Maximum rating is greater than 5."
  */
 
 export { bookRouter };
