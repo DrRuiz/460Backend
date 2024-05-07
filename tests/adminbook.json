@@ -1,0 +1,521 @@
+{
+	"info": {
+		"_postman_id": "a970b2af-79c8-4546-9661-d10c0311f2c3",
+		"name": "AdminBook",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33953173"
+	},
+	"item": [
+		{
+			"name": "AddBook",
+			"item": [
+				{
+					"name": "AddSuccess",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response status should be 201\", () => {\r",
+									"    pm.response.to.have.status(201);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Body has entry field\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"entry\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Success should relay this information\", () => {\r",
+									"    pm.expect(response.entry.isbn13).to.eql(\"9798631094345\");\r",
+									"    pm.expect(response.entry.authors).to.eql(\"Socrates Co.\");\r",
+									"    pm.expect(response.entry.publication).to.eql(\"2020\");\r",
+									"    pm.expect(response.entry.original_title).to.eql(\"One Million Digits Of Pi: Decimal Places from 1 to 1,000,000\");\r",
+									"    pm.expect(response.entry.title).to.eql(\"One Million Digits of Pi\");\r",
+									"    pm.expect(response.entry.average).to.eql(\"4.6\");\r",
+									"    pm.expect(response.entry.count).to.eql(\"102\");\r",
+									"    pm.expect(response.entry.rating_1).to.eql(\"3\");\r",
+									"    pm.expect(response.entry.rating_2).to.eql(\"2\");\r",
+									"    pm.expect(response.entry.rating_3).to.eql(\"4\");\r",
+									"    pm.expect(response.entry.rating_4).to.eql(\"9\");\r",
+									"    pm.expect(response.entry.rating_5).to.eql(\"84\");\r",
+									"    pm.expect(response.entry.large).to.eql(\"https://m.media-amazon.com/images/I/719VMyobJDL._SY466_.jpg\");\r",
+									"    pm.expect(response.entry.small).to.eql(\"https://m.media-amazon.com/images/I/719VMyobJDL._SY466_.jpg\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"isbn13\": 9798631094345,\r\n    \"authors\": \"Socrates Co.\",\r\n    \"publication\": 2020,\r\n    \"original_title\": \"One Million Digits Of Pi: Decimal Places from 1 to 1,000,000\",\r\n    \"title\": \"One Million Digits of Pi\",\r\n    \"average\": 4.6,\r\n    \"count\": 102,\r\n    \"rating_1\": 3,\r\n    \"rating_2\": 2,\r\n    \"rating_3\": 4,\r\n    \"rating_4\": 9,\r\n    \"rating_5\": 84,\r\n    \"large\": \"https://m.media-amazon.com/images/I/719VMyobJDL._SY466_.jpg\",\r\n    \"small\": \"https://m.media-amazon.com/images/I/719VMyobJDL._SY466_.jpg\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{admin_url}}",
+							"host": [
+								"{{admin_url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AddEmptySuccess",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response status should be 201\", () => {\r",
+									"    pm.response.to.have.status(201);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Body has entry field\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"entry\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Success should relay this information\", () => {\r",
+									"    pm.expect(response.entry.isbn13).to.eql(\"0\");\r",
+									"    pm.expect(response.entry.authors).to.eql(\"Mimiga\");\r",
+									"    pm.expect(response.entry.publication).to.eql(\"2021\");\r",
+									"    pm.expect(response.entry.original_title).to.eql(\"\");\r",
+									"    pm.expect(response.entry.title).to.eql(\"Paradise Apart\");\r",
+									"    pm.expect(response.entry.average).to.eql(\"0\");\r",
+									"    pm.expect(response.entry.count).to.eql(\"0\");\r",
+									"    pm.expect(response.entry.rating_1).to.eql(\"0\");\r",
+									"    pm.expect(response.entry.rating_2).to.eql(\"0\");\r",
+									"    pm.expect(response.entry.rating_3).to.eql(\"0\");\r",
+									"    pm.expect(response.entry.rating_4).to.eql(\"0\");\r",
+									"    pm.expect(response.entry.rating_5).to.eql(\"0\");\r",
+									"    pm.expect(response.entry.large).to.eql(\"\");\r",
+									"    pm.expect(response.entry.small).to.eql(\"\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"isbn13\": 0,\r\n    \"authors\": \"Mimiga\",\r\n    \"publication\": 2021,\r\n    \"title\": \"Paradise Apart\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{admin_url}}",
+							"host": [
+								"{{admin_url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AddISBNErr",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response status should be 400\", () => {\r",
+									"    pm.response.to.have.status(400);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Status code name has string\", () => {\r",
+									"    pm.response.to.have.status(\"Invalid ISBN\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Body has message field\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Error message should be in this format\", () => {\r",
+									"    pm.expect(response.message).to.eql(\"Invalid ISBN, use a nonnegative number.\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"isbn13\": -1,\r\n    \"authors\": \"Mimiga\",\r\n    \"publication\": 2021,\r\n    \"title\": \"Paradise Apart\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{admin_url}}",
+							"host": [
+								"{{admin_url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AddYearErr",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response status should be 400\", () => {\r",
+									"    pm.response.to.have.status(400);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Status code name has string\", () => {\r",
+									"    pm.response.to.have.status(\"Invalid year\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Body has message field\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Error message should be in this format\", () => {\r",
+									"    pm.expect(response.message).to.eql(\"Invalid year, use a number.\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"isbn13\": 0,\r\n    \"authors\": \"Mimiga\",\r\n    \"publication\": \"Twenty Twenty-One\",\r\n    \"title\": \"Paradise Apart\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{admin_url}}",
+							"host": [
+								"{{admin_url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AddAvgErr",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response status should be 400\", () => {\r",
+									"    pm.response.to.have.status(400);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Status code name has string\", () => {\r",
+									"    pm.response.to.have.status(\"Invalid average rating\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Body has message field\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Error message should be in this format\", () => {\r",
+									"    pm.expect(response.message).to.eql(\"Invalid average rating, use a number 0-5.\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"isbn13\": 0,\r\n    \"authors\": \"Mimiga\",\r\n    \"publication\": 2021,\r\n    \"title\": \"Paradise Apart\",\r\n    \"average\": 5.1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{admin_url}}",
+							"host": [
+								"{{admin_url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AddCountErr",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response status should be 400\", () => {\r",
+									"    pm.response.to.have.status(400);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Status code name has string\", () => {\r",
+									"    pm.response.to.have.status(\"Invalid total rating count\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Body has message field\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Error message should be in this format\", () => {\r",
+									"    pm.expect(response.message).to.eql(\"Invalid total rating count, use a nonnegative number.\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"isbn13\": 0,\r\n    \"authors\": \"Mimiga\",\r\n    \"publication\": 2021,\r\n    \"title\": \"Paradise Apart\",\r\n    \"count\": -1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{admin_url}}",
+							"host": [
+								"{{admin_url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AddStarErr",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response status should be 400\", () => {\r",
+									"    pm.response.to.have.status(400);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Status code name has string\", () => {\r",
+									"    pm.response.to.have.status(\"Invalid star ratings\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Body has message field\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Error message should be in this format\", () => {\r",
+									"    pm.expect(response.message).to.eql(\"Invalid star ratings, use nonnegative numbers.\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"isbn13\": 0,\r\n    \"authors\": \"Mimiga\",\r\n    \"publication\": 2021,\r\n    \"title\": \"Paradise Apart\",\r\n    \"rating_1\": -1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{admin_url}}",
+							"host": [
+								"{{admin_url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AddMissInfoErr",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response status should be 400\", () => {\r",
+									"    pm.response.to.have.status(400);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Status code name has string\", () => {\r",
+									"    pm.response.to.have.status(\"Missing information\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Body has message field\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Error message should be in this format\", () => {\r",
+									"    pm.expect(response.message).to.eql(\"Missing required information, see documentation.\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"authors\": \"Mimiga\",\r\n    \"publication\": 2021,\r\n    \"title\": \"Paradise Apart\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{admin_url}}",
+							"host": [
+								"{{admin_url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AddDuplicateErr",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response status should be 400\", () => {\r",
+									"    pm.response.to.have.status(400);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Status code name has string\", () => {\r",
+									"    pm.response.to.have.status(\"Book already exists\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Body has message field\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Error message should be in this format\", () => {\r",
+									"    pm.expect(response.message).to.eql(\"Book already exists in database.\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"isbn13\": 9780062024040,\r\n    \"authors\": \"Veronica Roth\",\r\n    \"publication\": 2011,\r\n    \"title\": \"Divergent\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{admin_url}}",
+							"host": [
+								"{{admin_url}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "admin_url",
+			"value": "{{base_url}}/adminBook",
+			"type": "string"
+		}
+	]
+}
