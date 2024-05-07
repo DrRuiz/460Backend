@@ -10,6 +10,13 @@ import {
 } from '../../core/utilities';
 
 const bookRouter: Router = express.Router();
+const isStringProvided = validationFunctions.isStringProvided;
+const isNumberProvided = validationFunctions.isNumberProvided;
+
+const allButId =
+    'SELECT isbn13, authors, publication_year, original_title, title, rating_avg, rating_count,' +
+    ' rating_1_star, rating_2_star, rating_3_star, rating_4_star, rating_5_star, image_url,' +
+    ' image_small_url FROM books ';
 
 const format = (resultRow) => {
     const out: IBook = {
@@ -112,10 +119,10 @@ bookRouter.get('/getAll', (request: Request, response: Response) => {
  *
  * @apiError (404: no books found) {String} message "No books with this <code>author</code> were found"
  */
-bookRouter.get('/:author', (request: Request, response: Response) => {
-    const theQuery = 'SELECT name, message, priority FROM Books WHERE = $1';
-    const author = request.query.author;
-});
+// bookRouter.get('/:author', (request: Request, response: Response) => {
+//     const theQuery = 'SELECT name, message, priority FROM Books WHERE = $1';
+//     const author = request.query.author;
+// });
 
 /**
  * @api {get} /book Request to retrieve books by rating
@@ -151,7 +158,7 @@ bookRouter.get('/:author', (request: Request, response: Response) => {
 //Riley methods start here #########################################
 
 /**
- * @api {get} /book Request for an author's book
+ * @api {get} /book/authortitle Request for an author's book
  *
  * @apiDescription Request for the specified book title by the specified author
  *
@@ -161,7 +168,7 @@ bookRouter.get('/:author', (request: Request, response: Response) => {
  * @apiQuery {String} author The author's name
  * @apiQuery {String} title The title of the book
  *
- * @apiSuccess {IBook} entry Specified entry with the following format:
+ * @apiSuccess {IBook[]} entries Specified entries with the following format:
  * "[isbn13: <code>isbn13</code>,
  * authors: <code>authors</code>,
  * publication: <code>publication_year</code>,
@@ -181,16 +188,95 @@ bookRouter.get('/:author', (request: Request, response: Response) => {
  *     small: <code>image_small_url</code>,
  * },]"
  *
- * @apiError (404: Author does not exist) {String} message "Author does not exist."
- * @apiError (404: Book does not exist) {String} message "Book title does not exist."
+ * @apiError (400: Missing information) {String} message "Missing data, refer to documentation."
+ * @apiError (404: Author does not exist) {String} message "Author does not exist in database."
+ * @apiError (404: Book does not exist) {String} message "Book title does not exist in database."
  * @apiError (400: Book and Author do not match) {String} message "Book not written by specified author."
  */
-// bookRouter.get(, () => {
-
-// })
+bookRouter.get(
+    '/authortitle',
+    (request: Request, response: Response, next: NextFunction) => {
+        if (
+            isStringProvided(request.query.author) &&
+            isStringProvided(request.query.title)
+        ) {
+            next();
+        } else {
+            response.statusMessage = 'Missing information';
+            response.status(400).send({
+                message: 'Missing data, refer to documentation.',
+            });
+        }
+    },
+    (request: Request, response: Response, next: NextFunction) => {
+        const query = 'SELECT authors FROM books WHERE authors LIKE $1';
+        const values = [`%${request.query.author}%`];
+        pool.query(query, values)
+            .then((result) => {
+                if (result.rowCount > 0) {
+                    next();
+                } else {
+                    response.statusMessage = 'Author does not exist';
+                    response.status(404).send({
+                        message: 'Author does not exist in database.',
+                    });
+                }
+            })
+            .catch(() => {
+                response.status(500).send({
+                    message: 'Server error - contact support',
+                });
+            });
+    },
+    (request: Request, response: Response, next: NextFunction) => {
+        const query = 'SELECT title FROM books WHERE title LIKE $1';
+        const values = [`%${request.query.title}%`];
+        pool.query(query, values)
+            .then((result) => {
+                if (result.rowCount > 0) {
+                    next();
+                } else {
+                    response.statusMessage = 'Book does not exist';
+                    response.status(404).send({
+                        message: 'Book title does not exist in database.',
+                    });
+                }
+            })
+            .catch(() => {
+                response.status(500).send({
+                    message: 'Server error - contact support',
+                });
+            });
+    },
+    (request: Request, response: Response) => {
+        const query = allButId + 'WHERE authors LIKE $1 AND title LIKE $2';
+        const values = [
+            `%${request.query.author}%`,
+            `%${request.query.title}%`,
+        ];
+        pool.query(query, values)
+            .then((result) => {
+                if (result.rowCount > 0) {
+                    response.status(200).send({
+                        entries: result.rows.map(format),
+                    });
+                } else {
+                    response.statusMessage = 'Book and Author do not match';
+                    response.status(400).send({
+                        message: 'Book not written by specified author.',
+                    });
+                }
+            })
+            .catch(() => {
+                response.status(500).send({
+                    message: 'Server error - contact support',
+                });
+            });
+    }
+);
 
 /**
- * @api {get} /book Request for books in a range of ratings.
+ * @api {get} /book/ratings Request for books in a range of ratings.
  *
  * @apiDescription Request for all books with an average rating between the min and max values, inclusive.
  *
@@ -220,8 +306,64 @@ bookRouter.get('/:author', (request: Request, response: Response) => {
  *     small: <code>image_small_url</code>,
  * },]"
  *
- * @apiError (400: Minimum out of range) {String} message "Minimum rating is less than 0."
- * @apiError (400: Maximum out of range) {String} message "Maximum rating is greater than 5."
+ * @apiError (400: Missing/Bad information) {String} message "Missing or bad information, see documentation."
+ * @apiError (400: Out of range) {String} message "Ratings should be between 0.0 and 5.0"
+ * @apiError (400: Min greater than max) {String} message "Minimum rating should be less than maximum rating."
+ * @apiError (404: No books in range) {String} message "No books found in this rating range."
  */
-
+bookRouter.get(
+    '/ratings',
+    (request: Request, response: Response, next: NextFunction) => {
+        if (
+            isNumberProvided(request.query.min) &&
+            isNumberProvided(request.query.max)
+        ) {
+            next();
+        } else {
+            response.statusMessage = 'Missing/Bad information';
+            response.status(400).send({
+                message: 'Missing or bad information, see documentation.',
+            });
+        }
+    },
+    (request: Request, response: Response, next: NextFunction) => {
+        const min: string = request.query.min as string;
+        const max: string = request.query.max as string;
+        if (parseFloat(min) < 0 || parseFloat(max) > 5) {
+            response.statusMessage = 'Out of range';
+            response.status(400).send({
+                message: 'Ratings should be between 0.0 and 5.0',
+            });
+        } else if (parseFloat(max) < parseFloat(min)) {
+            response.statusMessage = 'Min greater than max';
+            response.status(400).send({
+                message: 'Minimum rating should be less than maximum rating.',
+            });
+        } else {
+            next();
+        }
+    },
+    (request: Request, response: Response) => {
+        const query = allButId + 'WHERE rating_avg >= $1 AND rating_avg <= $2';
+        const values = [request.query.min, request.query.max];
+        pool.query(query, values)
+            .then((result) => {
+                if (result.rowCount > 0) {
+                    response.status(200).send({
+                        entries: result.rows.map(format),
+                    });
+                } else {
+                    response.statusMessage = 'No books in range';
+                    response.status(404).send({
+                        message: 'No books found in this rating range.',
+                    });
+                }
+            })
+            .catch(() => {
+                response.status(500).send({
+                    message: 'Server error - contact support',
+                });
+            });
+    }
+);
 export { bookRouter };
