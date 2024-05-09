@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "9ad5969a-c98e-449e-b5c9-dc32789188e3",
+		"_postman_id": "84034625-a413-49a9-abd0-30d403a9ad40",
 		"name": "Book",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "33953173"
+		"_exporter_id": "34779746"
 	},
 	"item": [
 		{
@@ -33,16 +33,24 @@
 								"type": "text/javascript",
 								"packages": {}
 							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"packages": {},
+								"type": "text/javascript"
+							}
 						}
 					],
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{book_url}}/authortitle?author=J.K. Rowling&title=Harry Potter and the Sorcerer's Stone",
+							"raw": "localhost:4000/authortitle?author=J.K. Rowling&title=Harry Potter and the Sorcerer's Stone",
 							"host": [
-								"{{book_url}}"
+								"localhost"
 							],
+							"port": "4000",
 							"path": [
 								"authortitle"
 							],
@@ -559,6 +567,367 @@
 								{
 									"key": "max",
 									"value": "5.0"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "BookTitle",
+			"item": [
+				{
+					"name": "GetTitleBookSuccess",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response status should be 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Body has entries field\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"entries\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Correct book should have this isbn\", () => {\r",
+									"    pm.expect(response.entries[0].isbn13).to.eql(\"9780316954990\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{book_url}}/title?title=Harry Potter and the Sorcerer's Stone",
+							"host": [
+								"{{book_url}}"
+							],
+							"path": [
+								"title"
+							],
+							"query": [
+								{
+									"key": "title",
+									"value": "Harry Potter and the Sorcerer's Stone"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetTitleBookMissingInfo",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response status should be 400\", () => {\r",
+									"    pm.response.to.have.status(400);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Status code name has string\", () => {\r",
+									"    pm.response.to.have.status(\"Missing information\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Body has message field\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Error message should be in this format\", () => {\r",
+									"    pm.expect(response.message).to.eql(\"Missing data, refer to documentation.\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{book_url}}/title/?title=",
+							"host": [
+								"{{book_url}}"
+							],
+							"path": [
+								"title",
+								""
+							],
+							"query": [
+								{
+									"key": "title",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetTitleBookNoneFound",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response status should be 404\", () => {\r",
+									"    pm.response.to.have.status(404);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Status code name has string\", () => {\r",
+									"    pm.response.to.have.status(\"No book titles containing the search term\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Body has message field\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Error message should be in this format\", () => {\r",
+									"    pm.expect(response.message).to.eql(\"No book titles containing the search term\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{book_url}}/title?title=bookthatshouldnotexistindatabase",
+							"host": [
+								"{{book_url}}"
+							],
+							"path": [
+								"title"
+							],
+							"query": [
+								{
+									"key": "title",
+									"value": "bookthatshouldnotexistindatabase"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "BookYear",
+			"item": [
+				{
+					"name": "GetYearBookSuccess",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response status should be 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Body has entries field\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"entries\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Correct book should have this isbn\", () => {\r",
+									"    //find a test thatll give me just one for an easy test\r",
+									"    pm.expect(response.entries[0].isbn13).to.eql(\"9780316954990\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{book_url}}/year?year=2020",
+							"host": [
+								"{{book_url}}"
+							],
+							"path": [
+								"year"
+							],
+							"query": [
+								{
+									"key": "year",
+									"value": "2020"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetRatingNoneFound",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response status should be 404\", () => {\r",
+									"    pm.response.to.have.status(404);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Status code name has string\", () => {\r",
+									"    pm.response.to.have.status(\"No books in this year\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Body has message field\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Error message should be in this format\", () => {\r",
+									"    pm.expect(response.message).to.eql(\"No books found in this Year.\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{book_url}}/year?year=42",
+							"host": [
+								"{{book_url}}"
+							],
+							"path": [
+								"year"
+							],
+							"query": [
+								{
+									"key": "year",
+									"value": "42"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetYearMissingInfo",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response status should be 400\", () => {\r",
+									"    pm.response.to.have.status(400);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Status code name has string\", () => {\r",
+									"    pm.response.to.have.status(\"Missing/Bad information\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Body has message field\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Error message should be in this format\", () => {\r",
+									"    pm.expect(response.message).to.eql(\"Missing or bad information, see documentation.\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{book_url}}/year?year=",
+							"host": [
+								"{{book_url}}"
+							],
+							"path": [
+								"year"
+							],
+							"query": [
+								{
+									"key": "year",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetYearBookFutureErr",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response status should be 404\", () => {\r",
+									"    pm.response.to.have.status(404);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Status code name has string\", () => {\r",
+									"    pm.response.to.have.status(\"No books in range\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Body has message field\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Error message should be in this format\", () => {\r",
+									"    pm.expect(response.message).to.eql(\"No books found in this rating range.\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{book_url}}/year?year=4040",
+							"host": [
+								"{{book_url}}"
+							],
+							"path": [
+								"year"
+							],
+							"query": [
+								{
+									"key": "year",
+									"value": "4040"
 								}
 							]
 						}

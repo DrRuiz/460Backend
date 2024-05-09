@@ -366,4 +366,147 @@ bookRouter.get(
             });
     }
 );
+
+//Max methods start here #########################################
+/**
+ * @api {get} /book/title Request for books with title containing search term
+ *
+ * @apiDescription Request for the specified book title
+ *
+ * @apiName GetBooksTitle
+ * @apiGroup Book
+ *
+ * @apiQuery {String} title The title of the book
+ *
+ * @apiSuccess {IBook[]} entries Specified entries with the following format:
+ * "[isbn13: <code>isbn13</code>,
+ * authors: <code>authors</code>,
+ * publication: <code>publication_year</code>,
+ * original_title: <code>original_title</code>,
+ * title: <code>title</code>,
+ * ratings: {
+ *     average: <code>rating_avg</code>,
+ *     count: <code>rating_count</code>,
+ *     rating_1: <code>rating_1_star</code>,
+ *     rating_2: <code>rating_2_star</code>,
+ *     rating_3: <code>rating_3_star</code>,
+ *     rating_4: <code>rating_4_star</code>,
+ *     rating_5: <code>rating_5_star</code>,
+ * },
+ * icons: {
+ *     large: <code>image_url</code>,
+ *     small: <code>image_small_url</code>,
+ * },]"
+ *
+ * @apiError (400: Missing information) {String} message "Missing data, refer to documentation."
+ * @apiError (404: Book does not exist) {String} message "Book title does not exist in database."
+ */
+bookRouter.get(
+    '/title',
+    (request: Request, response: Response, next: NextFunction) => {
+        if (
+            isStringProvided(request.query.title)
+        ) {
+            next();
+        } else {
+            response.statusMessage = 'Missing information';
+            response.status(400).send({
+                message: 'Missing data, refer to documentation.',
+            });
+        }
+    },
+    (request: Request, response: Response, next: NextFunction) => {
+        const query = 'SELECT title FROM books WHERE title LIKE $1';
+        const values = [`%${request.query.title}%`];
+        pool.query(query, values)
+            .then((result) => {
+                if (result.rowCount > 0) {
+                    next();
+                } else {
+                    response.statusMessage = 'Book does not exist';
+                    response.status(404).send({
+                        message: 'Book title does not exist in database.',
+                    });
+                }
+            })
+            .catch(() => {
+                response.status(500).send({
+                    message: 'Server error - contact support',
+                });
+            });
+    },
+);
+
+
+/**
+ * @api {get} /book/year Request for books in a given year
+ *
+ * @apiDescription Request for all books in a given year
+ *
+ * @apiName getBooksYear
+ * @apiGroup Book
+ *
+ * @apiQuery {int} year The year to get books for
+ *
+ * @apiSuccess {IBook[]} entries Specified entries with the following format:
+ * "[isbn13: <code>isbn13</code>,
+ * authors: <code>authors</code>,
+ * publication: <code>publication_year</code>,
+ * original_title: <code>original_title</code>,
+ * title: <code>title</code>,
+ * ratings: {
+ *     average: <code>rating_avg</code>,
+ *     count: <code>rating_count</code>,
+ *     rating_1: <code>rating_1_star</code>,
+ *     rating_2: <code>rating_2_star</code>,
+ *     rating_3: <code>rating_3_star</code>,
+ *     rating_4: <code>rating_4_star</code>,
+ *     rating_5: <code>rating_5_star</code>,
+ * },
+ * icons: {
+ *     large: <code>image_url</code>,
+ *     small: <code>image_small_url</code>,
+ * },]"
+ *
+ * @apiError (400: Missing/Bad information) {String} message "Missing or bad information, see documentation."
+ * @apiError (404: No books in range) {String} message "No books found in this year."
+ */
+bookRouter.get(
+    '/year',
+    (request: Request, response: Response, next: NextFunction) => {
+        if (
+            isNumberProvided(request.query.year)
+        ) {
+            next();
+        } else {
+            response.statusMessage = 'Missing/Bad information';
+            response.status(400).send({
+                message: 'Missing or bad information, see documentation.',
+            });
+        }
+    },
+    (request: Request, response: Response) => {
+        const query = allButId + 'WHERE publication_year == $1';
+        const values = [request.query.min, request.query.max];
+        pool.query(query, values)
+            .then((result) => {
+                if (result.rowCount > 0) {
+                    response.status(200).send({
+                        entries: result.rows.map(format),
+                    });
+                } else {
+                    response.statusMessage = 'No books in this year';
+                    response.status(404).send({
+                        message: 'No books found in this year.',
+                    });
+                }
+            })
+            .catch(() => {
+                response.status(500).send({
+                    message: 'Server error - contact support',
+                });
+            });
+    }
+);
+
 export { bookRouter };
