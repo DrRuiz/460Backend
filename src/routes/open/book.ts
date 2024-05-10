@@ -416,16 +416,18 @@ bookRouter.get(
         }
     },
     (request: Request, response: Response, next: NextFunction) => {
-        const query = 'SELECT title FROM books WHERE title LIKE $1';
+        const query = allButId + 'WHERE title LIKE $1';
         const values = [`%${request.query.title}%`];
         pool.query(query, values)
             .then((result) => {
                 if (result.rowCount > 0) {
-                    next();
+                    response.status(200).send({
+                        entries: result.rows.map(format),
+                    });
                 } else {
-                    response.statusMessage = 'Book does not exist';
+                    response.statusMessage = 'Book title does not exist';
                     response.status(404).send({
-                        message: 'Book title does not exist in database.',
+                        message: 'Book title not found in database',
                     });
                 }
             })
@@ -485,9 +487,28 @@ bookRouter.get(
             });
         }
     },
+
+    (request: Request, response: Response, next: NextFunction) => {
+        const year: string = request.query.year as string;
+        const currentYear: number = new Date().getFullYear();
+
+        if (parseInt(year) < 0){
+            response.statusMessage = 'Year is negative';
+            response.status(400).send({
+                message: 'Year cannot be negative',
+        });
+        } else if (parseInt(year) > currentYear){
+            response.statusMessage = 'Year is in the future';
+            response.status(400).send({
+                message: 'Cannot input a future year',
+        });
+        } else {
+            next();
+        } 
+    },
     (request: Request, response: Response) => {
-        const query = allButId + 'WHERE publication_year == $1';
-        const values = [request.query.min, request.query.max];
+        const query = allButId + 'WHERE publication_year = $1';
+        const values = [request.query.year];
         pool.query(query, values)
             .then((result) => {
                 if (result.rowCount > 0) {

@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "84034625-a413-49a9-abd0-30d403a9ad40",
-		"name": "Book",
+		"_postman_id": "5204ae79-be4c-4544-8b24-c17b9b50a35f",
+		"name": "Book Copy",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "34779746"
 	},
@@ -37,8 +37,11 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"packages": {},
-								"type": "text/javascript"
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -46,12 +49,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:4000/authortitle?author=J.K. Rowling&title=Harry Potter and the Sorcerer's Stone",
+							"raw": "localhost:4000/book/authortitle?author=J.K. Rowling&title=Harry Potter and the Sorcerer's Stone",
 							"host": [
 								"localhost"
 							],
 							"port": "4000",
 							"path": [
+								"book",
 								"authortitle"
 							],
 							"query": [
@@ -596,7 +600,7 @@
 									"})\r",
 									"\r",
 									"pm.test(\"Correct book should have this isbn\", () => {\r",
-									"    pm.expect(response.entries[0].isbn13).to.eql(\"9780316954990\");\r",
+									"    pm.expect(response.entries[0].isbn13).to.eql(\"9780439554930\");\r",
 									"})"
 								],
 								"type": "text/javascript",
@@ -608,12 +612,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{book_url}}/title?title=Harry Potter and the Sorcerer's Stone",
+							"raw": "{{book_url}}/title/?title=Harry Potter and the Sorcerer's Stone",
 							"host": [
 								"{{book_url}}"
 							],
 							"path": [
-								"title"
+								"title",
+								""
 							],
 							"query": [
 								{
@@ -691,7 +696,7 @@
 									"})\r",
 									"\r",
 									"pm.test(\"Status code name has string\", () => {\r",
-									"    pm.response.to.have.status(\"No book titles containing the search term\");\r",
+									"    pm.response.to.have.status(\"Book title does not exist\");\r",
 									"})\r",
 									"\r",
 									"pm.test(\"Body has message field\", () => {\r",
@@ -699,7 +704,7 @@
 									"})\r",
 									"\r",
 									"pm.test(\"Error message should be in this format\", () => {\r",
-									"    pm.expect(response.message).to.eql(\"No book titles containing the search term\");\r",
+									"    pm.expect(response.message).to.eql(\"Book title not found in database\");\r",
 									"})"
 								],
 								"type": "text/javascript",
@@ -752,7 +757,7 @@
 									"\r",
 									"pm.test(\"Correct book should have this isbn\", () => {\r",
 									"    //find a test thatll give me just one for an easy test\r",
-									"    pm.expect(response.entries[0].isbn13).to.eql(\"9780316954990\");\r",
+									"    pm.expect(response.entries[0].isbn13).to.eql(\"9780439554930\");\r",
 									"})"
 								],
 								"type": "text/javascript",
@@ -764,7 +769,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{book_url}}/year?year=2020",
+							"raw": "{{book_url}}/year?year=1997",
 							"host": [
 								"{{book_url}}"
 							],
@@ -774,7 +779,7 @@
 							"query": [
 								{
 									"key": "year",
-									"value": "2020"
+									"value": "1997"
 								}
 							]
 						}
@@ -782,7 +787,7 @@
 					"response": []
 				},
 				{
-					"name": "GetRatingNoneFound",
+					"name": "GetYearNoneFound",
 					"event": [
 						{
 							"listen": "test",
@@ -803,7 +808,7 @@
 									"})\r",
 									"\r",
 									"pm.test(\"Error message should be in this format\", () => {\r",
-									"    pm.expect(response.message).to.eql(\"No books found in this Year.\");\r",
+									"    pm.expect(response.message).to.eql(\"No books found in this year.\");\r",
 									"})"
 								],
 								"type": "text/javascript",
@@ -884,7 +889,7 @@
 					"response": []
 				},
 				{
-					"name": "GetYearBookFutureErr",
+					"name": "GetYearBookNegativeYear",
 					"event": [
 						{
 							"listen": "test",
@@ -893,11 +898,11 @@
 									"const response = pm.response.json();\r",
 									"\r",
 									"pm.test(\"Response status should be 404\", () => {\r",
-									"    pm.response.to.have.status(404);\r",
+									"    pm.response.to.have.status(400);\r",
 									"})\r",
 									"\r",
 									"pm.test(\"Status code name has string\", () => {\r",
-									"    pm.response.to.have.status(\"No books in range\");\r",
+									"    pm.response.to.have.status(\"Year is negative\");\r",
 									"})\r",
 									"\r",
 									"pm.test(\"Body has message field\", () => {\r",
@@ -905,7 +910,7 @@
 									"})\r",
 									"\r",
 									"pm.test(\"Error message should be in this format\", () => {\r",
-									"    pm.expect(response.message).to.eql(\"No books found in this rating range.\");\r",
+									"    pm.expect(response.message).to.eql(\"Year cannot be negative\");\r",
 									"})"
 								],
 								"type": "text/javascript",
@@ -917,7 +922,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{book_url}}/year?year=4040",
+							"raw": "{{book_url}}/year?year=-4000",
 							"host": [
 								"{{book_url}}"
 							],
@@ -927,7 +932,58 @@
 							"query": [
 								{
 									"key": "year",
-									"value": "4040"
+									"value": "-4000"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetYearBookFutureYear",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response status should be 404\", () => {\r",
+									"    pm.response.to.have.status(400);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Status code name has string\", () => {\r",
+									"    pm.response.to.have.status(\"Year is in the future\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Body has message field\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Error message should be in this format\", () => {\r",
+									"    pm.expect(response.message).to.eql(\"Cannot input a future year\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{book_url}}/year?year=6000",
+							"host": [
+								"{{book_url}}"
+							],
+							"path": [
+								"year"
+							],
+							"query": [
+								{
+									"key": "year",
+									"value": "6000"
 								}
 							]
 						}
