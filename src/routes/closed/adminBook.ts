@@ -1,31 +1,37 @@
 import express, { NextFunction, Request, Response, Router } from 'express';
 
-import { pool, validationFunctions } from '../../core/utilities';
+import { pool, validationFunctions, format } from '../../core/utilities';
+
+import { checkAdmin } from '../../core/middleware';
+import { IJwtRequest } from '../../core/models';
 
 const adminBookRouter: Router = express.Router();
+
+const isStringProvided = validationFunctions.isStringProvided;
+const isNumberProvided = validationFunctions.isNumberProvided;
 
 /**
  * @api {post} /adminBook Request to add a book.
  *
  * @apiDescription Request to add a book with author name, isbn, publication year, and book title.
  *
- * @apiName putBook
+ * @apiName postBook
  * @apiGroup AdminBook
  *
- * @apiBody {Number} isbn ISBN13 of the book
- * @apiBody {String} author Author's name
- * @apiBody {Number} publication Year of publication
- * @apiBody {String} original_title Original title of book, if any
- * @apiBody {String} title Book title
- * @apiBody {Number} average Average rating of the book, if any
- * @apiBody {Number} count Total number of ratings, if any
- * @apiBody {Number} rating_1 Total number of 1 star ratings, if any
- * @apiBody {Number} rating_2 Total number of 2 star ratings, if any
- * @apiBody {Number} rating_3 Total number of 3 star ratings, if any
- * @apiBody {Number} rating_4 Total number of 4 star ratings, if any
- * @apiBody {Number} rating_5 Total number of 5 star ratings, if any
- * @apiBody {String} large URL of large version of book cover, if any
- * @apiBody {String} small URL of small version of book cover, if any
+ * @apiBody {Number} isbn ISBN13 of the book, required
+ * @apiBody {String} author Author's name, required
+ * @apiBody {Number} publication Year of publication, required
+ * @apiBody {String} original_title Original title of book, optional
+ * @apiBody {String} title Book title, required
+ * @apiBody {Number} average Average rating of the book, optional
+ * @apiBody {Number} count Total number of ratings, optional
+ * @apiBody {Number} rating_1 Total number of 1 star ratings, optional
+ * @apiBody {Number} rating_2 Total number of 2 star ratings, optional
+ * @apiBody {Number} rating_3 Total number of 3 star ratings, optional
+ * @apiBody {Number} rating_4 Total number of 4 star ratings, optional
+ * @apiBody {Number} rating_5 Total number of 5 star ratings, optional
+ * @apiBody {String} large URL of large version of book cover, optional
+ * @apiBody {String} small URL of small version of book cover, optional
  *
  * @apiSuccess (Success 201) {String} entry The String:
  * "[isbn13: <code>isbn13</code>,
@@ -47,14 +53,274 @@ const adminBookRouter: Router = express.Router();
  *     small: <code>image_small_url</code>,
  * },]"
  *
+ * @apiError (403: Token is not valid) {String} message "Token is not valid" when the provided Auth token is
+ * invalid for any reason.
+ * @apiError (401: Auth token is not supplied) {String} message "Auth token is not supplied" when no Auth token
+ * is provided
+ *
+ * @apiError (403: Invalid Privilege) message "User does not have privilege to access this route."
+ * @apiError (400: Missing information) {String} message "Missing required information, see documentation."
  * @apiError (400: Invalid ISBN) {String} message "Invalid ISBN, use a nonnegative number."
  * @apiError (400: Invalid year) {String} message "Invalid year, use a number."
  * @apiError (400: Invalid average rating) {String} message "Invalid average rating, use a number 0-5."
  * @apiError (400: Invalid total rating count) {String} message "Invalid total rating count, use a nonnegative number."
  * @apiError (400: Invalid star ratings) {String} message "Invalid star ratings, use nonnegative numbers."
- * @apiError (400: Missing information) {String} message "Missing required information, see documentation."
  * @apiError (400: Book already exists) {String} message "Book already exists in database."
  */
+adminBookRouter.post(
+    '/addBook',
+    checkAdmin,
+    (request: IJwtRequest, response: Response, next: NextFunction) => {
+        if (
+            (request.body.isbn || request.body.isbn == 0) &&
+            request.body.author &&
+            request.body.publication &&
+            request.body.title
+        ) {
+            next();
+        } else {
+            response.statusMessage = 'Missing information';
+            response.status(400).send({
+                message: 'Missing required information, see documentation.',
+            });
+        }
+    },
+    (request: IJwtRequest, response: Response, next: NextFunction) => {
+        let numberTest = false;
+        if (isNumberProvided(request.body.isbn)) {
+            if (parseInt(request.body.isbn) >= 0) {
+                next();
+                numberTest = true;
+            }
+        }
+        if (!numberTest) {
+            response.statusMessage = 'Invalid ISBN';
+            response.status(400).send({
+                message: 'Invalid ISBN, use a nonnegative number.',
+            });
+        }
+    },
+    (request: IJwtRequest, response: Response, next: NextFunction) => {
+        if (isNumberProvided(request.body.publication)) {
+            next();
+        } else {
+            response.statusMessage = 'Invalid year';
+            response.status(400).send({
+                message: 'Invalid year, use a number.',
+            });
+        }
+    },
+    (request: IJwtRequest, response: Response, next: NextFunction) => {
+        let numberTest = false;
+        if (isNumberProvided(request.body.average)) {
+            const avg = parseFloat(request.body.average);
+            if (avg >= 0 && avg <= 5) {
+                next();
+                numberTest = true;
+            }
+        }
+
+        if (!numberTest) {
+            response.statusMessage = 'Invalid average rating';
+            response.status(400).send({
+                message: 'Invalid average rating, use a decimal number 0-5.',
+            });
+        }
+    },
+    (request: IJwtRequest, response: Response, next: NextFunction) => {
+        let numberTest = false;
+        if (isNumberProvided(request.body.count)) {
+            if (parseInt(request.body.count) >= 0) {
+                next();
+                numberTest = true;
+            }
+        }
+
+        if (!numberTest) {
+            response.statusMessage = 'Invalid total rating count';
+            response.status(400).send({
+                message:
+                    'Invalid total rating count, use a nonnegative number.',
+            });
+        }
+    },
+    (request: IJwtRequest, response: Response, next: NextFunction) => {
+        let numberTest = false;
+        if (
+            isNumberProvided(request.body.rating_1) ||
+            request.body.rating_1 == ''
+        ) {
+            const value =
+                request.body.rating_1 == ''
+                    ? 0
+                    : parseInt(request.body.rating_1);
+            if (value >= 0) {
+                next();
+                numberTest = true;
+            }
+        }
+
+        if (!numberTest) {
+            response.statusMessage = 'Invalid star ratings';
+            response.status(400).send({
+                message: 'Invalid star ratings, use nonnegative numbers.',
+            });
+        }
+    },
+    (request: IJwtRequest, response: Response, next: NextFunction) => {
+        let numberTest = false;
+        if (
+            isNumberProvided(request.body.rating_2) ||
+            request.body.rating_2 == ''
+        ) {
+            const value =
+                request.body.rating_2 == ''
+                    ? 0
+                    : parseInt(request.body.rating_2);
+            if (value >= 0) {
+                next();
+                numberTest = true;
+            }
+        }
+
+        if (!numberTest) {
+            response.statusMessage = 'Invalid star ratings';
+            response.status(400).send({
+                message: 'Invalid star ratings, use nonnegative numbers.',
+            });
+        }
+    },
+    (request: IJwtRequest, response: Response, next: NextFunction) => {
+        let numberTest = false;
+        if (
+            isNumberProvided(request.body.rating_3) ||
+            request.body.rating_3 == ''
+        ) {
+            const value =
+                request.body.rating_3 == ''
+                    ? 0
+                    : parseInt(request.body.rating_3);
+            if (value >= 0) {
+                next();
+                numberTest = true;
+            }
+        }
+
+        if (!numberTest) {
+            response.statusMessage = 'Invalid star ratings';
+            response.status(400).send({
+                message: 'Invalid star ratings, use nonnegative numbers.',
+            });
+        }
+    },
+    (request: IJwtRequest, response: Response, next: NextFunction) => {
+        let numberTest = false;
+        if (
+            isNumberProvided(request.body.rating_4) ||
+            request.body.rating_4 == ''
+        ) {
+            const value =
+                request.body.rating_4 == ''
+                    ? 0
+                    : parseInt(request.body.rating_4);
+            if (value >= 0) {
+                next();
+                numberTest = true;
+            }
+        }
+
+        if (!numberTest) {
+            response.statusMessage = 'Invalid star ratings';
+            response.status(400).send({
+                message: 'Invalid star ratings, use nonnegative numbers.',
+            });
+        }
+    },
+    (request: IJwtRequest, response: Response, next: NextFunction) => {
+        let numberTest = false;
+        if (
+            isNumberProvided(request.body.rating_5) ||
+            request.body.rating_5 == ''
+        ) {
+            const value =
+                request.body.rating_5 == ''
+                    ? 0
+                    : parseInt(request.body.rating_5);
+            if (value >= 0) {
+                next();
+                numberTest = true;
+            }
+        }
+
+        if (!numberTest) {
+            response.statusMessage = 'Invalid star ratings';
+            response.status(400).send({
+                message: 'Invalid star ratings, use nonnegative numbers.',
+            });
+        }
+    },
+    (request: IJwtRequest, response: Response) => {
+        const query =
+            'INSERT INTO books(id, isbn13, authors, publication_year, original_title, title, rating_avg, ' +
+            'rating_count, rating_1_star, rating_2_star, rating_3_star, rating_4_star, rating_5_star, image_url, ' +
+            'image_small_url) VALUES (DEFAULT, $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)';
+
+        const avg =
+            request.body.average == '' ? 0.0 : parseFloat(request.body.average);
+        const count =
+            request.body.count == '' ? 0 : parseInt(request.body.count);
+        const star1 =
+            request.body.rating_1 == '' ? 0 : parseInt(request.body.rating_1);
+        const star2 =
+            request.body.rating_2 == '' ? 0 : parseInt(request.body.rating_2);
+        const star3 =
+            request.body.rating_3 == '' ? 0 : parseInt(request.body.rating_3);
+        const star4 =
+            request.body.rating_4 == '' ? 0 : parseInt(request.body.rating_4);
+        const star5 =
+            request.body.rating_5 == '' ? 0 : parseInt(request.body.rating_5);
+
+        const values = [
+            request.body.isbn,
+            request.body.author,
+            request.body.publication,
+            request.body.original_title,
+            request.body.title,
+            avg,
+            count,
+            star1,
+            star2,
+            star3,
+            star4,
+            star5,
+            request.body.large,
+            request.body.small,
+        ];
+
+        pool.query(query, values)
+            .then((result) => {
+                response.status(201).send({
+                    entry: result.rows.map(format),
+                });
+            })
+            .catch((error) => {
+                if (
+                    error.detail != undefined &&
+                    (error.detail as string).endsWith('already exists.')
+                ) {
+                    response.statusMessage = 'Book already exists';
+                    response.status(400).send({
+                        message: 'Book already exists in database.',
+                    });
+                } else {
+                    console.log(error);
+                    response.status(500).send({
+                        message: 'Server error - contact support',
+                    });
+                }
+            });
+    }
+);
 
 /**
  * @api {delete} /adminBook Request to remove books by author
