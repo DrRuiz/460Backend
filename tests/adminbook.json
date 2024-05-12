@@ -1,11 +1,164 @@
 {
 	"info": {
-		"_postman_id": "a970b2af-79c8-4546-9661-d10c0311f2c3",
+		"_postman_id": "c73025d6-b26b-4d2f-91d6-b144b99b454a",
 		"name": "AdminBook",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "33953173"
+		"_exporter_id": "33974687"
 	},
 	"item": [
+		{
+			"name": "RemoveBooksByAuthor",
+			"item": [
+				{
+					"name": "RemoveByAuthorSuccess",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response status should be 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Body has entries field\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"entries\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Correct book should have this isbn\", () => {\r",
+									"    pm.expect(response.isbn13).to.eql(\"780143038410\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:4000/adminBook/author?author=Elizabeth Gilbert",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"adminBook",
+								"author"
+							],
+							"query": [
+								{
+									"key": "author",
+									"value": "Elizabeth Gilbert"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RemoveByAuthorErrorAuthor",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:4000/adminBook/author?author=Paulo Coelho",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"adminBook",
+								"author"
+							],
+							"query": [
+								{
+									"key": "author",
+									"value": "Paulo Coelho"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RemoveByAuthorEmpty",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response status should be 400\", () => {\r",
+									"    pm.response.to.have.status(400);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Status code name has string\", () => {\r",
+									"    pm.response.to.have.status(\"Missing information\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Body has message field\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Error message should be in this format\", () => {\r",
+									"    pm.expect(response.isbn13).to.eql(\"Missing data, refer to documentation.\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{admin_url}}/author?author=",
+							"host": [
+								"{{admin_url}}"
+							],
+							"path": [
+								"author"
+							],
+							"query": [
+								{
+									"key": "author",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RemoveByAuthorUnauthorized",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{admin_url}}/author?rating=carlos",
+							"host": [
+								"{{admin_url}}"
+							],
+							"path": [
+								"author"
+							],
+							"query": [
+								{
+									"key": "rating",
+									"value": "carlos"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
 		{
 			"name": "AddBook",
 			"item": [
@@ -53,8 +206,7 @@
 						"header": [
 							{
 								"key": "authorization",
-								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoxLCJpZCI6MSwiaWF0IjoxNzE1NDg5NzQ1LCJleHAiOjE3MTY2OTkzNDV9.O5AURDpINpCx1XdGf9R6EH77ix5J56EgVKlNJeqDOjg",
-								"type": "text"
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoxLCJpZCI6MSwiaWF0IjoxNzE1NDg5NzQ1LCJleHAiOjE3MTY2OTkzNDV9.O5AURDpINpCx1XdGf9R6EH77ix5J56EgVKlNJeqDOjg"
 							}
 						],
 						"body": {
@@ -176,8 +328,7 @@
 						"header": [
 							{
 								"key": "authorization",
-								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoxLCJpZCI6MSwiaWF0IjoxNzE1NDg5NzQ1LCJleHAiOjE3MTY2OTkzNDV9.O5AURDpINpCx1XdGf9R6EH77ix5J56EgVKlNJeqDOjg",
-								"type": "text"
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoxLCJpZCI6MSwiaWF0IjoxNzE1NDg5NzQ1LCJleHAiOjE3MTY2OTkzNDV9.O5AURDpINpCx1XdGf9R6EH77ix5J56EgVKlNJeqDOjg"
 							}
 						],
 						"body": {
@@ -236,8 +387,7 @@
 						"header": [
 							{
 								"key": "authorization",
-								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoxLCJpZCI6MSwiaWF0IjoxNzE1NDg5NzQ1LCJleHAiOjE3MTY2OTkzNDV9.O5AURDpINpCx1XdGf9R6EH77ix5J56EgVKlNJeqDOjg",
-								"type": "text"
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoxLCJpZCI6MSwiaWF0IjoxNzE1NDg5NzQ1LCJleHAiOjE3MTY2OTkzNDV9.O5AURDpINpCx1XdGf9R6EH77ix5J56EgVKlNJeqDOjg"
 							}
 						],
 						"body": {
@@ -296,8 +446,7 @@
 						"header": [
 							{
 								"key": "authorization",
-								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoxLCJpZCI6MSwiaWF0IjoxNzE1NDg5NzQ1LCJleHAiOjE3MTY2OTkzNDV9.O5AURDpINpCx1XdGf9R6EH77ix5J56EgVKlNJeqDOjg",
-								"type": "text"
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoxLCJpZCI6MSwiaWF0IjoxNzE1NDg5NzQ1LCJleHAiOjE3MTY2OTkzNDV9.O5AURDpINpCx1XdGf9R6EH77ix5J56EgVKlNJeqDOjg"
 							}
 						],
 						"body": {
@@ -356,8 +505,7 @@
 						"header": [
 							{
 								"key": "authorization",
-								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoxLCJpZCI6MSwiaWF0IjoxNzE1NDg5NzQ1LCJleHAiOjE3MTY2OTkzNDV9.O5AURDpINpCx1XdGf9R6EH77ix5J56EgVKlNJeqDOjg",
-								"type": "text"
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoxLCJpZCI6MSwiaWF0IjoxNzE1NDg5NzQ1LCJleHAiOjE3MTY2OTkzNDV9.O5AURDpINpCx1XdGf9R6EH77ix5J56EgVKlNJeqDOjg"
 							}
 						],
 						"body": {
@@ -416,8 +564,7 @@
 						"header": [
 							{
 								"key": "authorization",
-								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoxLCJpZCI6MSwiaWF0IjoxNzE1NDg5NzQ1LCJleHAiOjE3MTY2OTkzNDV9.O5AURDpINpCx1XdGf9R6EH77ix5J56EgVKlNJeqDOjg",
-								"type": "text"
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoxLCJpZCI6MSwiaWF0IjoxNzE1NDg5NzQ1LCJleHAiOjE3MTY2OTkzNDV9.O5AURDpINpCx1XdGf9R6EH77ix5J56EgVKlNJeqDOjg"
 							}
 						],
 						"body": {
@@ -476,8 +623,7 @@
 						"header": [
 							{
 								"key": "authorization",
-								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoxLCJpZCI6MSwiaWF0IjoxNzE1NDg5NzQ1LCJleHAiOjE3MTY2OTkzNDV9.O5AURDpINpCx1XdGf9R6EH77ix5J56EgVKlNJeqDOjg",
-								"type": "text"
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoxLCJpZCI6MSwiaWF0IjoxNzE1NDg5NzQ1LCJleHAiOjE3MTY2OTkzNDV9.O5AURDpINpCx1XdGf9R6EH77ix5J56EgVKlNJeqDOjg"
 							}
 						],
 						"body": {
@@ -536,8 +682,7 @@
 						"header": [
 							{
 								"key": "authorization",
-								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoxLCJpZCI6MSwiaWF0IjoxNzE1NDg5NzQ1LCJleHAiOjE3MTY2OTkzNDV9.O5AURDpINpCx1XdGf9R6EH77ix5J56EgVKlNJeqDOjg",
-								"type": "text"
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoxLCJpZCI6MSwiaWF0IjoxNzE1NDg5NzQ1LCJleHAiOjE3MTY2OTkzNDV9.O5AURDpINpCx1XdGf9R6EH77ix5J56EgVKlNJeqDOjg"
 							}
 						],
 						"body": {
@@ -650,8 +795,7 @@
 						"header": [
 							{
 								"key": "authorization",
-								"value": "THISISABADTOKEN!!!",
-								"type": "text"
+								"value": "THISISABADTOKEN!!!"
 							}
 						],
 						"url": {
@@ -701,8 +845,7 @@
 						"header": [
 							{
 								"key": "authorization",
-								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoyLCJpZCI6MSwiaWF0IjoxNzE1NDkyODkwLCJleHAiOjE3MTY3MDI0OTB9.0ZtV517ZCpJUzizGI_TC03HjU7Z7HOpteRqQaWVq8_g",
-								"type": "text"
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoyLCJpZCI6MSwiaWF0IjoxNzE1NDkyODkwLCJleHAiOjE3MTY3MDI0OTB9.0ZtV517ZCpJUzizGI_TC03HjU7Z7HOpteRqQaWVq8_g"
 							}
 						],
 						"url": {
