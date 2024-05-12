@@ -89,4 +89,39 @@ const adminBookRouter: Router = express.Router();
  * @apiError (404: Author does not exist) {String} message "Author does not exist."
  */
 
+//Max code start
+/**
+ * @api {delete} /adminBook Request to remove books by ISBN number
+ *
+ * @apiDescription Request to remove all books with the specified <code>isbn13</code>
+ *
+ * @apiName DeleteBooksISBN
+ * @apiGroup AdminBook
+ * 
+ * @apiBody {Number} isbn ISBN13 of the book
+ * 
+ * @apiSuccess (Success 201) {String} entry The String:
+ * "[isbn13: <code>isbn13</code>,
+ * authors: <code>authors</code>,
+ * publication: <code>publication_year</code>,
+ * original_title: <code>original_title</code>,
+ * title: <code>title</code>,
+ * ratings: {
+ *     average: <code>rating_avg</code>,
+ *     count: <code>rating_count</code>,
+ *     rating_1: <code>rating_1_star</code>,
+ *     rating_2: <code>rating_2_star</code>,
+ *     rating_3: <code>rating_3_star</code>,
+ *     rating_4: <code>rating_4_star</code>,
+ *     rating_5: <code>rating_5_star</code>,
+ * },
+ * icons: {
+ *     large: <code>image_url</code>,
+ *     small: <code>image_small_url</code>,
+ * },]"
+ *
+ * @apiError (400: Invalid ISBN) {String} message "Invalid ISBN, use a nonnegative number."
+ * @apiError (404: ISBN number does note xist) {String} message "ISBN number does not exist."
+ */
+
 export { adminBookRouter };
