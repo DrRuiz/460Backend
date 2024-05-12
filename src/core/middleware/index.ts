@@ -1,5 +1,5 @@
 import { checkToken } from './jwt';
 
-import { checkParamsIdToJwtId } from './verificationChecks';
+import { checkParamsIdToJwtId, checkAdmin } from './verificationChecks';
 
-export { checkToken, checkParamsIdToJwtId };
+export { checkToken, checkAdmin, checkParamsIdToJwtId };

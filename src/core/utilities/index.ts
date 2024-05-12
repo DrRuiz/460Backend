@@ -4,7 +4,7 @@ import { validationFunctions } from './validationUtils';
 
 import { credentialingFunctions } from './credentialingUtils';
 
-import { IBook, IRatings, IUrlIcon } from './bookInterfaces';
+import { IBook, IRatings, IUrlIcon, format } from './bookInterfaces';
 
 export {
     pool,
@@ -13,4 +13,5 @@ export {
     IBook,
     IRatings,
     IUrlIcon,
+    format,
 };
