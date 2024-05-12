@@ -39,7 +39,7 @@ const isValidPhone = (phone: string): boolean =>
 const isValidRole = (priority: string): boolean =>
     validationFunctions.isNumberProvided(priority) &&
     parseInt(priority) >= 1 &&
-    parseInt(priority) <= 5;
+    parseInt(priority) <= 2;
 
 // Add more/your own email validation here. The *rules* must be documented
 // and the client-side validation should match these rules.
@@ -76,7 +76,7 @@ const emailMiddlewareCheck = (
  * @apiBody {String} email a users email *unique
  * @apiBody {String} password a users password
  * @apiBody {String} username a username *unique
- * @apiBody {String} role a role for this user [1-5]
+ * @apiBody {String} role a role for this user [1-2] where 1 is admin and 2 is logged in user.
  * @apiBody {String} phone a phone number for this user
  *
  * @apiSuccess (Success 201) {string} accessToken a newly created JWT

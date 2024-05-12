@@ -314,7 +314,7 @@ adminBookRouter.post(
 );
 
 /**
- * @api {delete} /adminBook Request to remove books by author
+ * @api {delete} /adminBook/author Request to remove books by author
  *
  * @apiDescription Request to remove all books with the specified <code>author</code>
  *
@@ -343,7 +343,56 @@ adminBookRouter.post(
  *     small: <code>image_small_url</code>,
  * },]"
  *
- * @apiError (404: Author does not exist) {String} message "Author does not exist."
+ * @apiError (403: Invalid Privilege) {String} message "User does not have privilege to access this route."
+ * @apiError (400: Missing information) {String} message "Missing data, refer to documentation."
+ * @apiError (404: No books found) {String} message "No books with this author were found to delete."
  */
+adminBookRouter.delete(
+    '/author',
+    // (request: IJwtRequest, response: Response, next: NextFunction) => {
+    //     if (request.claims.role === 1) {
+    //         next();
+    //     } else {
+    //         response.statusMessage = 'Invalid Privilege';
+    //         response.status(403).send({
+    //             message: 'User does not have privilege to access this route.',
+    //         });
+    //     }
+    // },
+    (request: Request, response: Response, next: NextFunction) => {
+        if (isStringProvided(request.query.author)) {
+            next();
+        } else {
+            response.statusMessage = 'Missing information';
+            response.status(400).send({
+                message: 'Missing data, refer to documentation.',
+            });
+        }
+    },
+    (request: Request, response: Response) => {
+        const query = 'DELETE FROM books WHERE authors = $1';
+        const values = [`%${request.query.author}%`];
+
+        pool.query(query, values)
+            .then((result) => {
+                if (result.rowCount > 0) {
+                    response.status(200).send({
+                        entries: 'Deleted: ' + result.rows.map(format),
+                    });
+                } else {
+                    response.statusMessage = 'No books found';
+                    response.status(404).send({
+                        message:
+                            'No books with this author were found to delete.',
+                    });
+                }
+            })
+            .catch(() => {
+                response.status(500).send({
+                    message: 'Server error - contact support',
+                });
+            });
+    }
+);
 
 export { adminBookRouter };
