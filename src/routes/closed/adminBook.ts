@@ -18,8 +18,8 @@ const isNumberProvided = validationFunctions.isNumberProvided;
  * @apiName postBook
  * @apiGroup AdminBook
  *
- * @apiBody {Number} isbn ISBN13 of the book, required
- * @apiBody {String} author Author's name, required
+ * @apiBody {Number} isbn13 ISBN13 of the book, required
+ * @apiBody {String} authors Author's name, required
  * @apiBody {Number} publication Year of publication, required
  * @apiBody {String} original_title Original title of book, optional
  * @apiBody {String} title Book title, required
@@ -53,12 +53,12 @@ const isNumberProvided = validationFunctions.isNumberProvided;
  *     small: <code>image_small_url</code>,
  * },]"
  *
- * @apiError (403: Token is not valid) {String} message "Token is not valid" when the provided Auth token is
+ * @apiError (403: Forbidden) {String} message "Token is not valid" when the provided Auth token is
  * invalid for any reason.
- * @apiError (401: Auth token is not supplied) {String} message "Auth token is not supplied" when no Auth token
+ * @apiError (401: Unauthorized) {String} message "Auth token is not supplied" when no Auth token
  * is provided
- *
  * @apiError (403: Invalid Privilege) message "User does not have privilege to access this route."
+
  * @apiError (400: Missing information) {String} message "Missing required information, see documentation."
  * @apiError (400: Invalid ISBN) {String} message "Invalid ISBN, use a nonnegative number."
  * @apiError (400: Invalid year) {String} message "Invalid year, use a number."
@@ -72,8 +72,8 @@ adminBookRouter.post(
     checkAdmin,
     (request: IJwtRequest, response: Response, next: NextFunction) => {
         if (
-            (request.body.isbn || request.body.isbn == 0) &&
-            request.body.author &&
+            (request.body.isbn13 || request.body.isbn13 == 0) &&
+            request.body.authors &&
             request.body.publication &&
             request.body.title
         ) {
@@ -87,8 +87,8 @@ adminBookRouter.post(
     },
     (request: IJwtRequest, response: Response, next: NextFunction) => {
         let numberTest = false;
-        if (isNumberProvided(request.body.isbn)) {
-            if (parseInt(request.body.isbn) >= 0) {
+        if (isNumberProvided(request.body.isbn13)) {
+            if (parseInt(request.body.isbn13) >= 0) {
                 next();
                 numberTest = true;
             }
@@ -112,8 +112,10 @@ adminBookRouter.post(
     },
     (request: IJwtRequest, response: Response, next: NextFunction) => {
         let numberTest = false;
-        if (isNumberProvided(request.body.average)) {
-            const avg = parseFloat(request.body.average);
+        if (isNumberProvided(request.body.average) || !request.body.average) {
+            const avg = !request.body.average
+                ? 0
+                : parseFloat(request.body.average);
             if (avg >= 0 && avg <= 5) {
                 next();
                 numberTest = true;
@@ -129,8 +131,11 @@ adminBookRouter.post(
     },
     (request: IJwtRequest, response: Response, next: NextFunction) => {
         let numberTest = false;
-        if (isNumberProvided(request.body.count)) {
-            if (parseInt(request.body.count) >= 0) {
+        if (isNumberProvided(request.body.count) || !request.body.count) {
+            const value = !request.body.count
+                ? 0
+                : parseInt(request.body.count);
+            if (value >= 0) {
                 next();
                 numberTest = true;
             }
@@ -146,14 +151,10 @@ adminBookRouter.post(
     },
     (request: IJwtRequest, response: Response, next: NextFunction) => {
         let numberTest = false;
-        if (
-            isNumberProvided(request.body.rating_1) ||
-            request.body.rating_1 == ''
-        ) {
-            const value =
-                request.body.rating_1 == ''
-                    ? 0
-                    : parseInt(request.body.rating_1);
+        if (isNumberProvided(request.body.rating_1) || !request.body.rating_1) {
+            const value = !request.body.rating_1
+                ? 0
+                : parseInt(request.body.rating_1);
             if (value >= 0) {
                 next();
                 numberTest = true;
@@ -169,14 +170,10 @@ adminBookRouter.post(
     },
     (request: IJwtRequest, response: Response, next: NextFunction) => {
         let numberTest = false;
-        if (
-            isNumberProvided(request.body.rating_2) ||
-            request.body.rating_2 == ''
-        ) {
-            const value =
-                request.body.rating_2 == ''
-                    ? 0
-                    : parseInt(request.body.rating_2);
+        if (isNumberProvided(request.body.rating_2) || !request.body.rating_2) {
+            const value = !request.body.rating_2
+                ? 0
+                : parseInt(request.body.rating_2);
             if (value >= 0) {
                 next();
                 numberTest = true;
@@ -192,14 +189,10 @@ adminBookRouter.post(
     },
     (request: IJwtRequest, response: Response, next: NextFunction) => {
         let numberTest = false;
-        if (
-            isNumberProvided(request.body.rating_3) ||
-            request.body.rating_3 == ''
-        ) {
-            const value =
-                request.body.rating_3 == ''
-                    ? 0
-                    : parseInt(request.body.rating_3);
+        if (isNumberProvided(request.body.rating_3) || !request.body.rating_3) {
+            const value = !request.body.rating_3
+                ? 0
+                : parseInt(request.body.rating_3);
             if (value >= 0) {
                 next();
                 numberTest = true;
@@ -215,14 +208,10 @@ adminBookRouter.post(
     },
     (request: IJwtRequest, response: Response, next: NextFunction) => {
         let numberTest = false;
-        if (
-            isNumberProvided(request.body.rating_4) ||
-            request.body.rating_4 == ''
-        ) {
-            const value =
-                request.body.rating_4 == ''
-                    ? 0
-                    : parseInt(request.body.rating_4);
+        if (isNumberProvided(request.body.rating_4) || !request.body.rating_4) {
+            const value = !request.body.rating_4
+                ? 0
+                : parseInt(request.body.rating_4);
             if (value >= 0) {
                 next();
                 numberTest = true;
@@ -238,14 +227,10 @@ adminBookRouter.post(
     },
     (request: IJwtRequest, response: Response, next: NextFunction) => {
         let numberTest = false;
-        if (
-            isNumberProvided(request.body.rating_5) ||
-            request.body.rating_5 == ''
-        ) {
-            const value =
-                request.body.rating_5 == ''
-                    ? 0
-                    : parseInt(request.body.rating_5);
+        if (isNumberProvided(request.body.rating_5) || !request.body.rating_5) {
+            const value = !request.body.rating_5
+                ? 0
+                : parseInt(request.body.rating_5);
             if (value >= 0) {
                 next();
                 numberTest = true;
@@ -261,28 +246,33 @@ adminBookRouter.post(
     },
     (request: IJwtRequest, response: Response) => {
         const query =
-            'INSERT INTO books(id, isbn13, authors, publication_year, original_title, title, rating_avg, ' +
+            'INSERT INTO books(isbn13, authors, publication_year, original_title, title, rating_avg, ' +
             'rating_count, rating_1_star, rating_2_star, rating_3_star, rating_4_star, rating_5_star, image_url, ' +
-            'image_small_url) VALUES (DEFAULT, $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)';
+            'image_small_url) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING *';
 
-        const avg =
-            request.body.average == '' ? 0.0 : parseFloat(request.body.average);
-        const count =
-            request.body.count == '' ? 0 : parseInt(request.body.count);
-        const star1 =
-            request.body.rating_1 == '' ? 0 : parseInt(request.body.rating_1);
-        const star2 =
-            request.body.rating_2 == '' ? 0 : parseInt(request.body.rating_2);
-        const star3 =
-            request.body.rating_3 == '' ? 0 : parseInt(request.body.rating_3);
-        const star4 =
-            request.body.rating_4 == '' ? 0 : parseInt(request.body.rating_4);
-        const star5 =
-            request.body.rating_5 == '' ? 0 : parseInt(request.body.rating_5);
+        const avg = !request.body.average
+            ? 0.0
+            : parseFloat(request.body.average);
+        const count = !request.body.count ? 0 : parseInt(request.body.count);
+        const star1 = !request.body.rating_1
+            ? 0
+            : parseInt(request.body.rating_1);
+        const star2 = !request.body.rating_2
+            ? 0
+            : parseInt(request.body.rating_2);
+        const star3 = !request.body.rating_3
+            ? 0
+            : parseInt(request.body.rating_3);
+        const star4 = !request.body.rating_4
+            ? 0
+            : parseInt(request.body.rating_4);
+        const star5 = !request.body.rating_5
+            ? 0
+            : parseInt(request.body.rating_5);
 
         const values = [
-            request.body.isbn,
-            request.body.author,
+            request.body.isbn13,
+            request.body.authors,
             request.body.publication,
             request.body.original_title,
             request.body.title,
@@ -299,8 +289,9 @@ adminBookRouter.post(
 
         pool.query(query, values)
             .then((result) => {
+                // console.dir(result);
                 response.status(201).send({
-                    entry: result.rows.map(format),
+                    entry: format(result.rows[0]),
                 });
             })
             .catch((error) => {
