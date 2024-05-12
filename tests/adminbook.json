@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "a970b2af-79c8-4546-9661-d10c0311f2c3",
+		"_postman_id": "00e7c64a-4781-4a10-8b46-948655e12a5d",
 		"name": "AdminBook",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "33953173"
+		"_exporter_id": "33974687"
 	},
 	"item": [
 		{
@@ -481,6 +481,159 @@
 							"raw": "{{admin_url}}",
 							"host": [
 								"{{admin_url}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "RemoveBooksByAuthor",
+			"item": [
+				{
+					"name": "RemoveByAuthorSuccess",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response status should be 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Body has entries field\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"entries\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Correct book should have this isbn\", () => {\r",
+									"    pm.expect(response.isbn13).to.eql(\"780143038410\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:4000/adminBook/author?author=Elizabeth Gilbert",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"adminBook",
+								"author"
+							],
+							"query": [
+								{
+									"key": "author",
+									"value": "Elizabeth Gilbert"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RemoveByAuthorErrorAuthor",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:4000/adminBook/author?author=Paulo Coelho",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"adminBook",
+								"author"
+							],
+							"query": [
+								{
+									"key": "author",
+									"value": "Paulo Coelho"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RemoveByAuthorEmpty",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response status should be 400\", () => {\r",
+									"    pm.response.to.have.status(400);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Status code name has string\", () => {\r",
+									"    pm.response.to.have.status(\"Missing information\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Body has message field\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Error message should be in this format\", () => {\r",
+									"    pm.expect(response.isbn13).to.eql(\"Missing data, refer to documentation.\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{admin_url}}/author?author=",
+							"host": [
+								"{{admin_url}}"
+							],
+							"path": [
+								"author"
+							],
+							"query": [
+								{
+									"key": "author",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RemoveByAuthorUnauthorized",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{admin_url}}/author?rating=carlos",
+							"host": [
+								"{{admin_url}}"
+							],
+							"path": [
+								"author"
+							],
+							"query": [
+								{
+									"key": "rating",
+									"value": "carlos"
+								}
 							]
 						}
 					},

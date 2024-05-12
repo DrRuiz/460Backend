@@ -1,8 +1,42 @@
 import express, { NextFunction, Request, Response, Router } from 'express';
 
-import { pool, validationFunctions } from '../../core/utilities';
+import { IJwtRequest } from '../../core/models';
+
+import {
+    pool,
+    validationFunctions,
+    IBook,
+    IRatings,
+    IUrlIcon,
+} from '../../core/utilities';
 
 const adminBookRouter: Router = express.Router();
+
+const isStringProvided = validationFunctions.isStringProvided;
+
+const format = (resultRow) => {
+    const out: IBook = {
+        isbn13: resultRow.isbn13 as number,
+        authors: resultRow.authors as string,
+        publication: resultRow.publication_year as number,
+        original_title: resultRow.original_title as string,
+        title: resultRow.title as string,
+        ratings: {
+            average: resultRow.rating_avg as number,
+            count: resultRow.rating_count as number,
+            rating_1: resultRow.rating_1_star as number,
+            rating_2: resultRow.rating_2_star as number,
+            rating_3: resultRow.rating_3_star as number,
+            rating_4: resultRow.rating_4_star as number,
+            rating_5: resultRow.rating_5_star as number,
+        } as IRatings,
+        icons: {
+            large: resultRow.image_url as string,
+            small: resultRow.image_small_url as string,
+        } as IUrlIcon,
+    };
+    return out;
+};
 
 /**
  * @api {post} /adminBook Request to add a book.
@@ -57,7 +91,7 @@ const adminBookRouter: Router = express.Router();
  */
 
 /**
- * @api {delete} /adminBook Request to remove books by author
+ * @api {delete} /adminBook/author Request to remove books by author
  *
  * @apiDescription Request to remove all books with the specified <code>author</code>
  *
@@ -86,7 +120,56 @@ const adminBookRouter: Router = express.Router();
  *     small: <code>image_small_url</code>,
  * },]"
  *
- * @apiError (404: Author does not exist) {String} message "Author does not exist."
+ * @apiError (403: Invalid Privilege) {String} message "User does not have privilege to access this route."
+ * @apiError (400: Missing information) {String} message "Missing data, refer to documentation."
+ * @apiError (404: No books found) {String} message "No books with this author were found to delete."
  */
+adminBookRouter.delete(
+    '/author',
+    // (request: IJwtRequest, response: Response, next: NextFunction) => {
+    //     if (request.claims.role === 1) {
+    //         next();
+    //     } else {
+    //         response.statusMessage = 'Invalid Privilege';
+    //         response.status(403).send({
+    //             message: 'User does not have privilege to access this route.',
+    //         });
+    //     }
+    // },
+    (request: Request, response: Response, next: NextFunction) => {
+        if (isStringProvided(request.query.author)) {
+            next();
+        } else {
+            response.statusMessage = 'Missing information';
+            response.status(400).send({
+                message: 'Missing data, refer to documentation.',
+            });
+        }
+    },
+    (request: Request, response: Response) => {
+        const query = 'DELETE FROM books WHERE authors = $1';
+        const values = [`%${request.query.author}%`];
+
+        pool.query(query, values)
+            .then((result) => {
+                if (result.rowCount > 0) {
+                    response.status(200).send({
+                        entries: 'Deleted: ' + result.rows.map(format),
+                    });
+                } else {
+                    response.statusMessage = 'No books found';
+                    response.status(404).send({
+                        message:
+                            'No books with this author were found to delete.',
+                    });
+                }
+            })
+            .catch(() => {
+                response.status(500).send({
+                    message: 'Server error - contact support',
+                });
+            });
+    }
+);
 
 export { adminBookRouter };
