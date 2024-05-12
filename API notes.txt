@@ -1,0 +1,78 @@
+Ryan:
+Get
+- books/:isbn:route parameter, searches for isbn
+= Returns everything about the book.
+
+Riley:
+Get
+- books/?min=(minimum avg rating)&max=(maximum avg rating)
+- returns books with average ratings between the two speficied values, inclusive
+
+Ryan:
+Put 
+- books/
+	- Body {"isbn": (book isbn number),
+		"rating": (rating number 1 through 5)}
+= Updates the rating of the book with the passed isbn.
+
+Derek:
+Get
+- book/?author=(authorName)
+= Returns the book title, and author of all the books with the matching author.
+
+Max:
+Get
+- book/?year=(year)
+= Returns the book title, the author and the year of all the books with the same name.
+
+Max:
+Get
+- book/?title=(bookTitle)
+= Returns book title, the author and the rating.
+
+Riley:
+Get
+- book/?title=(bookTitle)&author=(authorName)
+= Returns the book title, and the author that match the passsed values.
+
+Derek:
+Get
+- book/?rating=(rating from 1 through 5)
+= Returns author name, and book name and the rating.
+
+Riley:
+Post
+- book/
+	- Body {"author": (authorName),
+		"isbn": (book isbn),
+		"publication year": (publication year between 0 and present),
+		"title": (book title)}
++ Role: admin-only.
+= Adds a new book to the database
+
+DONE:
+Get
+- book/getAll
+= Returns all the books along with their information.
+
+Max:
+Delete
+- book/:isbn
++ Role: admin-only
+= Deletes the book with the selected isbn, and returns them
+
+Derek:
+Delete
+- book/?author=(authorName)
++ Role: Admin-only
+= Removes all books with the specified author
+
+Ryan:
+Put
+- book/
+	- Body {"author": (authorName),
+		"title": (bookTitle),
+		"rating": (rating from 1 through 5)}
+	-//Number of ratings 1-5
+= Updates the ratings of the selected author and title
+
