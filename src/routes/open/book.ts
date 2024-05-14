@@ -24,7 +24,7 @@ const allButId =
  * @apiQuery {int} perpage The number of books that each page will have
  *
  * @apiSuccess {IBook[]} entries Book entries with the following format:
- * "[isbn13: <code>isbn13</code>,
+ * "isbn13: <code>isbn13</code>,
  * authors: <code>authors</code>,
  * publication: <code>publication_year</code>,
  * original_title: <code>original_title</code>,
@@ -36,12 +36,12 @@ const allButId =
  *     rating_2: <code>rating_2_star</code>,
  *     rating_3: <code>rating_3_star</code>,
  *     rating_4: <code>rating_4_star</code>,
- *     rating_5: <code>rating_5_star</code>,
+ *     rating_5: <code>rating_5_star</code>
  * },
  * icons: {
  *     large: <code>image_url</code>,
- *     small: <code>image_small_url</code>,
- * },]"
+ *     small: <code>image_small_url</code>
+ * }"
  *
  * @apiError (400 Input outside of range) {String} message "Both values per page and page number must be greater than 0.",
  * @apiError (400: Missing/Bad information) {String} message "Missing or bad information, see documentation."
@@ -127,7 +127,7 @@ bookRouter.get(
  * @apiQuery {string} author The name of the author whose books to retrieve
  *
  * @apiSuccess {IBook[]} entries Book entries with the following format:
- * "[isbn13: <code>isbn13</code>,
+ * "isbn13: <code>isbn13</code>,
  * authors: <code>authors</code>,
  * publication: <code>publication_year</code>,
  * original_title: <code>original_title</code>,
@@ -139,12 +139,12 @@ bookRouter.get(
  *     rating_2: <code>rating_2_star</code>,
  *     rating_3: <code>rating_3_star</code>,
  *     rating_4: <code>rating_4_star</code>,
- *     rating_5: <code>rating_5_star</code>,
+ *     rating_5: <code>rating_5_star</code>
  * },
  * icons: {
  *     large: <code>image_url</code>,
- *     small: <code>image_small_url</code>,
- * },]"
+ *     small: <code>image_small_url</code>
+ * }"
  * @apiError (400: Missing information) {String} message "Missing data, refer to documentation."
  * @apiError (404: No books found) {String} message "No books with this author were found in the database."
  */
@@ -209,7 +209,7 @@ bookRouter.get(
  * @apiQuery {int} rating The average rating (0-5] of the books to retrieve
  *
  * @apiSuccess {IBook[]} entries Book entries with the following format:
- * "[isbn13: <code>isbn13</code>,
+ * "isbn13: <code>isbn13</code>,
  * authors: <code>authors</code>,
  * publication: <code>publication_year</code>,
  * original_title: <code>original_title</code>,
@@ -221,12 +221,12 @@ bookRouter.get(
  *     rating_2: <code>rating_2_star</code>,
  *     rating_3: <code>rating_3_star</code>,
  *     rating_4: <code>rating_4_star</code>,
- *     rating_5: <code>rating_5_star</code>,
+ *     rating_5: <code>rating_5_star</code>
  * },
  * icons: {
  *     large: <code>image_url</code>,
- *     small: <code>image_small_url</code>,
- * },]"
+ *     small: <code>image_small_url</code>
+ * }"
  *
  * @apiError (400: Missing/Bad information) {String} message "Missing or bad information, see documentation."
  * @apiError (404: No books found) {String} message "No books with this rating were found."
@@ -293,7 +293,7 @@ bookRouter.get(
  * @apiQuery {String} title The title of the book
  *
  * @apiSuccess {IBook[]} entries Specified entries with the following format:
- * "[isbn13: <code>isbn13</code>,
+ * "isbn13: <code>isbn13</code>,
  * authors: <code>authors</code>,
  * publication: <code>publication_year</code>,
  * original_title: <code>original_title</code>,
@@ -305,12 +305,12 @@ bookRouter.get(
  *     rating_2: <code>rating_2_star</code>,
  *     rating_3: <code>rating_3_star</code>,
  *     rating_4: <code>rating_4_star</code>,
- *     rating_5: <code>rating_5_star</code>,
+ *     rating_5: <code>rating_5_star</code>
  * },
  * icons: {
  *     large: <code>image_url</code>,
- *     small: <code>image_small_url</code>,
- * },]"
+ *     small: <code>image_small_url</code>
+ * }"
  *
  * @apiError (400: Missing information) {String} message "Missing data, refer to documentation."
  * @apiError (404: Author does not exist) {String} message "Author does not exist in database."
@@ -411,7 +411,7 @@ bookRouter.get(
  * @apiQuery {int} max The maximum average rating to select
  *
  * @apiSuccess {IBook[]} entries Specified entries with the following format:
- * "[isbn13: <code>isbn13</code>,
+ * "isbn13: <code>isbn13</code>,
  * authors: <code>authors</code>,
  * publication: <code>publication_year</code>,
  * original_title: <code>original_title</code>,
@@ -423,12 +423,12 @@ bookRouter.get(
  *     rating_2: <code>rating_2_star</code>,
  *     rating_3: <code>rating_3_star</code>,
  *     rating_4: <code>rating_4_star</code>,
- *     rating_5: <code>rating_5_star</code>,
+ *     rating_5: <code>rating_5_star</code>
  * },
  * icons: {
  *     large: <code>image_url</code>,
- *     small: <code>image_small_url</code>,
- * },]"
+ *     small: <code>image_small_url</code>
+ * }"
  *
  * @apiError (400: Missing/Bad information) {String} message "Missing or bad information, see documentation."
  * @apiError (400: Out of range) {String} message "Ratings should be between 0.0 and 5.0"
@@ -503,7 +503,7 @@ bookRouter.get(
  * @apiQuery {String} title The title of the book
  *
  * @apiSuccess {IBook[]} entries Specified entries with the following format:
- * "[isbn13: <code>isbn13</code>,
+ * "isbn13: <code>isbn13</code>,
  * authors: <code>authors</code>,
  * publication: <code>publication_year</code>,
  * original_title: <code>original_title</code>,
@@ -515,12 +515,12 @@ bookRouter.get(
  *     rating_2: <code>rating_2_star</code>,
  *     rating_3: <code>rating_3_star</code>,
  *     rating_4: <code>rating_4_star</code>,
- *     rating_5: <code>rating_5_star</code>,
+ *     rating_5: <code>rating_5_star</code>
  * },
  * icons: {
  *     large: <code>image_url</code>,
- *     small: <code>image_small_url</code>,
- * },]"
+ *     small: <code>image_small_url</code>
+ * }"
  *
  * @apiError (400: Missing information) {String} message "Missing data, refer to documentation."
  * @apiError (404: Book does not exist) {String} message "Book title does not exist in database."
@@ -573,7 +573,7 @@ bookRouter.get(
  * @apiQuery {int} year The year to get books for
  *
  * @apiSuccess {IBook[]} entries Specified entries with the following format:
- * "[isbn13: <code>isbn13</code>,
+ * "isbn13: <code>isbn13</code>,
  * authors: <code>authors</code>,
  * publication: <code>publication_year</code>,
  * original_title: <code>original_title</code>,
@@ -585,12 +585,12 @@ bookRouter.get(
  *     rating_2: <code>rating_2_star</code>,
  *     rating_3: <code>rating_3_star</code>,
  *     rating_4: <code>rating_4_star</code>,
- *     rating_5: <code>rating_5_star</code>,
+ *     rating_5: <code>rating_5_star</code>
  * },
  * icons: {
  *     large: <code>image_url</code>,
- *     small: <code>image_small_url</code>,
- * },]"
+ *     small: <code>image_small_url</code>
+ * }"
  *
  * @apiError (400: Missing/Bad information) {String} message "Missing or bad information, see documentation."
  * @apiError (400: Year is in the future) {String} message "Cannot input a future year."

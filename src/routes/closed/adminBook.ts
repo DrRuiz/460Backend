@@ -137,8 +137,8 @@ function isValidStars(
  * @apiBody {String} large URL of large version of book cover, optional
  * @apiBody {String} small URL of small version of book cover, optional
  *
- * @apiSuccess (Success 201) {String} entry The String:
- * "[isbn13: <code>isbn13</code>,
+ * @apiSuccess (Success 201) {IBook} entry The inserted book:
+ * "isbn13: <code>isbn13</code>,
  * authors: <code>authors</code>,
  * publication: <code>publication_year</code>,
  * original_title: <code>original_title</code>,
@@ -150,12 +150,12 @@ function isValidStars(
  *     rating_2: <code>rating_2_star</code>,
  *     rating_3: <code>rating_3_star</code>,
  *     rating_4: <code>rating_4_star</code>,
- *     rating_5: <code>rating_5_star</code>,
+ *     rating_5: <code>rating_5_star</code>
  * },
  * icons: {
  *     large: <code>image_url</code>,
- *     small: <code>image_small_url</code>,
- * },]"
+ *     small: <code>image_small_url</code>
+ * }"
  *
  * @apiError (403: Forbidden) {String} message "Token is not valid" when the provided Auth token is
  * invalid for any reason.
@@ -279,8 +279,8 @@ adminBookRouter.post(
  *
  * @apiQuery {String} author The author's name
  *
- * @apiSuccess {String[]} entries Removed entries with the following format:
- * "[isbn13: <code>isbn13</code>,
+ * @apiSuccess {IBook[]} entries Removed entries with the following format:
+ * "isbn13: <code>isbn13</code>,
  * authors: <code>authors</code>,
  * publication: <code>publication_year</code>,
  * original_title: <code>original_title</code>,
@@ -292,12 +292,12 @@ adminBookRouter.post(
  *     rating_2: <code>rating_2_star</code>,
  *     rating_3: <code>rating_3_star</code>,
  *     rating_4: <code>rating_4_star</code>,
- *     rating_5: <code>rating_5_star</code>,
+ *     rating_5: <code>rating_5_star</code>
  * },
  * icons: {
  *     large: <code>image_url</code>,
- *     small: <code>image_small_url</code>,
- * },]"
+ *     small: <code>image_small_url</code>
+ * }"
  *
  * @apiError (403: Forbidden) {String} message "Token is not valid" when the provided Auth token is
  * invalid for any reason.
@@ -355,10 +355,10 @@ adminBookRouter.delete(
  * @apiName DeleteBooksByISBN
  * @apiGroup AdminBook
  *
- * @apiQuery {Number} isbn ISBN13 of the book
+ * @apiParam {Number} isbn ISBN13 of the book
  *
- * @apiSuccess (Success 201) {String} entry The String:
- * "[isbn13: <code>isbn13</code>,
+ * @apiSuccess (Success 201) {IBook} entry The removed book:
+ * "isbn13: <code>isbn13</code>,
  * authors: <code>authors</code>,
  * publication: <code>publication_year</code>,
  * original_title: <code>original_title</code>,
@@ -370,12 +370,12 @@ adminBookRouter.delete(
  *     rating_2: <code>rating_2_star</code>,
  *     rating_3: <code>rating_3_star</code>,
  *     rating_4: <code>rating_4_star</code>,
- *     rating_5: <code>rating_5_star</code>,
+ *     rating_5: <code>rating_5_star</code>
  * },
  * icons: {
  *     large: <code>image_url</code>,
- *     small: <code>image_small_url</code>,
- * },]"
+ *     small: <code>image_small_url</code>
+ * }"
  *
  * @apiError (403: Forbidden) {String} message "Token is not valid" when the provided Auth token is
  * invalid for any reason.
