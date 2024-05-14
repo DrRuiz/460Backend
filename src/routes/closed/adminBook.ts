@@ -10,8 +10,112 @@ const adminBookRouter: Router = express.Router();
 const isStringProvided = validationFunctions.isStringProvided;
 const isNumberProvided = validationFunctions.isNumberProvided;
 
+function isValidIsbn(
+    request: IJwtRequest,
+    response: Response,
+    next: NextFunction
+) {
+    if (parseInt(request.body.isbn13) >= 0) {
+        next();
+    } else {
+        response.statusMessage = 'Invalid ISBN';
+        response.status(400).send({
+            message: 'Invalid ISBN, use a nonnegative number.',
+        });
+    }
+}
+
+function isValidYear(
+    request: IJwtRequest,
+    response: Response,
+    next: NextFunction
+) {
+    const currentYear: number = new Date().getFullYear();
+    if (
+        isNumberProvided(request.body.publication) &&
+        parseInt(request.body.publication) <= currentYear
+    ) {
+        next();
+    } else {
+        response.statusMessage = 'Invalid year';
+        response.status(400).send({
+            message:
+                'Invalid year, use a number no greater than the current year.',
+        });
+    }
+}
+
+function isValidAvg(
+    request: IJwtRequest,
+    response: Response,
+    next: NextFunction
+) {
+    if (
+        (parseFloat(request.body.average) >= 0 &&
+            parseFloat(request.body.average) <= 5) ||
+        request.body.average == null
+    ) {
+        next();
+    } else {
+        response.statusMessage = 'Invalid average rating';
+        response.status(400).send({
+            message: 'Invalid average rating, use a decimal number 0-5.',
+        });
+    }
+}
+
+function isValidCount(
+    request: IJwtRequest,
+    response: Response,
+    next: NextFunction
+) {
+    if (parseInt(request.body.count) >= 0 || request.body.count == null) {
+        next();
+    } else {
+        response.statusMessage = 'Invalid total rating count';
+        response.status(400).send({
+            message: 'Invalid total rating count, use a nonnegative number.',
+        });
+    }
+}
+
+function isValidStars(
+    request: IJwtRequest,
+    response: Response,
+    next: NextFunction
+) {
+    let rating1 = parseInt(request.body.rating_1 ?? 0);
+    rating1 = request.body.rating_1 === '' ? 0 : rating1;
+
+    let rating2 = parseInt(request.body.rating_2 ?? 0);
+    rating2 = request.body.rating_2 === '' ? 0 : rating2;
+
+    let rating3 = parseInt(request.body.rating_3 ?? 0);
+    rating3 = request.body.rating_3 === '' ? 0 : rating3;
+
+    let rating4 = parseInt(request.body.rating_4 ?? 0);
+    rating4 = request.body.rating_4 === '' ? 0 : rating4;
+
+    let rating5 = parseInt(request.body.rating_5 ?? 0);
+    rating5 = request.body.rating_5 === '' ? 0 : rating5;
+
+    if (
+        rating1 >= 0 &&
+        rating2 >= 0 &&
+        rating3 >= 0 &&
+        rating4 >= 0 &&
+        rating5 >= 0
+    ) {
+        next();
+    } else {
+        response.statusMessage = 'Invalid star ratings';
+        response.status(400).send({
+            message: 'Invalid star ratings, use nonnegative numbers.',
+        });
+    }
+}
 /**
- * @api {post} /adminBook Request to add a book.
+ * @api {post} /adminBook/addBook Request to add a book.
  *
  * @apiDescription Request to add a book with author name, isbn, publication year, and book title.
  *
@@ -57,7 +161,7 @@ const isNumberProvided = validationFunctions.isNumberProvided;
  * invalid for any reason.
  * @apiError (401: Unauthorized) {String} message "Auth token is not supplied" when no Auth token
  * is provided
- * @apiError (403: Invalid Privilege) message "User does not have privilege to access this route."
+ * @apiError (403: Invalid Privilege) {String} message "User does not have privilege to access this route."
 
  * @apiError (400: Missing information) {String} message "Missing required information, see documentation."
  * @apiError (400: Invalid ISBN) {String} message "Invalid ISBN, use a nonnegative number."
@@ -85,170 +189,20 @@ adminBookRouter.post(
             });
         }
     },
-    (request: IJwtRequest, response: Response, next: NextFunction) => {
-        let numberTest = false;
-        if (isNumberProvided(request.body.isbn13)) {
-            if (parseInt(request.body.isbn13) >= 0) {
-                next();
-                numberTest = true;
-            }
-        }
-        if (!numberTest) {
-            response.statusMessage = 'Invalid ISBN';
-            response.status(400).send({
-                message: 'Invalid ISBN, use a nonnegative number.',
-            });
-        }
-    },
-    (request: IJwtRequest, response: Response, next: NextFunction) => {
-        if (isNumberProvided(request.body.publication)) {
-            next();
-        } else {
-            response.statusMessage = 'Invalid year';
-            response.status(400).send({
-                message: 'Invalid year, use a number.',
-            });
-        }
-    },
-    (request: IJwtRequest, response: Response, next: NextFunction) => {
-        let numberTest = false;
-        if (isNumberProvided(request.body.average) || !request.body.average) {
-            const avg = !request.body.average
-                ? 0
-                : parseFloat(request.body.average);
-            if (avg >= 0 && avg <= 5) {
-                next();
-                numberTest = true;
-            }
-        }
-
-        if (!numberTest) {
-            response.statusMessage = 'Invalid average rating';
-            response.status(400).send({
-                message: 'Invalid average rating, use a decimal number 0-5.',
-            });
-        }
-    },
-    (request: IJwtRequest, response: Response, next: NextFunction) => {
-        let numberTest = false;
-        if (isNumberProvided(request.body.count) || !request.body.count) {
-            const value = !request.body.count
-                ? 0
-                : parseInt(request.body.count);
-            if (value >= 0) {
-                next();
-                numberTest = true;
-            }
-        }
-
-        if (!numberTest) {
-            response.statusMessage = 'Invalid total rating count';
-            response.status(400).send({
-                message:
-                    'Invalid total rating count, use a nonnegative number.',
-            });
-        }
-    },
-    (request: IJwtRequest, response: Response, next: NextFunction) => {
-        let numberTest = false;
-        if (isNumberProvided(request.body.rating_1) || !request.body.rating_1) {
-            const value = !request.body.rating_1
-                ? 0
-                : parseInt(request.body.rating_1);
-            if (value >= 0) {
-                next();
-                numberTest = true;
-            }
-        }
-
-        if (!numberTest) {
-            response.statusMessage = 'Invalid star ratings';
-            response.status(400).send({
-                message: 'Invalid star ratings, use nonnegative numbers.',
-            });
-        }
-    },
-    (request: IJwtRequest, response: Response, next: NextFunction) => {
-        let numberTest = false;
-        if (isNumberProvided(request.body.rating_2) || !request.body.rating_2) {
-            const value = !request.body.rating_2
-                ? 0
-                : parseInt(request.body.rating_2);
-            if (value >= 0) {
-                next();
-                numberTest = true;
-            }
-        }
-
-        if (!numberTest) {
-            response.statusMessage = 'Invalid star ratings';
-            response.status(400).send({
-                message: 'Invalid star ratings, use nonnegative numbers.',
-            });
-        }
-    },
-    (request: IJwtRequest, response: Response, next: NextFunction) => {
-        let numberTest = false;
-        if (isNumberProvided(request.body.rating_3) || !request.body.rating_3) {
-            const value = !request.body.rating_3
-                ? 0
-                : parseInt(request.body.rating_3);
-            if (value >= 0) {
-                next();
-                numberTest = true;
-            }
-        }
-
-        if (!numberTest) {
-            response.statusMessage = 'Invalid star ratings';
-            response.status(400).send({
-                message: 'Invalid star ratings, use nonnegative numbers.',
-            });
-        }
-    },
-    (request: IJwtRequest, response: Response, next: NextFunction) => {
-        let numberTest = false;
-        if (isNumberProvided(request.body.rating_4) || !request.body.rating_4) {
-            const value = !request.body.rating_4
-                ? 0
-                : parseInt(request.body.rating_4);
-            if (value >= 0) {
-                next();
-                numberTest = true;
-            }
-        }
-
-        if (!numberTest) {
-            response.statusMessage = 'Invalid star ratings';
-            response.status(400).send({
-                message: 'Invalid star ratings, use nonnegative numbers.',
-            });
-        }
-    },
-    (request: IJwtRequest, response: Response, next: NextFunction) => {
-        let numberTest = false;
-        if (isNumberProvided(request.body.rating_5) || !request.body.rating_5) {
-            const value = !request.body.rating_5
-                ? 0
-                : parseInt(request.body.rating_5);
-            if (value >= 0) {
-                next();
-                numberTest = true;
-            }
-        }
-
-        if (!numberTest) {
-            response.statusMessage = 'Invalid star ratings';
-            response.status(400).send({
-                message: 'Invalid star ratings, use nonnegative numbers.',
-            });
-        }
-    },
+    isValidIsbn,
+    isValidYear,
+    isValidAvg,
+    isValidCount,
+    isValidStars,
     (request: IJwtRequest, response: Response) => {
         const query =
             'INSERT INTO books(isbn13, authors, publication_year, original_title, title, rating_avg, ' +
             'rating_count, rating_1_star, rating_2_star, rating_3_star, rating_4_star, rating_5_star, image_url, ' +
             'image_small_url) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING *';
+
+        const origTitle = !request.body.original_title
+            ? ''
+            : request.body.original_title;
 
         const avg = !request.body.average
             ? 0.0
@@ -270,11 +224,14 @@ adminBookRouter.post(
             ? 0
             : parseInt(request.body.rating_5);
 
+        const largeurl = !request.body.large ? '' : request.body.large;
+        const smallurl = !request.body.small ? '' : request.body.small;
+
         const values = [
-            request.body.isbn13,
+            parseInt(request.body.isbn13),
             request.body.authors,
-            request.body.publication,
-            request.body.original_title,
+            parseInt(request.body.publication),
+            origTitle,
             request.body.title,
             avg,
             count,
@@ -283,8 +240,8 @@ adminBookRouter.post(
             star3,
             star4,
             star5,
-            request.body.large,
-            request.body.small,
+            largeurl,
+            smallurl,
         ];
 
         pool.query(query, values)
@@ -304,7 +261,6 @@ adminBookRouter.post(
                         message: 'Book already exists in database.',
                     });
                 } else {
-                    console.log(error);
                     response.status(500).send({
                         message: 'Server error - contact support',
                     });
@@ -343,14 +299,19 @@ adminBookRouter.post(
  *     small: <code>image_small_url</code>,
  * },]"
  *
+ * @apiError (403: Forbidden) {String} message "Token is not valid" when the provided Auth token is
+ * invalid for any reason.
+ * @apiError (401: Unauthorized) {String} message "Auth token is not supplied" when no Auth token
+ * is provided
  * @apiError (403: Invalid Privilege) {String} message "User does not have privilege to access this route."
+ *
  * @apiError (400: Missing information) {String} message "Missing data, refer to documentation."
  * @apiError (404: No books found) {String} message "No books with this author were found to delete."
  */
 adminBookRouter.delete(
     '/author',
     checkAdmin,
-    (request: Request, response: Response, next: NextFunction) => {
+    (request: IJwtRequest, response: Response, next: NextFunction) => {
         if (isStringProvided(request.query.author)) {
             next();
         } else {
@@ -360,7 +321,7 @@ adminBookRouter.delete(
             });
         }
     },
-    (request: Request, response: Response) => {
+    (request: IJwtRequest, response: Response) => {
         const query = 'DELETE FROM books WHERE authors LIKE $1 RETURNING *';
         const values = [`%${request.query.author}%`];
 
@@ -387,15 +348,15 @@ adminBookRouter.delete(
 );
 //Max start #####################
 /**
- * @api {delete} /adminBook Request to remove books by ISBN number
+ * @api {delete} /adminBook/isbn/:isbn Request to remove books by ISBN number
  *
  * @apiDescription Request to remove all books with the specified <code>isbn13</code>
  *
  * @apiName DeleteBooksByISBN
  * @apiGroup AdminBook
- * 
+ *
  * @apiQuery {Number} isbn ISBN13 of the book
- * 
+ *
  * @apiSuccess (Success 201) {String} entry The String:
  * "[isbn13: <code>isbn13</code>,
  * authors: <code>authors</code>,
@@ -416,26 +377,32 @@ adminBookRouter.delete(
  *     small: <code>image_small_url</code>,
  * },]"
  *
- * @apiError (400: Invalid ISBN) {String} message "Invalid isbn or missing data, refer to documentation.
- * @apiError (404: ISBN number does not exist) {String} message "ISBN number does not exist."
+ * @apiError (403: Forbidden) {String} message "Token is not valid" when the provided Auth token is
+ * invalid for any reason.
+ * @apiError (401: Unauthorized) {String} message "Auth token is not supplied" when no Auth token
+ * is provided
+ * @apiError (403: Invalid Privilege) {String} message "User does not have privilege to access this route."
+ *
+ * @apiError (400: Invalid ISBN) {String} message "Invalid ISBN, use a nonnegative number."
+ * @apiError (404: ISBN number not found in database) {String} message "ISBN number not found in database."
  */
 
 adminBookRouter.delete(
-    '/isbn',
+    '/isbn/:isbn',
     checkAdmin,
-    (request: Request, response: Response, next: NextFunction) => {
-        if (isStringProvided(request.query.isbn)) {
+    (request: IJwtRequest, response: Response, next: NextFunction) => {
+        if (parseInt(request.params.isbn) >= 0) {
             next();
         } else {
-            response.statusMessage = 'Missing information';
+            response.statusMessage = 'Invalid ISBN';
             response.status(400).send({
-                message: 'Missing data, refer to documentation.',
+                message: 'Invalid ISBN, use a nonnegative number.',
             });
         }
     },
-    (request: Request, response: Response) => {
+    (request: IJwtRequest, response: Response) => {
         const query = 'DELETE FROM books WHERE isbn13 = $1 RETURNING *';
-        const values = [request.query.isbn];
+        const values = [request.params.isbn];
 
         pool.query(query, values)
             .then((result) => {
@@ -444,10 +411,10 @@ adminBookRouter.delete(
                         entries: result.rows.map(format),
                     });
                 } else {
-                    response.statusMessage = 'ISBN Number not found in database';
+                    response.statusMessage =
+                        'ISBN Number not found in database';
                     response.status(404).send({
-                        message:
-                            'ISBN Number not found in database',
+                        message: 'ISBN Number not found in database',
                     });
                 }
             })

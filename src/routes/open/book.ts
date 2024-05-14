@@ -22,7 +22,7 @@ const allButId =
  *
  * @apiQuery {int} pagenum The page number of the page to select
  * @apiQuery {int} perpage The number of books that each page will have
- * 
+ *
  * @apiSuccess {IBook[]} entries Book entries with the following format:
  * "[isbn13: <code>isbn13</code>,
  * authors: <code>authors</code>,
@@ -42,7 +42,7 @@ const allButId =
  *     large: <code>image_url</code>,
  *     small: <code>image_small_url</code>,
  * },]"
- * 
+ *
  * @apiError (400 Input outside of range) {String} message "Both values per page and page number must be greater than 0.",
  * @apiError (400: Missing/Bad information) {String} message "Missing or bad information, see documentation."
  * @apiError (400: Page outside of range) {String} message "Page must be greater than 0 and less than <code>maxPages</code>."
@@ -83,12 +83,13 @@ bookRouter.get(
                     message:
                         'Both values per page and page number must be greater than 0.',
                 });
-                
             } else if (maxPages < intPageNum || maxPages < 1) {
                 response.statusMessage = 'Page outside of range';
                 response.status(400).send({
                     message:
-                        'Page must be greater than 0 and less than ' + maxPages + '.',
+                        'Page must be greater than 0 and less than ' +
+                        maxPages +
+                        '.',
                 });
             } else {
                 // The last value in the page we selected
@@ -96,19 +97,20 @@ bookRouter.get(
                 const maxIndex = maxInPage > maxBook ? maxBook : maxInPage;
                 const minIndex = intPerPage * (intPageNum - 1) + 1;
 
-                const innerQuery ='SELECT * FROM books WHERE id >= $1 AND id <= $2';
+                const innerQuery =
+                    'SELECT * FROM books WHERE id >= $1 AND id <= $2';
                 const values = [minIndex, maxIndex];
                 pool.query(innerQuery, values)
                     .then((innerResult) => {
                         response.status(200).send({
                             entries: innerResult.rows.map(format),
                         });
-                })
-                .catch(() => {
-                    response.status(500).send({
-                        message: 'Server error - contact support',
+                    })
+                    .catch(() => {
+                        response.status(500).send({
+                            message: 'Server error - contact support',
+                        });
                     });
-                });
             }
         });
     }
@@ -489,7 +491,6 @@ bookRouter.get(
     }
 );
 
-
 //Max methods start here #########################################
 /**
  * @api {get} /book/title Request for books with title containing search term
@@ -527,9 +528,7 @@ bookRouter.get(
 bookRouter.get(
     '/title',
     (request: Request, response: Response, next: NextFunction) => {
-        if (
-            isStringProvided(request.query.title)
-        ) {
+        if (isStringProvided(request.query.title)) {
             next();
         } else {
             response.statusMessage = 'Missing information';
@@ -550,7 +549,7 @@ bookRouter.get(
                 } else {
                     response.statusMessage = 'Book title does not exist';
                     response.status(404).send({
-                        message: 'Book title not found in database',
+                        message: 'Book title not found in database.',
                     });
                 }
             })
@@ -559,7 +558,7 @@ bookRouter.get(
                     message: 'Server error - contact support',
                 });
             });
-    },
+    }
 );
 
 //max start #############
@@ -594,14 +593,13 @@ bookRouter.get(
  * },]"
  *
  * @apiError (400: Missing/Bad information) {String} message "Missing or bad information, see documentation."
- * @apiError (404: No books in range) {String} message "No books found in this year."
+ * @apiError (400: Year is in the future) {String} message "Cannot input a future year."
+ * @apiError (404: No books in this year) {String} message "No books found in this year."
  */
 bookRouter.get(
     '/year',
     (request: Request, response: Response, next: NextFunction) => {
-        if (
-            isNumberProvided(request.query.year)
-        ) {
+        if (isNumberProvided(request.query.year)) {
             next();
         } else {
             response.statusMessage = 'Missing/Bad information';
@@ -615,19 +613,14 @@ bookRouter.get(
         const year: string = request.query.year as string;
         const currentYear: number = new Date().getFullYear();
 
-        if (parseInt(year) < 0){
-            response.statusMessage = 'Year is negative';
-            response.status(400).send({
-                message: 'Year cannot be negative',
-        });
-        } else if (parseInt(year) > currentYear){
+        if (parseInt(year) > currentYear) {
             response.statusMessage = 'Year is in the future';
             response.status(400).send({
-                message: 'Cannot input a future year',
-        });
+                message: 'Cannot input a future year.',
+            });
         } else {
             next();
-        } 
+        }
     },
     (request: Request, response: Response) => {
         const query = allButId + 'WHERE publication_year = $1';
