@@ -391,7 +391,7 @@ adminBookRouter.delete(
  *
  * @apiDescription Request to remove all books with the specified <code>isbn13</code>
  *
- * @apiName DeleteBooksISBN
+ * @apiName DeleteBooksByISBN
  * @apiGroup AdminBook
  * 
  * @apiQuery {Number} isbn ISBN13 of the book
