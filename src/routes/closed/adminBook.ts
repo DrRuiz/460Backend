@@ -385,7 +385,6 @@ adminBookRouter.delete(
             });
     }
 );
-
 //Max start #####################
 /**
  * @api {delete} /adminBook Request to remove books by ISBN number
@@ -418,7 +417,7 @@ adminBookRouter.delete(
  * },]"
  *
  * @apiError (400: Invalid ISBN) {String} message "Invalid isbn or missing data, refer to documentation.
- * @apiError (404: ISBN number does note xist) {String} message "ISBN number does not exist."
+ * @apiError (404: ISBN number does not exist) {String} message "ISBN number does not exist."
  */
 
 adminBookRouter.delete(
@@ -435,20 +434,20 @@ adminBookRouter.delete(
         }
     },
     (request: Request, response: Response) => {
-        const query = 'DELETE FROM books WHERE isbn13 = $1';
+        const query = 'DELETE FROM books WHERE isbn13 = $1 RETURNING *';
         const values = [request.query.isbn];
 
         pool.query(query, values)
             .then((result) => {
                 if (result.rowCount > 0) {
                     response.status(200).send({
-                        message: 'Book with isbn13 number: ' + values + ' deleted!',
+                        entries: result.rows.map(format),
                     });
                 } else {
-                    response.statusMessage = 'No books found';
+                    response.statusMessage = 'ISBN Number not found in database';
                     response.status(404).send({
                         message:
-                            'Book with that ISBN number does not exist within the database',
+                            'ISBN Number not found in database',
                     });
                 }
             })

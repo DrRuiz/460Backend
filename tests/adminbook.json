@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "a970b2af-79c8-4546-9661-d10c0311f2c3",
+		"_postman_id": "7b53fa9b-a7ed-4cef-82ba-55bc29b38a57",
 		"name": "AdminBook",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "33953173"
+		"_exporter_id": "34779746"
 	},
 	"item": [
 		{
@@ -724,7 +724,18 @@
 									"pm.test(\"Response status should be 200\", () => {\r",
 									"    pm.response.to.have.status(200);\r",
 									"})\r",
-									""
+									"\r",
+									"pm.test(\"Body has entries field\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"entries\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Correct book should have this isbn\", () => {\r",
+									"    pm.expect(response.entries[0].isbn13).to.eql(\"9780374404150\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Correct book should have this isbn\", () => {\r",
+									"    pm.expect(response.entries[0].authors).to.eql(\"Kristin Hannah\");\r",
+									"})"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -740,7 +751,7 @@
 							}
 						],
 						"url": {
-							"raw": "localhost:4000/adminBook/isbn?isbn=9780399157320",
+							"raw": "localhost:4000/adminBook/isbn?isbn=9780374404150",
 							"host": [
 								"localhost"
 							],
@@ -752,7 +763,7 @@
 							"query": [
 								{
 									"key": "isbn",
-									"value": "9780399157320"
+									"value": "9780374404150"
 								}
 							]
 						}
@@ -771,7 +782,18 @@
 									"pm.test(\"Response status should be 400\", () => {\r",
 									"    pm.response.to.have.status(400);\r",
 									"})\r",
-									""
+									"\r",
+									"pm.test(\"Status code name has string\", () => {\r",
+									"    pm.response.to.have.status(\"Missing information\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Body has message field\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Error message should be in this format\", () => {\r",
+									"    pm.expect(response.message).to.eql(\"Missing data, refer to documentation.\");\r",
+									"})"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -787,18 +809,18 @@
 							}
 						],
 						"url": {
-							"raw": "localhost:4000/adminBook/author?author=",
+							"raw": "localhost:4000/adminBook/isbn?isbn=",
 							"host": [
 								"localhost"
 							],
 							"port": "4000",
 							"path": [
 								"adminBook",
-								"author"
+								"isbn"
 							],
 							"query": [
 								{
-									"key": "author",
+									"key": "isbn",
 									"value": ""
 								}
 							]
@@ -818,7 +840,18 @@
 									"pm.test(\"Response status should be 404\", () => {\r",
 									"    pm.response.to.have.status(404);\r",
 									"})\r",
-									""
+									"\r",
+									"pm.test(\"Status code name has string\", () => {\r",
+									"    pm.response.to.have.status(\"ISBN Number not found in database\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Body has message field\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Error message should be in this format\", () => {\r",
+									"    pm.expect(response.message).to.eql(\"ISBN Number not found in database\");\r",
+									"})"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -834,19 +867,19 @@
 							}
 						],
 						"url": {
-							"raw": "localhost:4000/adminBook/author?author=8888888888888888",
+							"raw": "localhost:4000/adminBook/isbn?isbn=88888888888",
 							"host": [
 								"localhost"
 							],
 							"port": "4000",
 							"path": [
 								"adminBook",
-								"author"
+								"isbn"
 							],
 							"query": [
 								{
-									"key": "author",
-									"value": "8888888888888888"
+									"key": "isbn",
+									"value": "88888888888"
 								}
 							]
 						}
