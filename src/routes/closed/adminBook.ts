@@ -386,4 +386,79 @@ adminBookRouter.delete(
     }
 );
 
+//Max start #####################
+/**
+ * @api {delete} /adminBook Request to remove books by ISBN number
+ *
+ * @apiDescription Request to remove all books with the specified <code>isbn13</code>
+ *
+ * @apiName DeleteBooksISBN
+ * @apiGroup AdminBook
+ * 
+ * @apiQuery {Number} isbn ISBN13 of the book
+ * 
+ * @apiSuccess (Success 201) {String} entry The String:
+ * "[isbn13: <code>isbn13</code>,
+ * authors: <code>authors</code>,
+ * publication: <code>publication_year</code>,
+ * original_title: <code>original_title</code>,
+ * title: <code>title</code>,
+ * ratings: {
+ *     average: <code>rating_avg</code>,
+ *     count: <code>rating_count</code>,
+ *     rating_1: <code>rating_1_star</code>,
+ *     rating_2: <code>rating_2_star</code>,
+ *     rating_3: <code>rating_3_star</code>,
+ *     rating_4: <code>rating_4_star</code>,
+ *     rating_5: <code>rating_5_star</code>,
+ * },
+ * icons: {
+ *     large: <code>image_url</code>,
+ *     small: <code>image_small_url</code>,
+ * },]"
+ *
+ * @apiError (400: Invalid ISBN) {String} message "Invalid isbn or missing data, refer to documentation.
+ * @apiError (404: ISBN number does note xist) {String} message "ISBN number does not exist."
+ */
+
+adminBookRouter.delete(
+    '/isbn',
+    checkAdmin,
+    (request: Request, response: Response, next: NextFunction) => {
+        if (isStringProvided(request.query.isbn)) {
+            next();
+        } else {
+            response.statusMessage = 'Missing information';
+            response.status(400).send({
+                message: 'Missing data, refer to documentation.',
+            });
+        }
+    },
+    (request: Request, response: Response) => {
+        const query = 'DELETE FROM books WHERE isbn13 = $1';
+        const values = [request.query.isbn];
+
+        pool.query(query, values)
+            .then((result) => {
+                if (result.rowCount > 0) {
+                    response.status(200).send({
+                        entries: 'Deleted: ' + values,
+                    });
+                } else {
+                    response.statusMessage = 'No books found';
+                    response.status(404).send({
+                        message:
+                            'Book with that ISBN number does not exist within the database',
+                    });
+                }
+            })
+            .catch(() => {
+                response.status(500).send({
+                    message: 'Server error - contact support',
+                });
+            });
+    }
+);
+//max end #############
+
 export { adminBookRouter };

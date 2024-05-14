@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "e1f43f5e-2eff-4917-884f-a3d106e2a964",
+		"_postman_id": "9ad5969a-c98e-449e-b5c9-dc32789188e3",
 		"name": "Book",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "33974687"
+		"_exporter_id": "33953173"
 	},
 	"item": [
 		{
@@ -1037,7 +1037,10 @@
 					"name": "GetAllBooksMissingInput",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": ""
+						}
 					},
 					"response": []
 				},
@@ -1045,7 +1048,10 @@
 					"name": "GetAllBadInput",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": ""
+						}
 					},
 					"response": []
 				},
@@ -1053,7 +1059,10 @@
 					"name": "GetAllBadRange",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": ""
+						}
 					},
 					"response": []
 				},
@@ -1061,7 +1070,10 @@
 					"name": "GetAllNegativePageNumber",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": ""
+						}
 					},
 					"response": []
 				},
@@ -1069,7 +1081,443 @@
 					"name": "GetAllNegativeNumberPerPage",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": ""
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "GetBooksByTitle",
+			"item": [
+				{
+					"name": "GetBooksByTitleSuccess",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response status should be 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Body has entries field\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"entries\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Correct book should have this isbn\", () => {\r",
+									"    pm.expect(response.entries[0].isbn13).to.eql(\"9780618346260\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{book_url}}/title/?title=The Fellowship of the Ring",
+							"host": [
+								"{{book_url}}"
+							],
+							"path": [
+								"title",
+								""
+							],
+							"query": [
+								{
+									"key": "title",
+									"value": "The Fellowship of the Ring"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetBooksByTitleMissingInfo",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response status should be 400\", () => {\r",
+									"    pm.response.to.have.status(400);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Status code name has string\", () => {\r",
+									"    pm.response.to.have.status(\"Missing information\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Body has message field\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Error message should be in this format\", () => {\r",
+									"    pm.expect(response.message).to.eql(\"Missing data, refer to documentation.\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{book_url}}/title/?title=",
+							"host": [
+								"{{book_url}}"
+							],
+							"path": [
+								"title",
+								""
+							],
+							"query": [
+								{
+									"key": "title",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetBooksByTitleNoneFound",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response status should be 404\", () => {\r",
+									"    pm.response.to.have.status(404);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Status code name has string\", () => {\r",
+									"    pm.response.to.have.status(\"Book title does not exist\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Body has message field\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Error message should be in this format\", () => {\r",
+									"    pm.expect(response.message).to.eql(\"Book title not found in database\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{book_url}}/title?title=bookthatshouldnotexistindatabase",
+							"host": [
+								"{{book_url}}"
+							],
+							"path": [
+								"title"
+							],
+							"query": [
+								{
+									"key": "title",
+									"value": "bookthatshouldnotexistindatabase"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "GetBooksByYear",
+			"item": [
+				{
+					"name": "GetBooksByYearSuccess",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response status should be 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Body has entries field\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"entries\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Correct book should have this isbn\", () => {\r",
+									"    //find a test thatll give me just one for an easy test\r",
+									"    pm.expect(response.entries[0].isbn13).to.eql(\"9780618346260\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Correct book should have this isbn\", () => {\r",
+									"    //find a test thatll give me just one for an easy test\r",
+									"    pm.expect(response.entries[1].isbn13).to.eql(\"9780140283330\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Correct book should have this isbn\", () => {\r",
+									"    //find a test thatll give me just one for an easy test\r",
+									"    pm.expect(response.entries[2].isbn13).to.eql(\"9780394800160\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Correct book should have this isbn\", () => {\r",
+									"    //find a test thatll give me just one for an easy test\r",
+									"    pm.expect(response.entries[3].isbn13).to.eql(\"9781594200820\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Correct book should have this isbn\", () => {\r",
+									"    //find a test thatll give me just one for an easy test\r",
+									"    pm.expect(response.entries[4].isbn13).to.eql(\"9781444778520\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{book_url}}/year?year=1954",
+							"host": [
+								"{{book_url}}"
+							],
+							"path": [
+								"year"
+							],
+							"query": [
+								{
+									"key": "year",
+									"value": "1954"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetBooksByYearNoneFound",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response status should be 404\", () => {\r",
+									"    pm.response.to.have.status(404);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Status code name has string\", () => {\r",
+									"    pm.response.to.have.status(\"No books in this year\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Body has message field\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Error message should be in this format\", () => {\r",
+									"    pm.expect(response.message).to.eql(\"No books found in this year.\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{book_url}}/year?year=42",
+							"host": [
+								"{{book_url}}"
+							],
+							"path": [
+								"year"
+							],
+							"query": [
+								{
+									"key": "year",
+									"value": "42"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetBooksByYearMissingInfo",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response status should be 400\", () => {\r",
+									"    pm.response.to.have.status(400);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Status code name has string\", () => {\r",
+									"    pm.response.to.have.status(\"Missing/Bad information\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Body has message field\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Error message should be in this format\", () => {\r",
+									"    pm.expect(response.message).to.eql(\"Missing or bad information, see documentation.\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{book_url}}/year?year=",
+							"host": [
+								"{{book_url}}"
+							],
+							"path": [
+								"year"
+							],
+							"query": [
+								{
+									"key": "year",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetBooksByYearNegativeYear",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response status should be 404\", () => {\r",
+									"    pm.response.to.have.status(400);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Status code name has string\", () => {\r",
+									"    pm.response.to.have.status(\"Year is negative\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Body has message field\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Error message should be in this format\", () => {\r",
+									"    pm.expect(response.message).to.eql(\"Year cannot be negative\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{book_url}}/year?year=-4000",
+							"host": [
+								"{{book_url}}"
+							],
+							"path": [
+								"year"
+							],
+							"query": [
+								{
+									"key": "year",
+									"value": "-4000"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetBooksByYearFutureYear",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response status should be 404\", () => {\r",
+									"    pm.response.to.have.status(400);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Status code name has string\", () => {\r",
+									"    pm.response.to.have.status(\"Year is in the future\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Body has message field\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Error message should be in this format\", () => {\r",
+									"    pm.expect(response.message).to.eql(\"Cannot input a future year\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{book_url}}/year?year=6000",
+							"host": [
+								"{{book_url}}"
+							],
+							"path": [
+								"year"
+							],
+							"query": [
+								{
+									"key": "year",
+									"value": "6000"
+								}
+							]
+						}
 					},
 					"response": []
 				}
