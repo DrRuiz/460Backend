@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "7b53fa9b-a7ed-4cef-82ba-55bc29b38a57",
+		"_postman_id": "5d1a8c78-7bb0-4198-8192-8ee1192f07ca",
 		"name": "AdminBook",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "34779746"
@@ -880,6 +880,64 @@
 								{
 									"key": "isbn",
 									"value": "88888888888"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RemoveByISBNUnauthorized Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response status should be 403\", () => {\r",
+									"    pm.response.to.have.status(403);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Status code name has string\", () => {\r",
+									"    pm.response.to.have.status(\"Invalid Privilege\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Body has message field\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Error message should be in this format\", () => {\r",
+									"    pm.expect(response.message).to.eql(\"User does not have privilege to access this route.\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoyLCJpZCI6MiwiaWF0IjoxNzE1NjQ3Mzc4LCJleHAiOjE3MTY4NTY5Nzh9.HHmF_-0D5qfX7WNWeC4v0vF-Zl39N5xg4giPYxlBQps"
+							}
+						],
+						"url": {
+							"raw": "localhost:4000/adminBook/isbn?isbn=9780374404150",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"adminBook",
+								"isbn"
+							],
+							"query": [
+								{
+									"key": "isbn",
+									"value": "9780374404150"
 								}
 							]
 						}
