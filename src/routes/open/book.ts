@@ -593,7 +593,7 @@ bookRouter.get(
     },
 );
 
-
+//max start #############
 /**
  * @api {get} /book/year Request for books in a given year
  *
@@ -684,6 +684,6 @@ bookRouter.get(
     }
 );
 
-//Max methods ends here #########################################
+//max end #############
 
 export { bookRouter };
