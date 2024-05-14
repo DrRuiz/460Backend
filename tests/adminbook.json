@@ -7,6 +7,231 @@
 	},
 	"item": [
 		{
+			"name": "RemoveBooksByAuthor",
+			"item": [
+				{
+					"name": "RemoveByAuthorSuccess",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response status should be 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Body has entries field\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"entries\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Correct book should have this isbn\", () => {\r",
+									"    pm.expect(response.entries[0].isbn13).to.eql(\"9798631094345\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoxLCJpZCI6MSwiaWF0IjoxNzE1NjM5MzM3LCJleHAiOjE3MTY4NDg5Mzd9.TBbpBzz5KPW7XcTNi_jAF34ZdA7-q8EKYRKQV6MQLKw"
+							}
+						],
+						"url": {
+							"raw": "{{admin_url}}/author?author=Socrates Co.",
+							"host": [
+								"{{admin_url}}"
+							],
+							"path": [
+								"author"
+							],
+							"query": [
+								{
+									"key": "author",
+									"value": "Socrates Co."
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RemoveByAuthorErrorAuthor",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response status should be 404\", () => {\r",
+									"    pm.response.to.have.status(404);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Status code name has string\", () => {\r",
+									"    pm.response.to.have.status(\"No books found\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Body has message field\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Error message should be in this format\", () => {\r",
+									"    pm.expect(response.message).to.eql(\"No books with this author were found to delete.\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoxLCJpZCI6MSwiaWF0IjoxNzE1NjM5MzM3LCJleHAiOjE3MTY4NDg5Mzd9.TBbpBzz5KPW7XcTNi_jAF34ZdA7-q8EKYRKQV6MQLKw"
+							}
+						],
+						"url": {
+							"raw": "{{admin_url}}/author?author=Stu dent",
+							"host": [
+								"{{admin_url}}"
+							],
+							"path": [
+								"author"
+							],
+							"query": [
+								{
+									"key": "author",
+									"value": "Stu dent"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RemoveByAuthorEmpty",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response status should be 400\", () => {\r",
+									"    pm.response.to.have.status(400);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Status code name has string\", () => {\r",
+									"    pm.response.to.have.status(\"Missing information\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Body has message field\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Error message should be in this format\", () => {\r",
+									"    pm.expect(response.message).to.eql(\"Missing data, refer to documentation.\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoxLCJpZCI6MSwiaWF0IjoxNzE1NjM5MzM3LCJleHAiOjE3MTY4NDg5Mzd9.TBbpBzz5KPW7XcTNi_jAF34ZdA7-q8EKYRKQV6MQLKw"
+							}
+						],
+						"url": {
+							"raw": "{{admin_url}}/author?author=",
+							"host": [
+								"{{admin_url}}"
+							],
+							"path": [
+								"author"
+							],
+							"query": [
+								{
+									"key": "author",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RemoveByAuthorUnauthorized",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response status should be 403\", () => {\r",
+									"    pm.response.to.have.status(403);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Status code name has string\", () => {\r",
+									"    pm.response.to.have.status(\"Invalid Privilege\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Body has message field\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Error message should be in this format\", () => {\r",
+									"    pm.expect(response.message).to.eql(\"User does not have privilege to access this route.\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoyLCJpZCI6MiwiaWF0IjoxNzE1NjQ3Mzc4LCJleHAiOjE3MTY4NTY5Nzh9.HHmF_-0D5qfX7WNWeC4v0vF-Zl39N5xg4giPYxlBQps"
+							}
+						],
+						"url": {
+							"raw": "{{admin_url}}/author?author=carlos",
+							"host": [
+								"{{admin_url}}"
+							],
+							"path": [
+								"author"
+							],
+							"query": [
+								{
+									"key": "author",
+									"value": "carlos"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "AddBook",
 			"item": [
 				{
@@ -914,7 +1139,7 @@
 	"variable": [
 		{
 			"key": "admin_url",
-			"value": "{{base_url}}/adminBook",
+			"value": "localhost:4000/adminBook",
 			"type": "string"
 		}
 	]

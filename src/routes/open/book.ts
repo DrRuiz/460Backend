@@ -113,37 +113,6 @@ bookRouter.get(
         });
     }
 );
-    // (request: Request, response: Response, next: NextFunction) => {
-        // if (parseFloat(pageNum) < 0 || parseFloat(pageNum) > 5) {
-        //     response.statusMessage = 'Out of range';
-        //         response.status(400).send({
-        //             message: 'Ratings should be between 0.0 and 5.0',
-        //         });
-        //     } else if (parseFloat(max) < parseFloat(min)) {
-        //         response.statusMessage = 'Min greater than max';
-        //         response.status(400).send({
-        //             message: 'Minimum rating should be less than maximum rating.',
-        //         });
-        //     } else {
-        //         next();
-        //     }
-        // },
-        //     const theQuery = 'SELECT * FROM books';
-        //     pool.query(theQuery)
-        //         .then((result) => {
-        //             response.status(200).send({
-        //                 entries: result.rows.map(format),
-        //             });
-        //         })
-        //         .catch((error) => {
-        //             console.error('DB Query error on GET all');
-        //             console.error(error);
-        //             response.status(500).send({
-        //                 message: 'server error - contact support',
-        //             });
-        //         });
-//     }
-// );
 
 /**
  * @api {get} /book/author Request to retrieve books by author
