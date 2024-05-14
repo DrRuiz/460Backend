@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "825125a2-a3f5-4e27-8c06-41397fd1f6bd",
+		"_postman_id": "7b53fa9b-a7ed-4cef-82ba-55bc29b38a57",
 		"name": "AdminBook",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "33974687"
+		"_exporter_id": "34779746"
 	},
 	"item": [
 		{
@@ -935,58 +935,183 @@
 			]
 		},
 		{
-			"name": "RegisterUnauthorizedUser",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"firstname\": \"John\",\r\n    \"lastname\": \"Doe\",\r\n    \"email\": \"jdoe@gmail.com\",\r\n    \"password\": \"password\",\r\n    \"username\": \"JTheDoe\",\r\n    \"role\": 2,\r\n    \"phone\": \"098-765-4321\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+			"name": "RemoveBooksByISBN",
+			"item": [
+				{
+					"name": "RemoveBooksByISBNSuccess",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response status should be 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Body has entries field\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"entries\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Correct book should have this isbn\", () => {\r",
+									"    pm.expect(response.entries[0].isbn13).to.eql(\"9780374404150\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Correct book should have this isbn\", () => {\r",
+									"    pm.expect(response.entries[0].authors).to.eql(\"Kristin Hannah\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
 						}
-					}
-				},
-				"url": {
-					"raw": "localhost:4000/register",
-					"host": [
-						"localhost"
 					],
-					"port": "4000",
-					"path": [
-						"register"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "RegisterAdmin",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"firstname\": \"John\",\r\n    \"lastname\": \"Fortnite\",\r\n    \"email\": \"epicgames@epicgames.com\",\r\n    \"password\": \"qwertyuiop\",\r\n    \"username\": \"JohnFortnite\",\r\n    \"role\": 1,\r\n    \"phone\": \"999-888-7777\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoxLCJpZCI6MSwiaWF0IjoxNzE1NDg5NzQ1LCJleHAiOjE3MTY2OTkzNDV9.O5AURDpINpCx1XdGf9R6EH77ix5J56EgVKlNJeqDOjg"
+							}
+						],
+						"url": {
+							"raw": "localhost:4000/adminBook/isbn?isbn=9780374404150",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"adminBook",
+								"isbn"
+							],
+							"query": [
+								{
+									"key": "isbn",
+									"value": "9780374404150"
+								}
+							]
 						}
-					}
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "localhost:4000/register",
-					"host": [
-						"localhost"
+				{
+					"name": "RemoveByISBNMissingInfo",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response status should be 400\", () => {\r",
+									"    pm.response.to.have.status(400);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Status code name has string\", () => {\r",
+									"    pm.response.to.have.status(\"Missing information\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Body has message field\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Error message should be in this format\", () => {\r",
+									"    pm.expect(response.message).to.eql(\"Missing data, refer to documentation.\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
 					],
-					"port": "4000",
-					"path": [
-						"register"
-					]
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoxLCJpZCI6MSwiaWF0IjoxNzE1NDg5NzQ1LCJleHAiOjE3MTY2OTkzNDV9.O5AURDpINpCx1XdGf9R6EH77ix5J56EgVKlNJeqDOjg"
+							}
+						],
+						"url": {
+							"raw": "localhost:4000/adminBook/isbn?isbn=",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"adminBook",
+								"isbn"
+							],
+							"query": [
+								{
+									"key": "isbn",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RemoveByISBNNoneFound",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response status should be 404\", () => {\r",
+									"    pm.response.to.have.status(404);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Status code name has string\", () => {\r",
+									"    pm.response.to.have.status(\"ISBN Number not found in database\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Body has message field\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Error message should be in this format\", () => {\r",
+									"    pm.expect(response.message).to.eql(\"ISBN Number not found in database\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoxLCJpZCI6MSwiaWF0IjoxNzE1NDg5NzQ1LCJleHAiOjE3MTY2OTkzNDV9.O5AURDpINpCx1XdGf9R6EH77ix5J56EgVKlNJeqDOjg"
+							}
+						],
+						"url": {
+							"raw": "localhost:4000/adminBook/isbn?isbn=88888888888",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"adminBook",
+								"isbn"
+							],
+							"query": [
+								{
+									"key": "isbn",
+									"value": "88888888888"
+								}
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		}
 	],
 	"event": [
