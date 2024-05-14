@@ -442,7 +442,7 @@ adminBookRouter.delete(
             .then((result) => {
                 if (result.rowCount > 0) {
                     response.status(200).send({
-                        entries: 'Deleted: ' + values,
+                        message: 'Book with isbn13 number: ' + values + ' deleted!',
                     });
                 } else {
                     response.statusMessage = 'No books found';
