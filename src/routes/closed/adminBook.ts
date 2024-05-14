@@ -395,7 +395,7 @@ adminBookRouter.delete(
  * @apiName DeleteBooksISBN
  * @apiGroup AdminBook
  * 
- * @apiBody {Number} isbn ISBN13 of the book
+ * @apiQuery {Number} isbn ISBN13 of the book
  * 
  * @apiSuccess (Success 201) {String} entry The String:
  * "[isbn13: <code>isbn13</code>,
@@ -434,29 +434,15 @@ adminBookRouter.delete(
             });
         }
     },
-
-    (request: Request, response: Response, next: NextFunction) => {
-        const isbnNumber: string = request.query.isbn as string;
-
-        if (parseInt(isbnNumber) < 0){
-            response.statusMessage = 'isbn number cannot be negative';
-            response.status(400).send({
-                message: 'isbn cannot be negative',
-        });
-        } else {
-            next();
-        } 
-    },
-
     (request: Request, response: Response) => {
         const query = 'DELETE FROM books WHERE isbn13 = $1';
-        const values = [`%${request.query.isbn}%`];
+        const values = [request.query.isbn];
 
         pool.query(query, values)
             .then((result) => {
                 if (result.rowCount > 0) {
                     response.status(200).send({
-                        entries: 'Deleted: ' + result.rows.map(format),
+                        entries: 'Deleted: ' + values,
                     });
                 } else {
                     response.statusMessage = 'No books found';

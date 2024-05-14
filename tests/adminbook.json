@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "19c292b9-5469-4575-99e4-4202453c559f",
+		"_postman_id": "1c678fc9-6672-4937-9b72-19205a519b8b",
 		"name": "AdminBook",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "34779746"
@@ -37,7 +37,12 @@
 					],
 					"request": {
 						"method": "DELETE",
-						"header": [],
+						"header": [
+							{
+								"key": "authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoxLCJpZCI6MSwiaWF0IjoxNzE1NDg5NzQ1LCJleHAiOjE3MTY2OTkzNDV9.O5AURDpINpCx1XdGf9R6EH77ix5J56EgVKlNJeqDOjg"
+							}
+						],
 						"url": {
 							"raw": "localhost:4000/adminBook/author?author=Elizabeth Gilbert",
 							"host": [
@@ -927,11 +932,33 @@
 			"item": [
 				{
 					"name": "RemoveBooksByISBNSuccess",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response status should be 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
-						"method": "GET",
-						"header": [],
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoxLCJpZCI6MSwiaWF0IjoxNzE1NDg5NzQ1LCJleHAiOjE3MTY2OTkzNDV9.O5AURDpINpCx1XdGf9R6EH77ix5J56EgVKlNJeqDOjg"
+							}
+						],
 						"url": {
-							"raw": "localhost:4000/adminBook/isbn?isbn=9780618346260",
+							"raw": "localhost:4000/adminBook/isbn?isbn=9780399157320",
 							"host": [
 								"localhost"
 							],
@@ -943,7 +970,101 @@
 							"query": [
 								{
 									"key": "isbn",
-									"value": "9780618346260"
+									"value": "9780399157320"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RemoveByISBNMissingInfo",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response status should be 400\", () => {\r",
+									"    pm.response.to.have.status(400);\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoxLCJpZCI6MSwiaWF0IjoxNzE1NDg5NzQ1LCJleHAiOjE3MTY2OTkzNDV9.O5AURDpINpCx1XdGf9R6EH77ix5J56EgVKlNJeqDOjg"
+							}
+						],
+						"url": {
+							"raw": "localhost:4000/adminBook/author?author=",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"adminBook",
+								"author"
+							],
+							"query": [
+								{
+									"key": "author",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RemoveByISBNNoneFound",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response status should be 404\", () => {\r",
+									"    pm.response.to.have.status(404);\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoxLCJpZCI6MSwiaWF0IjoxNzE1NDg5NzQ1LCJleHAiOjE3MTY2OTkzNDV9.O5AURDpINpCx1XdGf9R6EH77ix5J56EgVKlNJeqDOjg"
+							}
+						],
+						"url": {
+							"raw": "localhost:4000/adminBook/author?author=8888888888888888",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"adminBook",
+								"author"
+							],
+							"query": [
+								{
+									"key": "author",
+									"value": "8888888888888888"
 								}
 							]
 						}
@@ -986,7 +1107,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"firstname\": \"John\",\r\n    \"lastname\": \"Fortnite\",\r\n    \"email\": \"epicgames@epicgames.com\",\r\n    \"password\": \"qwertyuiop\",\r\n    \"username\": \"JohnFortnite\",\r\n    \"role\": 1,\r\n    \"phone\": \"999-888-7777\"\r\n}",
+					"raw": "{\r\n    \"firstname\": \"John\",\r\n    \"lastname\": \"Madden\",\r\n    \"email\": \"football@Sports.com\",\r\n    \"password\": \"qwertyuiop\",\r\n    \"username\": \"JohnMadden\",\r\n    \"role\": 1,\r\n    \"phone\": \"123-456-7890\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
