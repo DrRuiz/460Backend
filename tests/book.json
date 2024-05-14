@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "e1f43f5e-2eff-4917-884f-a3d106e2a964",
+		"_postman_id": "2f5a4e16-35da-4829-ac0c-f8592742ad9b",
 		"name": "Book",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "33974687"
@@ -583,12 +583,12 @@
 									"    pm.response.to.have.status(200);\r",
 									"})\r",
 									"\r",
-									"pm.test(\"Response has entries field\", () => {\r",
+									"pm.test(\"Body has entries field\", () => {\r",
 									"    pm.expect(response).to.haveOwnProperty(\"entries\")\r",
 									"})\r",
 									"\r",
 									"pm.test(\"Correct book should have this isbn\", () => {\r",
-									"    pm.expect(response.isbn13).to.eql(\"9780061122420\");\r",
+									"    pm.expect(response.entries[0].isbn13).to.eql(\"9780061122420\");\r",
 									"})"
 								],
 								"type": "text/javascript",
@@ -600,13 +600,11 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:4000/book/author?author=Paulo Coelho",
+							"raw": "{{book_url}}/author?author=Paulo Coelho",
 							"host": [
-								"localhost"
+								"{{book_url}}"
 							],
-							"port": "4000",
 							"path": [
-								"book",
 								"author"
 							],
 							"query": [
@@ -628,8 +626,8 @@
 								"exec": [
 									"const response = pm.response.json();\r",
 									"\r",
-									"pm.test(\"Response status should be 400\", () => {\r",
-									"    pm.response.to.have.status(400);\r",
+									"pm.test(\"Response status should be 404\", () => {\r",
+									"    pm.response.to.have.status(404);\r",
 									"})\r",
 									"\r",
 									"pm.test(\"Status code name has string\", () => {\r",
@@ -641,7 +639,7 @@
 									"})\r",
 									"\r",
 									"pm.test(\"Error message should be in this format\", () => {\r",
-									"    pm.expect(response.isbn13).to.eql(\"No books with this author were found\");\r",
+									"    pm.expect(response.message).to.eql(\"No books with this author were found in the database.\");\r",
 									"})"
 								],
 								"type": "text/javascript",
@@ -653,13 +651,11 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:4000/book/author?author=Stu Dent",
+							"raw": "{{book_url}}/author?author=Stu Dent",
 							"host": [
-								"localhost"
+								"{{book_url}}"
 							],
-							"port": "4000",
 							"path": [
-								"book",
 								"author"
 							],
 							"query": [
@@ -694,7 +690,7 @@
 									"})\r",
 									"\r",
 									"pm.test(\"Error message should be in this format\", () => {\r",
-									"    pm.expect(response.isbn13).to.eql(\"Missing data, refer to documentation.\");\r",
+									"    pm.expect(response.message).to.eql(\"Missing data, refer to documentation.\");\r",
 									"})"
 								],
 								"type": "text/javascript",
@@ -706,13 +702,11 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:4000/book/author?author=",
+							"raw": "{{book_url}}/author?author=",
 							"host": [
-								"localhost"
+								"{{book_url}}"
 							],
-							"port": "4000",
 							"path": [
-								"book",
 								"author"
 							],
 							"query": [
@@ -743,12 +737,12 @@
 									"    pm.response.to.have.status(200);\r",
 									"})\r",
 									"\r",
-									"pm.test(\"Rsponse has entries field\", () => {\r",
+									"pm.test(\"Body has entries field\", () => {\r",
 									"    pm.expect(response).to.haveOwnProperty(\"entries\");\r",
 									"})\r",
 									"\r",
 									"pm.test(\"Correct book should have this isbn\", () => {\r",
-									"    pm.expect(response.isbn13).to.eql(\"9780525478810\");\r",
+									"    pm.expect(response.entries[0].isbn13).to.eql(\"9780679783270\");\r",
 									"})"
 								],
 								"type": "text/javascript",
@@ -760,19 +754,17 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:4000/book/singlerating?rating=2",
+							"raw": "{{book_url}}/singlerating?rating=4.24",
 							"host": [
-								"localhost"
+								"{{book_url}}"
 							],
-							"port": "4000",
 							"path": [
-								"book",
 								"singlerating"
 							],
 							"query": [
 								{
 									"key": "rating",
-									"value": "2"
+									"value": "4.24"
 								}
 							]
 						}
@@ -788,20 +780,20 @@
 								"exec": [
 									"const response = pm.response.json();\r",
 									"\r",
-									"pm.test(\"Response \", () => {\r",
+									"pm.test(\"Response status should be 404\", () => {\r",
 									"    pm.response.to.have.status(404);\r",
 									"})\r",
 									"\r",
-									"pm.test(\"Response code name has string\", () => {\r",
+									"pm.test(\"Status code name has string\", () => {\r",
 									"    pm.response.to.have.status(\"No books found\");\r",
 									"})\r",
 									"\r",
-									"pm.test(\"Response\", () => {\r",
-									"    pm.expect(response).to.haveOwnProperty(message);\r",
+									"pm.test(\"Body has message field\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
 									"})\r",
 									"\r",
-									"pm.test(\"Response\", () => {\r",
-									"    pm.expect(response).to.haveOwnProperty(\"No books with this rating were found\");\r",
+									"pm.test(\"Error message should be in this format\", () => {\r",
+									"    pm.expect(response.message).to.eql(\"No books with this rating were found.\");\r",
 									"})"
 								],
 								"type": "text/javascript",
@@ -813,19 +805,17 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:4000/book/singlerating?rating=5",
+							"raw": "{{book_url}}/singlerating?rating=2",
 							"host": [
-								"localhost"
+								"{{book_url}}"
 							],
-							"port": "4000",
 							"path": [
-								"book",
 								"singlerating"
 							],
 							"query": [
 								{
 									"key": "rating",
-									"value": "5"
+									"value": "2"
 								}
 							]
 						}
@@ -866,13 +856,11 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:4000/book/singlerating?rating=-1",
+							"raw": "{{book_url}}/singlerating?rating=-1",
 							"host": [
-								"localhost"
+								"{{book_url}}"
 							],
-							"port": "4000",
 							"path": [
-								"book",
 								"singlerating"
 							],
 							"query": [
@@ -894,20 +882,20 @@
 								"exec": [
 									"const response = pm.response.json();\r",
 									"\r",
-									"pm.test(\"Response \", () => {\r",
+									"pm.test(\"Response status should be 400\", () => {\r",
 									"    pm.response.to.have.status(400);\r",
 									"})\r",
 									"\r",
-									"pm.test(\"Response code name has string\", () => {\r",
+									"pm.test(\"Status code name has string\", () => {\r",
 									"    pm.response.to.have.status(\"Rating out of range\");\r",
 									"})\r",
 									"\r",
-									"pm.test(\"Response\", () => {\r",
-									"    pm.expect(response).to.haveOwnProperty(message);\r",
+									"pm.test(\"Body has message field\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
 									"})\r",
 									"\r",
-									"pm.test(\"Response\", () => {\r",
-									"    pm.expect(response).to.haveOwnProperty(\"Rating provided is less than 0 or greater than 5.\");\r",
+									"pm.test(\"Error message should be in this format\", () => {\r",
+									"    pm.expect(response.message).to.eql(\"Rating should be between 0.0 and 5.0.\");\r",
 									"})"
 								],
 								"type": "text/javascript",
@@ -919,13 +907,11 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:4000/book/singlerating?rating=12",
+							"raw": "{{book_url}}/singlerating?rating=12",
 							"host": [
-								"localhost"
+								"{{book_url}}"
 							],
-							"port": "4000",
 							"path": [
-								"book",
 								"singlerating"
 							],
 							"query": [
@@ -947,20 +933,20 @@
 								"exec": [
 									"const response = pm.response.json();\r",
 									"\r",
-									"pm.test(\"Response \", () => {\r",
+									"pm.test(\"Response status should be 400\", () => {\r",
 									"    pm.response.to.have.status(400);\r",
 									"})\r",
 									"\r",
-									"pm.test(\"Response code name has string\", () => {\r",
+									"pm.test(\"Status code name has string\", () => {\r",
 									"    pm.response.to.have.status(\"Missing/Bad information\");\r",
 									"})\r",
 									"\r",
-									"pm.test(\"Response\", () => {\r",
-									"    pm.expect(response).to.haveOwnProperty(message);\r",
+									"pm.test(\"Body has message field\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
 									"})\r",
 									"\r",
-									"pm.test(\"Response\", () => {\r",
-									"    pm.expect(response).to.haveOwnProperty(\"Missing or bad information, see documentation.\");\r",
+									"pm.test(\"Error message should be in this format\", () => {\r",
+									"    pm.expect(response.message).to.eql(\"Missing or bad information, see documentation.\");\r",
 									"})"
 								],
 								"type": "text/javascript",
@@ -972,13 +958,11 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:4000/book/singlerating?rating=carlos",
+							"raw": "{{book_url}}/singlerating?rating=carlos",
 							"host": [
-								"localhost"
+								"{{book_url}}"
 							],
-							"port": "4000",
 							"path": [
-								"book",
 								"singlerating"
 							],
 							"query": [
@@ -1022,12 +1006,22 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{book_url}}/getAll",
+							"raw": "{{book_url}}/getAll?pagenum=20&perpage=4",
 							"host": [
 								"{{book_url}}"
 							],
 							"path": [
 								"getAll"
+							],
+							"query": [
+								{
+									"key": "pagenum",
+									"value": "20"
+								},
+								{
+									"key": "perpage",
+									"value": "4"
+								}
 							]
 						}
 					},
@@ -1035,41 +1029,272 @@
 				},
 				{
 					"name": "GetAllBooksMissingInput",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response status should be 400\", () => {\r",
+									"    pm.response.to.have.status(400);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Status code name has string\", () => {\r",
+									"    pm.response.to.have.status(\"Missing/Bad information\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Body has message field\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Error message should be in this format\", () => {\r",
+									"    pm.expect(response.message).to.eql(\"Missing or bad information, see documentation.\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": "{{book_url}}/getAll?pagenum=20",
+							"host": [
+								"{{book_url}}"
+							],
+							"path": [
+								"getAll"
+							],
+							"query": [
+								{
+									"key": "pagenum",
+									"value": "20"
+								}
+							]
+						}
 					},
 					"response": []
 				},
 				{
 					"name": "GetAllBadInput",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response status should be 400\", () => {\r",
+									"    pm.response.to.have.status(400);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Status code name has string\", () => {\r",
+									"    pm.response.to.have.status(\"Missing/Bad information\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Body has message field\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Error message should be in this format\", () => {\r",
+									"    pm.expect(response.message).to.eql(\"Missing or bad information, see documentation.\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": "{{book_url}}/getAll?pagenum=20&perpage=Stu Dent",
+							"host": [
+								"{{book_url}}"
+							],
+							"path": [
+								"getAll"
+							],
+							"query": [
+								{
+									"key": "pagenum",
+									"value": "20"
+								},
+								{
+									"key": "perpage",
+									"value": "Stu Dent"
+								}
+							]
+						}
 					},
 					"response": []
 				},
 				{
 					"name": "GetAllBadRange",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response status should be 400\", () => {\r",
+									"    pm.response.to.have.status(400);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Status code name has string\", () => {\r",
+									"    pm.response.to.have.status(\"Page outside of range\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Body has message field\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Error message should be in this format\", () => {\r",
+									"    pm.expect(response.message).to.eql(\"Page must be greater than 0 and less than 48.\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": "{{book_url}}/getAll?pagenum=98&perpage=200",
+							"host": [
+								"{{book_url}}"
+							],
+							"path": [
+								"getAll"
+							],
+							"query": [
+								{
+									"key": "pagenum",
+									"value": "98"
+								},
+								{
+									"key": "perpage",
+									"value": "200"
+								}
+							]
+						}
 					},
 					"response": []
 				},
 				{
 					"name": "GetAllNegativePageNumber",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response status should be 400\", () => {\r",
+									"    pm.response.to.have.status(400);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Status code name has string\", () => {\r",
+									"    pm.response.to.have.status(\"Input outside of range\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Body has message field\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Error message should be in this format\", () => {\r",
+									"    pm.expect(response.message).to.eql(\"Both values per page and page number must be greater than 0.\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": "{{book_url}}/getAll?pagenum=-48&perpage=20",
+							"host": [
+								"{{book_url}}"
+							],
+							"path": [
+								"getAll"
+							],
+							"query": [
+								{
+									"key": "pagenum",
+									"value": "-48"
+								},
+								{
+									"key": "perpage",
+									"value": "20"
+								}
+							]
+						}
 					},
 					"response": []
 				},
 				{
 					"name": "GetAllNegativeNumberPerPage",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response status should be 400\", () => {\r",
+									"    pm.response.to.have.status(400);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Status code name has string\", () => {\r",
+									"    pm.response.to.have.status(\"Input outside of range\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Body has message field\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Error message should be in this format\", () => {\r",
+									"    pm.expect(response.message).to.eql(\"Both values per page and page number must be greater than 0.\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": "{{book_url}}/getAll?pagenum=1&perpage=-20",
+							"host": [
+								"{{book_url}}"
+							],
+							"path": [
+								"getAll"
+							],
+							"query": [
+								{
+									"key": "pagenum",
+									"value": "1"
+								},
+								{
+									"key": "perpage",
+									"value": "-20"
+								}
+							]
+						}
 					},
 					"response": []
 				}
@@ -1101,7 +1326,7 @@
 	"variable": [
 		{
 			"key": "book_url",
-			"value": "{{base_url}}/book",
+			"value": "localhost:4000/book",
 			"type": "string"
 		}
 	]

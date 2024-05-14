@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "40848053-a83d-494b-aacf-916ae051b709",
+		"_postman_id": "825125a2-a3f5-4e27-8c06-41397fd1f6bd",
 		"name": "AdminBook",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "33974687"
@@ -27,7 +27,7 @@
 									"})\r",
 									"\r",
 									"pm.test(\"Correct book should have this isbn\", () => {\r",
-									"    pm.expect(response.entries[0].isbn13).to.eql(\"9780143038410\");\r",
+									"    pm.expect(response.entries[0].isbn13).to.eql(\"9798631094345\");\r",
 									"})"
 								],
 								"type": "text/javascript",
@@ -37,21 +37,24 @@
 					],
 					"request": {
 						"method": "DELETE",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoxLCJpZCI6MSwiaWF0IjoxNzE1NjM5MzM3LCJleHAiOjE3MTY4NDg5Mzd9.TBbpBzz5KPW7XcTNi_jAF34ZdA7-q8EKYRKQV6MQLKw"
+							}
+						],
 						"url": {
-							"raw": "localhost:4000/adminBook/author?author=Elizabeth Gilbert",
+							"raw": "{{admin_url}}/author?author=Socrates Co.",
 							"host": [
-								"localhost"
+								"{{admin_url}}"
 							],
-							"port": "4000",
 							"path": [
-								"adminBook",
 								"author"
 							],
 							"query": [
 								{
 									"key": "author",
-									"value": "Elizabeth Gilbert"
+									"value": "Socrates Co."
 								}
 							]
 						}
@@ -80,7 +83,7 @@
 									"})\r",
 									"\r",
 									"pm.test(\"Error message should be in this format\", () => {\r",
-									"    pm.expect(response.isbn13).to.eql(\"No books with this author were found to delete.\");\r",
+									"    pm.expect(response.message).to.eql(\"No books with this author were found to delete.\");\r",
 									"})"
 								],
 								"type": "text/javascript",
@@ -90,15 +93,18 @@
 					],
 					"request": {
 						"method": "DELETE",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoxLCJpZCI6MSwiaWF0IjoxNzE1NjM5MzM3LCJleHAiOjE3MTY4NDg5Mzd9.TBbpBzz5KPW7XcTNi_jAF34ZdA7-q8EKYRKQV6MQLKw"
+							}
+						],
 						"url": {
-							"raw": "localhost:4000/adminBook/author?author=Stu dent",
+							"raw": "{{admin_url}}/author?author=Stu dent",
 							"host": [
-								"localhost"
+								"{{admin_url}}"
 							],
-							"port": "4000",
 							"path": [
-								"adminBook",
 								"author"
 							],
 							"query": [
@@ -133,7 +139,7 @@
 									"})\r",
 									"\r",
 									"pm.test(\"Error message should be in this format\", () => {\r",
-									"    pm.expect(response.isbn13).to.eql(\"Missing data, refer to documentation.\");\r",
+									"    pm.expect(response.message).to.eql(\"Missing data, refer to documentation.\");\r",
 									"})"
 								],
 								"type": "text/javascript",
@@ -143,15 +149,18 @@
 					],
 					"request": {
 						"method": "DELETE",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoxLCJpZCI6MSwiaWF0IjoxNzE1NjM5MzM3LCJleHAiOjE3MTY4NDg5Mzd9.TBbpBzz5KPW7XcTNi_jAF34ZdA7-q8EKYRKQV6MQLKw"
+							}
+						],
 						"url": {
-							"raw": "localhost:4000/adminBook/author?author=",
+							"raw": "{{admin_url}}/author?author=",
 							"host": [
-								"localhost"
+								"{{admin_url}}"
 							],
-							"port": "4000",
 							"path": [
-								"adminBook",
 								"author"
 							],
 							"query": [
@@ -173,8 +182,8 @@
 								"exec": [
 									"const response = pm.response.json();\r",
 									"\r",
-									"pm.test(\"Response status should be 404\", () => {\r",
-									"    pm.response.to.have.status(404);\r",
+									"pm.test(\"Response status should be 403\", () => {\r",
+									"    pm.response.to.have.status(403);\r",
 									"})\r",
 									"\r",
 									"pm.test(\"Status code name has string\", () => {\r",
@@ -186,7 +195,7 @@
 									"})\r",
 									"\r",
 									"pm.test(\"Error message should be in this format\", () => {\r",
-									"    pm.expect(response.isbn13).to.eql(\"User does not have privilege to access this route.\");\r",
+									"    pm.expect(response.message).to.eql(\"User does not have privilege to access this route.\");\r",
 									"})"
 								],
 								"type": "text/javascript",
@@ -196,20 +205,23 @@
 					],
 					"request": {
 						"method": "DELETE",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoyLCJpZCI6MiwiaWF0IjoxNzE1NjQ3Mzc4LCJleHAiOjE3MTY4NTY5Nzh9.HHmF_-0D5qfX7WNWeC4v0vF-Zl39N5xg4giPYxlBQps"
+							}
+						],
 						"url": {
-							"raw": "localhost:4000/adminBook/author?rating=carlos",
+							"raw": "{{admin_url}}/author?author=carlos",
 							"host": [
-								"localhost"
+								"{{admin_url}}"
 							],
-							"port": "4000",
 							"path": [
-								"adminBook",
 								"author"
 							],
 							"query": [
 								{
-									"key": "rating",
+									"key": "author",
 									"value": "carlos"
 								}
 							]
@@ -1002,7 +1014,7 @@
 	"variable": [
 		{
 			"key": "admin_url",
-			"value": "{{base_url}}/adminBook",
+			"value": "localhost:4000/adminBook",
 			"type": "string"
 		}
 	]

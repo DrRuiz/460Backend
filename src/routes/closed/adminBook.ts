@@ -361,14 +361,14 @@ adminBookRouter.delete(
         }
     },
     (request: Request, response: Response) => {
-        const query = 'DELETE FROM books WHERE authors = $1';
+        const query = 'DELETE FROM books WHERE authors LIKE $1 RETURNING *';
         const values = [`%${request.query.author}%`];
 
         pool.query(query, values)
             .then((result) => {
                 if (result.rowCount > 0) {
                     response.status(200).send({
-                        entries: 'Deleted: ' + result.rows.map(format),
+                        entries: result.rows.map(format),
                     });
                 } else {
                     response.statusMessage = 'No books found';
