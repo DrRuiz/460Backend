@@ -651,14 +651,14 @@ bookRouter.get(
 //Ryan Start ########################
 
 /**
- * @api {get} /book/ISBN Request for the book with a given ISBN
+ * @api {get} /book/isbn Request for the book with a given ISBN
  *
  * @apiDescription Request for the book with a given ISBN
  *
  * @apiName getBooksISBN
  * @apiGroup Book
  *
- * @apiQuery {int} isbn The ISBN to get the book for
+ * @apiQuery {int} isbn The ISBN to get the book for (13 digits)
  *
  * @apiSuccess {IBook[]} entries Specified entries with the following format:
  * "isbn13: <code>isbn13</code>,
@@ -685,7 +685,42 @@ bookRouter.get(
  * @apiError (400: Invalid ISBN) {String} message "Invalid ISBN, use a nonnegative number."
  * @apiError (404: No books matching this ISBN) {String} message "No books found matching this ISBN."
  */
+bookRouter.get(
+    '/isbn',
+    (request: Request, response: Response, next: NextFunction) => {
+        if (isNumberProvided(request.query.isbn) && (request.query.isbn.length == 13)) {
+            next();
+        } else {
+            response.statusMessage = 'Missing/Bad information';
+            response.status(400).send({
+                message: 'Missing or bad information, see documentation.',
+            });
+        }
+    },
 
+    (request: Request, response: Response) => {
+        const query = allButId + 'WHERE isbn13 = $1';
+        const values = [request.query.isbn];
+        pool.query(query, values)
+            .then((result) => {
+                if (result.rowCount > 0) {
+                    response.status(200).send({
+                        entries: result.rows.map(format),
+                    });
+                } else {
+                    response.statusMessage = 'No books with this ISBN';
+                    response.status(404).send({
+                        message: 'No books found with this ISBN.',
+                    });
+                }
+            })
+            .catch(() => {
+                response.status(500).send({
+                    message: 'Server error - contact support',
+                });
+            });
+    }
+);
 /**
  * @api {put} /bookook/addRating Request to add a rating for a book.
  *
