@@ -648,4 +648,83 @@ bookRouter.get(
 
 //max end #############
 
+//Ryan Start ########################
+
+/**
+ * @api {get} /book/ISBN Request for the book with a given ISBN
+ *
+ * @apiDescription Request for the book with a given ISBN
+ *
+ * @apiName getBooksISBN
+ * @apiGroup Book
+ *
+ * @apiQuery {int} isbn The ISBN to get the book for
+ *
+ * @apiSuccess {IBook[]} entries Specified entries with the following format:
+ * "isbn13: <code>isbn13</code>,
+ * authors: <code>authors</code>,
+ * publication: <code>publication_year</code>,
+ * original_title: <code>original_title</code>,
+ * title: <code>title</code>,
+ * ratings: {
+ *     average: <code>rating_avg</code>,
+ *     count: <code>rating_count</code>,
+ *     rating_1: <code>rating_1_star</code>,
+ *     rating_2: <code>rating_2_star</code>,
+ *     rating_3: <code>rating_3_star</code>,
+ *     rating_4: <code>rating_4_star</code>,
+ *     rating_5: <code>rating_5_star</code>
+ * },
+ * icons: {
+ *     large: <code>image_url</code>,
+ *     small: <code>image_small_url</code>
+ * }"
+ *
+ *
+ * @apiError (400: Missing/Bad information) {String} message "Missing or bad information, see documentation."
+ * @apiError (400: Invalid ISBN) {String} message "Invalid ISBN, use a nonnegative number."
+ * @apiError (404: No books matching this ISBN) {String} message "No books found matching this ISBN."
+ */
+
+/**
+ * @api {put} /bookook/addRating Request to add a rating for a book.
+ *
+ * @apiDescription Request to add a rating to a book with author name and book title.
+ *
+ * @apiName putBook
+ * @apiGroup Book
+ *
+ * @apiBody {String} authors Author's name, required
+ * @apiBody {String} original_title Original title of book, optional
+ * @apiBody {String} title Book title, required
+ * @apiBody {Number} rating The rating that will be added to the book, required
+ *
+ * @apiSuccess (Success 201) {IBook} entry The book with added rating:
+ * "isbn13: <code>isbn13</code>,
+ * authors: <code>authors</code>,
+ * publication: <code>publication_year</code>,
+ * original_title: <code>original_title</code>,
+ * title: <code>title</code>,
+ * ratings: {
+ *     average: <code>rating_avg</code>,
+ *     count: <code>rating_count</code>,
+ *     rating_1: <code>rating_1_star</code>,
+ *     rating_2: <code>rating_2_star</code>,
+ *     rating_3: <code>rating_3_star</code>,
+ *     rating_4: <code>rating_4_star</code>,
+ *     rating_5: <code>rating_5_star</code>
+ * },
+ * icons: {
+ *     large: <code>image_url</code>,
+ *     small: <code>image_small_url</code>
+ * }"
+ *
+ * @apiError (400: Missing information) {String} message "Missing required information, see documentation."
+ * @apiError (400: Invalid rating) {String} message "Invalid rating, use a number 0-5."
+ *
+ * @apiError (404: Author not found in database) {String} message "Author not found in database."
+ * @apiError (404: Title not found in database) {String} message "Title not found in database."
+ */
+//Ryan End ########################
+
 export { bookRouter };
