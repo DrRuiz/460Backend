@@ -7,7 +7,7 @@
 	},
 	"item": [
 		{
-			"name": "AuthorTitle",
+			"name": "GetBooksAuthorTitle",
 			"item": [
 				{
 					"name": "GetAuthorBookSuccess",
@@ -287,7 +287,7 @@
 			]
 		},
 		{
-			"name": "GetRatingAvg",
+			"name": "GetAvgRatingRange",
 			"item": [
 				{
 					"name": "GetRatingSuccess",
@@ -978,7 +978,7 @@
 			]
 		},
 		{
-			"name": "GetAll",
+			"name": "GetAllBooks",
 			"item": [
 				{
 					"name": "GetAllBooksSuccess",
@@ -1674,6 +1674,160 @@
 								{
 									"key": "year",
 									"value": "6000"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "GetBooksISBN",
+			"item": [
+				{
+					"name": "GetISBNSuccess",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response status should be 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Response should have a field 'entries'\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"entries\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/book/isbn/?isbn=9780743273560",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"book",
+								"isbn",
+								""
+							],
+							"query": [
+								{
+									"key": "isbn",
+									"value": "9780743273560"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetISBNNoBooks",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response status should be 404\", () => {\r",
+									"    pm.response.to.have.status(404);\r",
+									"}) \r",
+									"\r",
+									"pm.test(\"Response has correct status message\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
+									"    pm.expect(response.message).to.equal(\"No books found with this ISBN.\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/book/isbn/?isbn=9780743273260",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"book",
+								"isbn",
+								""
+							],
+							"query": [
+								{
+									"key": "isbn",
+									"value": "9780743273260"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetISBNMissingInfo",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response status should be 400\", () => {\r",
+									"    pm.response.to.have.status(400);\r",
+									"}) \r",
+									"\r",
+									"pm.test(\"Response has correct status message\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
+									"    pm.expect(response.message).to.equal(\"Missing or bad information, see documentation.\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/book/isbn/?isbn=978074327356",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"book",
+								"isbn",
+								""
+							],
+							"query": [
+								{
+									"key": "isbn",
+									"value": "978074327356"
 								}
 							]
 						}

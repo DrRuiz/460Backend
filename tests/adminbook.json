@@ -1065,7 +1065,68 @@
 									"})\r",
 									"\r",
 									"pm.test(\"Error message should be in this format\", () => {\r",
-									"    pm.expect(response.message).to.eql(\"ISBN Number not found in database\");\r",
+									"    pm.expect(response.message).to.eql(\"User does not have privilege to access this route.\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoyLCJpZCI6MiwiaWF0IjoxNzE1NjQ3Mzc4LCJleHAiOjE3MTY4NTY5Nzh9.HHmF_-0D5qfX7WNWeC4v0vF-Zl39N5xg4giPYxlBQps"
+							}
+						],
+						"url": {
+							"raw": "{{admin_url}}/author?author=carlos",
+							"host": [
+								"{{admin_url}}"
+							],
+							"path": [
+								"author"
+							],
+							"query": [
+								{
+									"key": "author",
+									"value": "carlos"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "DeleteBooksByISBN",
+			"item": [
+				{
+					"name": "RemoveBooksByISBNSuccess",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response status should be 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Body has entries field\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"entries\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Correct book should have this isbn\", () => {\r",
+									"    pm.expect(response.entries[0].isbn13).to.eql(\"9780374404150\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Correct book should have this isbn\", () => {\r",
+									"    pm.expect(response.entries[0].authors).to.eql(\"Kristin Hannah\");\r",
 									"})"
 								],
 								"type": "text/javascript",
@@ -1144,6 +1205,558 @@
 								"adminBook",
 								"isbn",
 								"9780374404150"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "AddBookRating",
+			"item": [
+				{
+					"name": "adBook/addRating 201 success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response status should be 201\", () => {\r",
+									"    pm.response.to.have.status(201);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Response should have a field 'entries'\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"entries\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiUnlhbiIsInJvbGUiOjIsImlkIjoxLCJpYXQiOjE3MTU5MjI4OTIsImV4cCI6MTcxNzEzMjQ5Mn0.P8st0Ax56y4XzvaHUOg0aBM-JCvJLx9RejO9YhRbQHY"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"author\":\"Gillian Flynn\",\r\n    \"title\":\"Gone Girl\",\r\n    \"rating\":4\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/adminBook/addRating/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"adminBook",
+								"addRating",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "adBook/addRating 400 missing",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response status should be 400\", () => {\r",
+									"    pm.response.to.have.status(400);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Response has correct status message\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
+									"    pm.expect(response.message).to.equal(\"Missing or bad information, see documentation.\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiUnlhbiIsInJvbGUiOjIsImlkIjoxLCJpYXQiOjE3MTU5MjI4OTIsImV4cCI6MTcxNzEzMjQ5Mn0.P8st0Ax56y4XzvaHUOg0aBM-JCvJLx9RejO9YhRbQHY"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"author\":\"Gillian Flynn\",\r\n    \"title\":\"Gone Girl\",\r\n    \"rating\":null\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/adminBook/addRating/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"adminBook",
+								"addRating",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "adBook/addRating 400 invalid rating",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response status should be 400\", () => {\r",
+									"    pm.response.to.have.status(400);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Response has correct status message\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
+									"    pm.expect(response.message).to.equal(\"Invalid rating, use a number 0-5.\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiUnlhbiIsInJvbGUiOjIsImlkIjoxLCJpYXQiOjE3MTU5MjI4OTIsImV4cCI6MTcxNzEzMjQ5Mn0.P8st0Ax56y4XzvaHUOg0aBM-JCvJLx9RejO9YhRbQHY"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"author\":\"Gillian Flynn\",\r\n    \"title\":\"Gone Girl\",\r\n    \"rating\":7\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{admin_url}}/addRating",
+							"host": [
+								"{{admin_url}}"
+							],
+							"path": [
+								"addRating"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "adBook/addRating 404 author not found",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response status should be 404\", () => {\r",
+									"    pm.response.to.have.status(404);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Response has correct status message\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
+									"    pm.expect(response.message).to.equal(\"Author not found in database.\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiUnlhbiIsInJvbGUiOjIsImlkIjoxLCJpYXQiOjE3MTU5MjI4OTIsImV4cCI6MTcxNzEzMjQ5Mn0.P8st0Ax56y4XzvaHUOg0aBM-JCvJLx9RejO9YhRbQHY"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"author\":\"Not Gillian Flynn\",\r\n    \"title\":\"Gone Girl\",\r\n    \"rating\":4\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/adminBook/addRating/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"adminBook",
+								"addRating",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "adBook/addRating 404 Book not found",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response status should be 404\", () => {\r",
+									"    pm.response.to.have.status(404);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Response has correct status message\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
+									"    pm.expect(response.message).to.equal(\"Book not written by specified author.\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiUnlhbiIsInJvbGUiOjIsImlkIjoxLCJpYXQiOjE3MTU5MjI4OTIsImV4cCI6MTcxNzEzMjQ5Mn0.P8st0Ax56y4XzvaHUOg0aBM-JCvJLx9RejO9YhRbQHY"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"author\":\"Gillian Flynn\",\r\n    \"title\":\"Little Women\",\r\n    \"rating\":4\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/adminBook/addRating/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"adminBook",
+								"addRating",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "UpdateBooks",
+			"item": [
+				{
+					"name": "UpdateBooksSuccess",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response status should be 201\", () => {\r",
+									"    pm.response.to.have.status(201);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Response should have a field 'entries'\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"entries\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiSmltYm8iLCJyb2xlIjoxLCJpZCI6NSwiaWF0IjoxNzE1OTM0MjE4LCJleHAiOjE3MTcxNDM4MTh9.rdwPbv4MMox8kFRrCIBmTXFG6sKT07ZGs8k4thiZlww"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"author\":\"Gillian Flynn\",\r\n    \"title\":\"Gone Girl\",\r\n    \"new_author\":\"Gillian Flynn\",\r\n    \"new_title\":\"Gone Girl\",\r\n    \"new_year\":2012,\r\n    \"new_isbn\":9780297859380\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/adminBook/changeValues/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"adminBook",
+								"changeValues",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateBooksMissingInfo",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response status should be 400\", () => {\r",
+									"    pm.response.to.have.status(400);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Response has correct status message\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
+									"    pm.expect(response.message).to.equal(\"Missing or bad information, see documentation.\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiSmltYm8iLCJyb2xlIjoxLCJpZCI6NSwiaWF0IjoxNzE1OTM0MjE4LCJleHAiOjE3MTcxNDM4MTh9.rdwPbv4MMox8kFRrCIBmTXFG6sKT07ZGs8k4thiZlww"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"author\":\"Gillian Flynn\",\r\n    \"title\":null,\r\n    \"new_author\":\"Gillian Flynn\",\r\n    \"new_title\":\"Gone Girl\",\r\n    \"new_year\":2012,\r\n    \"new_isbn\":9780297859380\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/adminBook/changeValues/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"adminBook",
+								"changeValues",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateBooksNoValidFields",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response status should be 400\", () => {\r",
+									"    pm.response.to.have.status(400);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Response has correct status message\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
+									"    pm.expect(response.message).to.equal(\"No valid update values were passed.\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiSmltYm8iLCJyb2xlIjoxLCJpZCI6NSwiaWF0IjoxNzE1OTM0MjE4LCJleHAiOjE3MTcxNDM4MTh9.rdwPbv4MMox8kFRrCIBmTXFG6sKT07ZGs8k4thiZlww"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"author\":\"Gillian Flynn\",\r\n    \"title\":\"Gone Girl\",\r\n    \"new_author\":null,\r\n    \"new_title\":null,\r\n    \"new_year\":null,\r\n    \"new_isbn\":null\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/adminBook/changeValues/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"adminBook",
+								"changeValues",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateBooksNoneFound",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response status should be 404\", () => {\r",
+									"    pm.response.to.have.status(404);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Response has correct status message\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
+									"    pm.expect(response.message).to.equal(\"No book found with given author and title.\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiSmltYm8iLCJyb2xlIjoxLCJpZCI6NSwiaWF0IjoxNzE1OTM0MjE4LCJleHAiOjE3MTcxNDM4MTh9.rdwPbv4MMox8kFRrCIBmTXFG6sKT07ZGs8k4thiZlww"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"author\":\"Gillian Flynn\",\r\n    \"title\":\"Not Gone Girl\",\r\n    \"new_author\":\"empty string\",\r\n    \"new_title\":null,\r\n    \"new_year\":null,\r\n    \"new_isbn\":null\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/adminBook/changeValues",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"adminBook",
+								"changeValues"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateBooksDuplicate",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response status should be 400\", () => {\r",
+									"    pm.response.to.have.status(400);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Status code name has string\", () => {\r",
+									"    pm.response.to.have.status(\"Book already exists\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Body has message field\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Error message should be in this format\", () => {\r",
+									"    pm.expect(response.message).to.eql(\"Book already exists in database.\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiSmltYm8iLCJyb2xlIjoxLCJpZCI6NSwiaWF0IjoxNzE1OTM0MjE4LCJleHAiOjE3MTcxNDM4MTh9.rdwPbv4MMox8kFRrCIBmTXFG6sKT07ZGs8k4thiZlww",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"author\":\"Suzanne Collins\",\r\n    \"title\": \"The Hunger Games (The Hunger Games, #1)\",\r\n    \"new_author\":\"Gillian Flynn\",\r\n    \"new_title\":\"Gone Girl\",\r\n    \"new_year\":2012,\r\n    \"new_isbn\":9780297859380\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/adminBook/changeValues",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"adminBook",
+								"changeValues"
 							]
 						}
 					},
