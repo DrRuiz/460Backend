@@ -1,1084 +1,494 @@
 {
 	"info": {
-		"_postman_id": "0fab6970-47d5-4619-a70d-057660d21614",
-		"name": "AdminBook",
+		"_postman_id": "e7a1af78-f69e-444b-ae23-b6788d393ffe",
+		"name": "adminbook",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "33953173"
+		"_exporter_id": "34903483"
 	},
 	"item": [
 		{
-			"name": "AddBook",
-			"item": [
+			"name": "adBook/addRating 201 success",
+			"event": [
 				{
-					"name": "AddSuccess",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"const response = pm.response.json();\r",
-									"\r",
-									"pm.test(\"Response status should be 201\", () => {\r",
-									"    pm.response.to.have.status(201);\r",
-									"})\r",
-									"\r",
-									"pm.test(\"Body has entry field\", () => {\r",
-									"    pm.expect(response).to.haveOwnProperty(\"entry\");\r",
-									"})\r",
-									"\r",
-									"pm.test(\"Success should relay this information\", () => {\r",
-									"    pm.expect(response.entry.isbn13).to.eql(\"9798631094345\");\r",
-									"    pm.expect(response.entry.authors).to.eql(\"Socrates Co.\");\r",
-									"    pm.expect(response.entry.publication).to.eql(2020);\r",
-									"    pm.expect(response.entry.original_title).to.eql(\"One Million Digits Of Pi: Decimal Places from 1 to 1,000,000\");\r",
-									"    pm.expect(response.entry.title).to.eql(\"One Million Digits of Pi\");\r",
-									"    pm.expect(response.entry.ratings.average).to.eql(4.6);\r",
-									"    pm.expect(response.entry.ratings.count).to.eql(102);\r",
-									"    pm.expect(response.entry.ratings.rating_1).to.eql(3);\r",
-									"    pm.expect(response.entry.ratings.rating_2).to.eql(2);\r",
-									"    pm.expect(response.entry.ratings.rating_3).to.eql(4);\r",
-									"    pm.expect(response.entry.ratings.rating_4).to.eql(9);\r",
-									"    pm.expect(response.entry.ratings.rating_5).to.eql(84);\r",
-									"    pm.expect(response.entry.icons.large).to.eql(\"https://m.media-amazon.com/images/I/719VMyobJDL._SY466_.jpg\");\r",
-									"    pm.expect(response.entry.icons.small).to.eql(\"https://m.media-amazon.com/images/I/719VMyobJDL._SY466_.jpg\");\r",
-									"})"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "authorization",
-								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoxLCJpZCI6MSwiaWF0IjoxNzE1NDg5NzQ1LCJleHAiOjE3MTY2OTkzNDV9.O5AURDpINpCx1XdGf9R6EH77ix5J56EgVKlNJeqDOjg"
-							}
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Response status should be 201\", () => {\r",
+							"    pm.response.to.have.status(201);\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Response should have a field 'entries'\", () => {\r",
+							"    pm.expect(response).to.haveOwnProperty(\"entries\");\r",
+							"})"
 						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"isbn13\": 9798631094345,\r\n    \"authors\": \"Socrates Co.\",\r\n    \"publication\": 2020,\r\n    \"original_title\": \"One Million Digits Of Pi: Decimal Places from 1 to 1,000,000\",\r\n    \"title\": \"One Million Digits of Pi\",\r\n    \"average\": 4.6,\r\n    \"count\": 102,\r\n    \"rating_1\": 3,\r\n    \"rating_2\": 2,\r\n    \"rating_3\": 4,\r\n    \"rating_4\": 9,\r\n    \"rating_5\": 84,\r\n    \"large\": \"https://m.media-amazon.com/images/I/719VMyobJDL._SY466_.jpg\",\r\n    \"small\": \"https://m.media-amazon.com/images/I/719VMyobJDL._SY466_.jpg\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{admin_url}}/addBook",
-							"host": [
-								"{{admin_url}}"
-							],
-							"path": [
-								"addBook"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "AddEmptySuccess",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"const response = pm.response.json();\r",
-									"\r",
-									"pm.test(\"Response status should be 201\", () => {\r",
-									"    pm.response.to.have.status(201);\r",
-									"})\r",
-									"\r",
-									"pm.test(\"Body has entry field\", () => {\r",
-									"    pm.expect(response).to.haveOwnProperty(\"entry\");\r",
-									"})\r",
-									"\r",
-									"pm.test(\"Success should relay this information\", () => {\r",
-									"    pm.expect(response.entry.isbn13).to.eql(\"0\");\r",
-									"    pm.expect(response.entry.authors).to.eql(\"Mimiga\");\r",
-									"    pm.expect(response.entry.publication).to.eql(2021);\r",
-									"    pm.expect(response.entry.original_title).to.eql(\"\");\r",
-									"    pm.expect(response.entry.title).to.eql(\"Paradise Apart\");\r",
-									"    pm.expect(response.entry.ratings.average).to.eql(0);\r",
-									"    pm.expect(response.entry.ratings.count).to.eql(0);\r",
-									"    pm.expect(response.entry.ratings.rating_1).to.eql(0);\r",
-									"    pm.expect(response.entry.ratings.rating_2).to.eql(0);\r",
-									"    pm.expect(response.entry.ratings.rating_3).to.eql(0);\r",
-									"    pm.expect(response.entry.ratings.rating_4).to.eql(0);\r",
-									"    pm.expect(response.entry.ratings.rating_5).to.eql(0);\r",
-									"    pm.expect(response.entry.icons.large).to.eql(\"\");\r",
-									"    pm.expect(response.entry.icons.small).to.eql(\"\");\r",
-									"})"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "authorization",
-								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoxLCJpZCI6MSwiaWF0IjoxNzE1NDg5NzQ1LCJleHAiOjE3MTY2OTkzNDV9.O5AURDpINpCx1XdGf9R6EH77ix5J56EgVKlNJeqDOjg",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"isbn13\": 0,\r\n    \"authors\": \"Mimiga\",\r\n    \"publication\": 2021,\r\n    \"title\": \"Paradise Apart\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{admin_url}}/addBook",
-							"host": [
-								"{{admin_url}}"
-							],
-							"path": [
-								"addBook"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "AddISBNErr",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"const response = pm.response.json();\r",
-									"\r",
-									"pm.test(\"Response status should be 400\", () => {\r",
-									"    pm.response.to.have.status(400);\r",
-									"})\r",
-									"\r",
-									"pm.test(\"Status code name has string\", () => {\r",
-									"    pm.response.to.have.status(\"Invalid ISBN\");\r",
-									"})\r",
-									"\r",
-									"pm.test(\"Body has message field\", () => {\r",
-									"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
-									"})\r",
-									"\r",
-									"pm.test(\"Error message should be in this format\", () => {\r",
-									"    pm.expect(response.message).to.eql(\"Invalid ISBN, use a nonnegative number.\");\r",
-									"})"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "authorization",
-								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoxLCJpZCI6MSwiaWF0IjoxNzE1NDg5NzQ1LCJleHAiOjE3MTY2OTkzNDV9.O5AURDpINpCx1XdGf9R6EH77ix5J56EgVKlNJeqDOjg"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"isbn13\": -1,\r\n    \"authors\": \"Mimiga\",\r\n    \"publication\": 2021,\r\n    \"title\": \"Paradise Apart\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{admin_url}}/addBook",
-							"host": [
-								"{{admin_url}}"
-							],
-							"path": [
-								"addBook"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "AddYearErr",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"const response = pm.response.json();\r",
-									"\r",
-									"pm.test(\"Response status should be 400\", () => {\r",
-									"    pm.response.to.have.status(400);\r",
-									"})\r",
-									"\r",
-									"pm.test(\"Status code name has string\", () => {\r",
-									"    pm.response.to.have.status(\"Invalid year\");\r",
-									"})\r",
-									"\r",
-									"pm.test(\"Body has message field\", () => {\r",
-									"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
-									"})\r",
-									"\r",
-									"pm.test(\"Error message should be in this format\", () => {\r",
-									"    pm.expect(response.message).to.eql(\"Invalid year, use a number no greater than the current year.\");\r",
-									"})"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "authorization",
-								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoxLCJpZCI6MSwiaWF0IjoxNzE1NDg5NzQ1LCJleHAiOjE3MTY2OTkzNDV9.O5AURDpINpCx1XdGf9R6EH77ix5J56EgVKlNJeqDOjg"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"isbn13\": 0,\r\n    \"authors\": \"Mimiga\",\r\n    \"publication\": \"Twenty Twenty-One\",\r\n    \"title\": \"Paradise Apart\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{admin_url}}/addBook",
-							"host": [
-								"{{admin_url}}"
-							],
-							"path": [
-								"addBook"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "AddAvgErr",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"const response = pm.response.json();\r",
-									"\r",
-									"pm.test(\"Response status should be 400\", () => {\r",
-									"    pm.response.to.have.status(400);\r",
-									"})\r",
-									"\r",
-									"pm.test(\"Status code name has string\", () => {\r",
-									"    pm.response.to.have.status(\"Invalid average rating\");\r",
-									"})\r",
-									"\r",
-									"pm.test(\"Body has message field\", () => {\r",
-									"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
-									"})\r",
-									"\r",
-									"pm.test(\"Error message should be in this format\", () => {\r",
-									"    pm.expect(response.message).to.eql(\"Invalid average rating, use a decimal number 0-5.\");\r",
-									"})"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "authorization",
-								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoxLCJpZCI6MSwiaWF0IjoxNzE1NDg5NzQ1LCJleHAiOjE3MTY2OTkzNDV9.O5AURDpINpCx1XdGf9R6EH77ix5J56EgVKlNJeqDOjg"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"isbn13\": 0,\r\n    \"authors\": \"Mimiga\",\r\n    \"publication\": 2021,\r\n    \"title\": \"Paradise Apart\",\r\n    \"average\": 5.1\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{admin_url}}/addBook",
-							"host": [
-								"{{admin_url}}"
-							],
-							"path": [
-								"addBook"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "AddCountErr",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"const response = pm.response.json();\r",
-									"\r",
-									"pm.test(\"Response status should be 400\", () => {\r",
-									"    pm.response.to.have.status(400);\r",
-									"})\r",
-									"\r",
-									"pm.test(\"Status code name has string\", () => {\r",
-									"    pm.response.to.have.status(\"Invalid total rating count\");\r",
-									"})\r",
-									"\r",
-									"pm.test(\"Body has message field\", () => {\r",
-									"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
-									"})\r",
-									"\r",
-									"pm.test(\"Error message should be in this format\", () => {\r",
-									"    pm.expect(response.message).to.eql(\"Invalid total rating count, use a nonnegative number.\");\r",
-									"})"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "authorization",
-								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoxLCJpZCI6MSwiaWF0IjoxNzE1NDg5NzQ1LCJleHAiOjE3MTY2OTkzNDV9.O5AURDpINpCx1XdGf9R6EH77ix5J56EgVKlNJeqDOjg"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"isbn13\": 0,\r\n    \"authors\": \"Mimiga\",\r\n    \"publication\": 2021,\r\n    \"title\": \"Paradise Apart\",\r\n    \"count\": -1\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{admin_url}}/addBook",
-							"host": [
-								"{{admin_url}}"
-							],
-							"path": [
-								"addBook"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "AddStarErr",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"const response = pm.response.json();\r",
-									"\r",
-									"pm.test(\"Response status should be 400\", () => {\r",
-									"    pm.response.to.have.status(400);\r",
-									"})\r",
-									"\r",
-									"pm.test(\"Status code name has string\", () => {\r",
-									"    pm.response.to.have.status(\"Invalid star ratings\");\r",
-									"})\r",
-									"\r",
-									"pm.test(\"Body has message field\", () => {\r",
-									"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
-									"})\r",
-									"\r",
-									"pm.test(\"Error message should be in this format\", () => {\r",
-									"    pm.expect(response.message).to.eql(\"Invalid star ratings, use nonnegative numbers.\");\r",
-									"})"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "authorization",
-								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoxLCJpZCI6MSwiaWF0IjoxNzE1NDg5NzQ1LCJleHAiOjE3MTY2OTkzNDV9.O5AURDpINpCx1XdGf9R6EH77ix5J56EgVKlNJeqDOjg"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"isbn13\": 0,\r\n    \"authors\": \"Mimiga\",\r\n    \"publication\": 2021,\r\n    \"title\": \"Paradise Apart\",\r\n    \"rating_1\": -1\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{admin_url}}/addBook",
-							"host": [
-								"{{admin_url}}"
-							],
-							"path": [
-								"addBook"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "AddMissInfoErr",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"const response = pm.response.json();\r",
-									"\r",
-									"pm.test(\"Response status should be 400\", () => {\r",
-									"    pm.response.to.have.status(400);\r",
-									"})\r",
-									"\r",
-									"pm.test(\"Status code name has string\", () => {\r",
-									"    pm.response.to.have.status(\"Missing information\");\r",
-									"})\r",
-									"\r",
-									"pm.test(\"Body has message field\", () => {\r",
-									"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
-									"})\r",
-									"\r",
-									"pm.test(\"Error message should be in this format\", () => {\r",
-									"    pm.expect(response.message).to.eql(\"Missing required information, see documentation.\");\r",
-									"})"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "authorization",
-								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoxLCJpZCI6MSwiaWF0IjoxNzE1NDg5NzQ1LCJleHAiOjE3MTY2OTkzNDV9.O5AURDpINpCx1XdGf9R6EH77ix5J56EgVKlNJeqDOjg"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"authors\": \"Mimiga\",\r\n    \"publication\": 2021,\r\n    \"title\": \"Paradise Apart\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{admin_url}}/addBook",
-							"host": [
-								"{{admin_url}}"
-							],
-							"path": [
-								"addBook"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "AddDuplicateErr",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"const response = pm.response.json();\r",
-									"\r",
-									"pm.test(\"Response status should be 400\", () => {\r",
-									"    pm.response.to.have.status(400);\r",
-									"})\r",
-									"\r",
-									"pm.test(\"Status code name has string\", () => {\r",
-									"    pm.response.to.have.status(\"Book already exists\");\r",
-									"})\r",
-									"\r",
-									"pm.test(\"Body has message field\", () => {\r",
-									"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
-									"})\r",
-									"\r",
-									"pm.test(\"Error message should be in this format\", () => {\r",
-									"    pm.expect(response.message).to.eql(\"Book already exists in database.\");\r",
-									"})"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "authorization",
-								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoxLCJpZCI6MSwiaWF0IjoxNzE1NDg5NzQ1LCJleHAiOjE3MTY2OTkzNDV9.O5AURDpINpCx1XdGf9R6EH77ix5J56EgVKlNJeqDOjg"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"isbn13\": 9780062024040,\r\n    \"authors\": \"Veronica Roth\",\r\n    \"publication\": 2011,\r\n    \"title\": \"Divergent (Divergent, #1)\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{admin_url}}/addBook",
-							"host": [
-								"{{admin_url}}"
-							],
-							"path": [
-								"addBook"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "AddNoToken",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"const response = pm.response.json();\r",
-									"\r",
-									"pm.test(\"Response status should be 401\", () => {\r",
-									"    pm.response.to.have.status(401);\r",
-									"})\r",
-									"\r",
-									"pm.test(\"Status code name has string\", () => {\r",
-									"    pm.response.to.have.status(\"Unauthorized\");\r",
-									"})\r",
-									"\r",
-									"pm.test(\"Body has message field\", () => {\r",
-									"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
-									"})\r",
-									"\r",
-									"pm.test(\"Error message should be in this format\", () => {\r",
-									"    pm.expect(response.message).to.eql(\"Auth token is not supplied\");\r",
-									"})"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"isbn13\": 0,\r\n    \"authors\": \"Mimiga\",\r\n    \"publication\": 2021,\r\n    \"title\": \"Paradise Apart\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{admin_url}}/addBook",
-							"host": [
-								"{{admin_url}}"
-							],
-							"path": [
-								"addBook"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "AddBadToken",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"const response = pm.response.json();\r",
-									"\r",
-									"pm.test(\"Response status should be 403\", () => {\r",
-									"    pm.response.to.have.status(403);\r",
-									"})\r",
-									"\r",
-									"pm.test(\"Status code name has string\", () => {\r",
-									"    pm.response.to.have.status(\"Forbidden\");\r",
-									"})\r",
-									"\r",
-									"pm.test(\"Body has message field\", () => {\r",
-									"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
-									"})\r",
-									"\r",
-									"pm.test(\"Error message should be in this format\", () => {\r",
-									"    pm.expect(response.message).to.eql(\"Token is not valid\");\r",
-									"})"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "authorization",
-								"value": "THISISABADTOKEN!!!"
-							}
-						],
-						"url": {
-							"raw": "{{admin_url}}/addBook",
-							"host": [
-								"{{admin_url}}"
-							],
-							"path": [
-								"addBook"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "AddUnauthorized",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"const response = pm.response.json();\r",
-									"\r",
-									"pm.test(\"Response status should be 403\", () => {\r",
-									"    pm.response.to.have.status(403);\r",
-									"})\r",
-									"\r",
-									"pm.test(\"Status code name has string\", () => {\r",
-									"    pm.response.to.have.status(\"Invalid Privilege\");\r",
-									"})\r",
-									"\r",
-									"pm.test(\"Body has message field\", () => {\r",
-									"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
-									"})\r",
-									"\r",
-									"pm.test(\"Error message should be in this format\", () => {\r",
-									"    pm.expect(response.message).to.eql(\"User does not have privilege to access this route.\");\r",
-									"})"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "authorization",
-								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoyLCJpZCI6MSwiaWF0IjoxNzE1NDkyODkwLCJleHAiOjE3MTY3MDI0OTB9.0ZtV517ZCpJUzizGI_TC03HjU7Z7HOpteRqQaWVq8_g"
-							}
-						],
-						"url": {
-							"raw": "{{admin_url}}/addBook",
-							"host": [
-								"{{admin_url}}"
-							],
-							"path": [
-								"addBook"
-							]
-						}
-					},
-					"response": []
+						"type": "text/javascript",
+						"packages": {}
+					}
 				}
-			]
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiUnlhbiIsInJvbGUiOjIsImlkIjoxLCJpYXQiOjE3MTU5MjI4OTIsImV4cCI6MTcxNzEzMjQ5Mn0.P8st0Ax56y4XzvaHUOg0aBM-JCvJLx9RejO9YhRbQHY"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"author\":\"Gillian Flynn\",\r\n    \"title\":\"Gone Girl\",\r\n    \"rating\":4\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/adminBook/addRating/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"adminBook",
+						"addRating",
+						""
+					]
+				}
+			},
+			"response": []
 		},
 		{
-			"name": "RemoveBooksByAuthor",
-			"item": [
+			"name": "adBook/addRating 400 missing",
+			"event": [
 				{
-					"name": "RemoveByAuthorSuccess",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"const response = pm.response.json();\r",
-									"\r",
-									"pm.test(\"Response status should be 200\", () => {\r",
-									"    pm.response.to.have.status(200);\r",
-									"})\r",
-									"\r",
-									"pm.test(\"Body has entries field\", () => {\r",
-									"    pm.expect(response).to.haveOwnProperty(\"entries\");\r",
-									"})\r",
-									"\r",
-									"pm.test(\"Correct book should have this isbn\", () => {\r",
-									"    pm.expect(response.entries[0].isbn13).to.eql(\"9798631094345\");\r",
-									"})"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoxLCJpZCI6MSwiaWF0IjoxNzE1NjM5MzM3LCJleHAiOjE3MTY4NDg5Mzd9.TBbpBzz5KPW7XcTNi_jAF34ZdA7-q8EKYRKQV6MQLKw"
-							}
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Response status should be 400\", () => {\r",
+							"    pm.response.to.have.status(400);\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Response has correct status message\", () => {\r",
+							"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
+							"    pm.expect(response.message).to.equal(\"Missing or bad information, see documentation.\");\r",
+							"})"
 						],
-						"url": {
-							"raw": "{{admin_url}}/author?author=Socrates Co.",
-							"host": [
-								"{{admin_url}}"
-							],
-							"path": [
-								"author"
-							],
-							"query": [
-								{
-									"key": "author",
-									"value": "Socrates Co."
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "RemoveByAuthorErrorAuthor",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"const response = pm.response.json();\r",
-									"\r",
-									"pm.test(\"Response status should be 404\", () => {\r",
-									"    pm.response.to.have.status(404);\r",
-									"})\r",
-									"\r",
-									"pm.test(\"Status code name has string\", () => {\r",
-									"    pm.response.to.have.status(\"No books found\");\r",
-									"})\r",
-									"\r",
-									"pm.test(\"Body has message field\", () => {\r",
-									"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
-									"})\r",
-									"\r",
-									"pm.test(\"Error message should be in this format\", () => {\r",
-									"    pm.expect(response.message).to.eql(\"No books with this author were found to delete.\");\r",
-									"})"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoxLCJpZCI6MSwiaWF0IjoxNzE1NjM5MzM3LCJleHAiOjE3MTY4NDg5Mzd9.TBbpBzz5KPW7XcTNi_jAF34ZdA7-q8EKYRKQV6MQLKw"
-							}
-						],
-						"url": {
-							"raw": "{{admin_url}}/author?author=Stu dent",
-							"host": [
-								"{{admin_url}}"
-							],
-							"path": [
-								"author"
-							],
-							"query": [
-								{
-									"key": "author",
-									"value": "Stu dent"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "RemoveByAuthorEmpty",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"const response = pm.response.json();\r",
-									"\r",
-									"pm.test(\"Response status should be 400\", () => {\r",
-									"    pm.response.to.have.status(400);\r",
-									"})\r",
-									"\r",
-									"pm.test(\"Status code name has string\", () => {\r",
-									"    pm.response.to.have.status(\"Missing information\");\r",
-									"})\r",
-									"\r",
-									"pm.test(\"Body has message field\", () => {\r",
-									"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
-									"})\r",
-									"\r",
-									"pm.test(\"Error message should be in this format\", () => {\r",
-									"    pm.expect(response.message).to.eql(\"Missing data, refer to documentation.\");\r",
-									"})"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoxLCJpZCI6MSwiaWF0IjoxNzE1NjM5MzM3LCJleHAiOjE3MTY4NDg5Mzd9.TBbpBzz5KPW7XcTNi_jAF34ZdA7-q8EKYRKQV6MQLKw"
-							}
-						],
-						"url": {
-							"raw": "{{admin_url}}/author?author=",
-							"host": [
-								"{{admin_url}}"
-							],
-							"path": [
-								"author"
-							],
-							"query": [
-								{
-									"key": "author",
-									"value": ""
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "RemoveByAuthorUnauthorized",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"const response = pm.response.json();\r",
-									"\r",
-									"pm.test(\"Response status should be 403\", () => {\r",
-									"    pm.response.to.have.status(403);\r",
-									"})\r",
-									"\r",
-									"pm.test(\"Status code name has string\", () => {\r",
-									"    pm.response.to.have.status(\"Invalid Privilege\");\r",
-									"})\r",
-									"\r",
-									"pm.test(\"Body has message field\", () => {\r",
-									"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
-									"})\r",
-									"\r",
-									"pm.test(\"Error message should be in this format\", () => {\r",
-									"    pm.expect(response.message).to.eql(\"User does not have privilege to access this route.\");\r",
-									"})"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoyLCJpZCI6MiwiaWF0IjoxNzE1NjQ3Mzc4LCJleHAiOjE3MTY4NTY5Nzh9.HHmF_-0D5qfX7WNWeC4v0vF-Zl39N5xg4giPYxlBQps"
-							}
-						],
-						"url": {
-							"raw": "{{admin_url}}/author?author=carlos",
-							"host": [
-								"{{admin_url}}"
-							],
-							"path": [
-								"author"
-							],
-							"query": [
-								{
-									"key": "author",
-									"value": "carlos"
-								}
-							]
-						}
-					},
-					"response": []
+						"type": "text/javascript",
+						"packages": {}
+					}
 				}
-			]
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiUnlhbiIsInJvbGUiOjIsImlkIjoxLCJpYXQiOjE3MTU5MjI4OTIsImV4cCI6MTcxNzEzMjQ5Mn0.P8st0Ax56y4XzvaHUOg0aBM-JCvJLx9RejO9YhRbQHY"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"author\":\"Gillian Flynn\",\r\n    \"title\":\"Gone Girl\",\r\n    \"rating\":null\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/adminBook/addRating/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"adminBook",
+						"addRating",
+						""
+					]
+				}
+			},
+			"response": []
 		},
 		{
-			"name": "RemoveBooksByISBN",
-			"item": [
+			"name": "adBook/addRating 400 invalid rating",
+			"event": [
 				{
-					"name": "RemoveBooksByISBNSuccess",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"const response = pm.response.json();\r",
-									"\r",
-									"pm.test(\"Response status should be 200\", () => {\r",
-									"    pm.response.to.have.status(200);\r",
-									"})\r",
-									"\r",
-									"pm.test(\"Body has entries field\", () => {\r",
-									"    pm.expect(response).to.haveOwnProperty(\"entries\");\r",
-									"})\r",
-									"\r",
-									"pm.test(\"Correct book should have this isbn\", () => {\r",
-									"    pm.expect(response.entries[0].isbn13).to.eql(\"9780374404150\");\r",
-									"})\r",
-									"\r",
-									"pm.test(\"Correct book should have this isbn\", () => {\r",
-									"    pm.expect(response.entries[0].authors).to.eql(\"Kristin Hannah\");\r",
-									"})"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "authorization",
-								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoxLCJpZCI6MSwiaWF0IjoxNzE1NDg5NzQ1LCJleHAiOjE3MTY2OTkzNDV9.O5AURDpINpCx1XdGf9R6EH77ix5J56EgVKlNJeqDOjg"
-							}
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Response status should be 400\", () => {\r",
+							"    pm.response.to.have.status(400);\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Response has correct status message\", () => {\r",
+							"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
+							"    pm.expect(response.message).to.equal(\"Invalid rating, use a number 0-5.\");\r",
+							"})"
 						],
-						"url": {
-							"raw": "localhost:4000/adminBook/isbn/9780374404150",
-							"host": [
-								"localhost"
-							],
-							"port": "4000",
-							"path": [
-								"adminBook",
-								"isbn",
-								"9780374404150"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "RemoveByISBNNoneFound",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"const response = pm.response.json();\r",
-									"\r",
-									"pm.test(\"Response status should be 404\", () => {\r",
-									"    pm.response.to.have.status(404);\r",
-									"})\r",
-									"\r",
-									"pm.test(\"Status code name has string\", () => {\r",
-									"    pm.response.to.have.status(\"ISBN Number not found in database\");\r",
-									"})\r",
-									"\r",
-									"pm.test(\"Body has message field\", () => {\r",
-									"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
-									"})\r",
-									"\r",
-									"pm.test(\"Error message should be in this format\", () => {\r",
-									"    pm.expect(response.message).to.eql(\"ISBN Number not found in database\");\r",
-									"})"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "authorization",
-								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoxLCJpZCI6MSwiaWF0IjoxNzE1NDg5NzQ1LCJleHAiOjE3MTY2OTkzNDV9.O5AURDpINpCx1XdGf9R6EH77ix5J56EgVKlNJeqDOjg"
-							}
-						],
-						"url": {
-							"raw": "localhost:4000/adminBook/isbn/88888888888",
-							"host": [
-								"localhost"
-							],
-							"port": "4000",
-							"path": [
-								"adminBook",
-								"isbn",
-								"88888888888"
-							]
-						}
-					},
-					"response": []
+						"type": "text/javascript",
+						"packages": {}
+					}
 				}
-			]
-		}
-	],
-	"event": [
-		{
-			"listen": "prerequest",
-			"script": {
-				"type": "text/javascript",
-				"packages": {},
-				"exec": [
-					""
-				]
-			}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiUnlhbiIsInJvbGUiOjIsImlkIjoxLCJpYXQiOjE3MTU5MjI4OTIsImV4cCI6MTcxNzEzMjQ5Mn0.P8st0Ax56y4XzvaHUOg0aBM-JCvJLx9RejO9YhRbQHY"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"author\":\"Gillian Flynn\",\r\n    \"title\":\"Gone Girl\",\r\n    \"rating\":7\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/adminBook/addRating/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"adminBook",
+						"addRating",
+						""
+					]
+				}
+			},
+			"response": []
 		},
 		{
-			"listen": "test",
-			"script": {
-				"type": "text/javascript",
-				"packages": {},
-				"exec": [
-					""
-				]
-			}
-		}
-	],
-	"variable": [
+			"name": "adBook/addRating 404 author not found",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Response status should be 404\", () => {\r",
+							"    pm.response.to.have.status(404);\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Response has correct status message\", () => {\r",
+							"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
+							"    pm.expect(response.message).to.equal(\"Author not found in database.\");\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiUnlhbiIsInJvbGUiOjIsImlkIjoxLCJpYXQiOjE3MTU5MjI4OTIsImV4cCI6MTcxNzEzMjQ5Mn0.P8st0Ax56y4XzvaHUOg0aBM-JCvJLx9RejO9YhRbQHY"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"author\":\"Not Gillian Flynn\",\r\n    \"title\":\"Gone Girl\",\r\n    \"rating\":4\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/adminBook/addRating/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"adminBook",
+						"addRating",
+						""
+					]
+				}
+			},
+			"response": []
+		},
 		{
-			"key": "admin_url",
-			"value": "localhost:4000/adminBook",
-			"type": "string"
+			"name": "adBook/addRating 404 Book not found",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Response status should be 404\", () => {\r",
+							"    pm.response.to.have.status(404);\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Response has correct status message\", () => {\r",
+							"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
+							"    pm.expect(response.message).to.equal(\"Book not written by specified author.\");\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiUnlhbiIsInJvbGUiOjIsImlkIjoxLCJpYXQiOjE3MTU5MjI4OTIsImV4cCI6MTcxNzEzMjQ5Mn0.P8st0Ax56y4XzvaHUOg0aBM-JCvJLx9RejO9YhRbQHY"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"author\":\"Gillian Flynn\",\r\n    \"title\":\"Little Women\",\r\n    \"rating\":4\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/adminBook/addRating/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"adminBook",
+						"addRating",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "adBook/changeValues 201 success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Response status should be 201\", () => {\r",
+							"    pm.response.to.have.status(201);\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Response should have a field 'entries'\", () => {\r",
+							"    pm.expect(response).to.haveOwnProperty(\"entries\");\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiSmltYm8iLCJyb2xlIjoxLCJpZCI6NSwiaWF0IjoxNzE1OTM0MjE4LCJleHAiOjE3MTcxNDM4MTh9.rdwPbv4MMox8kFRrCIBmTXFG6sKT07ZGs8k4thiZlww"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"author\":\"Gillian Flynn\",\r\n    \"title\":\"Gone Girl\",\r\n    \"new_author\":\"Gillian Flynn\",\r\n    \"new_title\":\"Gone Girl\",\r\n    \"new_year\":2012,\r\n    \"new_isbn\":9780297859380\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/adminBook/changeValues/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"adminBook",
+						"changeValues",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "adBook/changeValues 400 missing",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Response status should be 400\", () => {\r",
+							"    pm.response.to.have.status(400);\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Response has correct status message\", () => {\r",
+							"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
+							"    pm.expect(response.message).to.equal(\"Missing or bad information, see documentation.\");\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiSmltYm8iLCJyb2xlIjoxLCJpZCI6NSwiaWF0IjoxNzE1OTM0MjE4LCJleHAiOjE3MTcxNDM4MTh9.rdwPbv4MMox8kFRrCIBmTXFG6sKT07ZGs8k4thiZlww"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"author\":\"Gillian Flynn\",\r\n    \"title\":null,\r\n    \"new_author\":\"Gillian Flynn\",\r\n    \"new_title\":\"Gone Girl\",\r\n    \"new_year\":2012,\r\n    \"new_isbn\":9780297859380\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/adminBook/changeValues/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"adminBook",
+						"changeValues",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "adBook/changeValues 400 no valid values",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Response status should be 400\", () => {\r",
+							"    pm.response.to.have.status(400);\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Response has correct status message\", () => {\r",
+							"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
+							"    pm.expect(response.message).to.equal(\"No valid update values were passed.\");\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiSmltYm8iLCJyb2xlIjoxLCJpZCI6NSwiaWF0IjoxNzE1OTM0MjE4LCJleHAiOjE3MTcxNDM4MTh9.rdwPbv4MMox8kFRrCIBmTXFG6sKT07ZGs8k4thiZlww"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"author\":\"Gillian Flynn\",\r\n    \"title\":\"Gone Girl\",\r\n    \"new_author\":null,\r\n    \"new_title\":null,\r\n    \"new_year\":null,\r\n    \"new_isbn\":null\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/adminBook/changeValues/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"adminBook",
+						"changeValues",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "adBook/changeValues 404 no books found",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Response status should be 404\", () => {\r",
+							"    pm.response.to.have.status(404);\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Response has correct status message\", () => {\r",
+							"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
+							"    pm.expect(response.message).to.equal(\"No book found with given author and title.\");\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiSmltYm8iLCJyb2xlIjoxLCJpZCI6NSwiaWF0IjoxNzE1OTM0MjE4LCJleHAiOjE3MTcxNDM4MTh9.rdwPbv4MMox8kFRrCIBmTXFG6sKT07ZGs8k4thiZlww"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"author\":\"Gillian Flynn\",\r\n    \"title\":\"Not Gone Girl\",\r\n    \"new_author\":\"empty string\",\r\n    \"new_title\":null,\r\n    \"new_year\":null,\r\n    \"new_isbn\":null\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/adminBook/changeValues/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"adminBook",
+						"changeValues",
+						""
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }

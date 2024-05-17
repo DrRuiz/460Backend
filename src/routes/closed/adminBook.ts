@@ -540,7 +540,7 @@ adminBookRouter.put(
         pool.query(query, values)
             .then((result) => {
                 if (result.rowCount > 0) {
-                    response.status(200).send({
+                    response.status(201).send({
                         entries: result.rows.map(format),
                     });
                 } else {
@@ -709,7 +709,7 @@ adminBookRouter.put(
         
         pool.query(query, values)
             .then((result) => {
-                response.status(200).send({
+                response.status(201).send({
                     entries: result.rows.map(format),
                 })
             })
