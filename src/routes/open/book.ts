@@ -404,7 +404,7 @@ bookRouter.get(
  *
  * @apiDescription Request for all books with an average rating between the min and max values, inclusive.
  *
- * @apiName getAvgRatingRange
+ * @apiName GetAvgRatingRange
  * @apiGroup Book
  *
  * @apiQuery {int} min The minimum average rating to select
@@ -523,7 +523,7 @@ bookRouter.get(
  * }"
  *
  * @apiError (400: Missing information) {String} message "Missing data, refer to documentation."
- * @apiError (404: Book does not exist) {String} message "Book title does not exist in database."
+ * @apiError (404: Book title does not exist) {String} message "Book title not found in database."
  */
 bookRouter.get(
     '/title',
