@@ -982,13 +982,11 @@
 							}
 						],
 						"url": {
-							"raw": "localhost:4000/adminBook/isbn/9780374404150",
+							"raw": "{{admin_url}}/isbn/9780374404150",
 							"host": [
-								"localhost"
+								"{{admin_url}}"
 							],
-							"port": "4000",
 							"path": [
-								"adminBook",
 								"isbn",
 								"9780374404150"
 							]
@@ -1035,13 +1033,11 @@
 							}
 						],
 						"url": {
-							"raw": "localhost:4000/adminBook/isbn/-9780374404150",
+							"raw": "{{admin_url}}/isbn/-9780374404150",
 							"host": [
-								"localhost"
+								"{{admin_url}}"
 							],
-							"port": "4000",
 							"path": [
-								"adminBook",
 								"isbn",
 								"-9780374404150"
 							]
@@ -1088,13 +1084,11 @@
 							}
 						],
 						"url": {
-							"raw": "localhost:4000/adminBook/isbn/88888888888",
+							"raw": "{{admin_url}}/isbn/88888888888",
 							"host": [
-								"localhost"
+								"{{admin_url}}"
 							],
-							"port": "4000",
 							"path": [
-								"adminBook",
 								"isbn",
 								"88888888888"
 							]
@@ -1147,12 +1141,11 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/adminBook/addRating/",
+							"raw": "{{admin_url}}/addRating/",
 							"host": [
-								"{{base_url}}"
+								"{{admin_url}}"
 							],
 							"path": [
-								"adminBook",
 								"addRating",
 								""
 							]
@@ -1201,12 +1194,11 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/adminBook/addRating/",
+							"raw": "{{admin_url}}/addRating/",
 							"host": [
-								"{{base_url}}"
+								"{{admin_url}}"
 							],
 							"path": [
-								"adminBook",
 								"addRating",
 								""
 							]
@@ -1307,12 +1299,11 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/adminBook/addRating/",
+							"raw": "{{admin_url}}/addRating/",
 							"host": [
-								"{{base_url}}"
+								"{{admin_url}}"
 							],
 							"path": [
-								"adminBook",
 								"addRating",
 								""
 							]
@@ -1361,12 +1352,11 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/adminBook/addRating/",
+							"raw": "{{admin_url}}/addRating/",
 							"host": [
-								"{{base_url}}"
+								"{{admin_url}}"
 							],
 							"path": [
-								"adminBook",
 								"addRating",
 								""
 							]
@@ -1419,12 +1409,11 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/adminBook/changeValues/",
+							"raw": "{{admin_url}}/changeValues/",
 							"host": [
-								"{{base_url}}"
+								"{{admin_url}}"
 							],
 							"path": [
-								"adminBook",
 								"changeValues",
 								""
 							]
@@ -1473,12 +1462,11 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/adminBook/changeValues/",
+							"raw": "{{admin_url}}/changeValues/",
 							"host": [
-								"{{base_url}}"
+								"{{admin_url}}"
 							],
 							"path": [
-								"adminBook",
 								"changeValues",
 								""
 							]
@@ -1527,12 +1515,11 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/adminBook/changeValues/",
+							"raw": "{{admin_url}}/changeValues/",
 							"host": [
-								"{{base_url}}"
+								"{{admin_url}}"
 							],
 							"path": [
-								"adminBook",
 								"changeValues",
 								""
 							]
@@ -1581,12 +1568,11 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/adminBook/changeValues",
+							"raw": "{{admin_url}}/changeValues",
 							"host": [
-								"{{base_url}}"
+								"{{admin_url}}"
 							],
 							"path": [
-								"adminBook",
 								"changeValues"
 							]
 						}
@@ -1642,12 +1628,11 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/adminBook/changeValues",
+							"raw": "{{admin_url}}/changeValues",
 							"host": [
-								"{{base_url}}"
+								"{{admin_url}}"
 							],
 							"path": [
-								"adminBook",
 								"changeValues"
 							]
 						}
