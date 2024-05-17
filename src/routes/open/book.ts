@@ -682,7 +682,6 @@ bookRouter.get(
  *
  *
  * @apiError (400: Missing/Bad information) {String} message "Missing or bad information, see documentation."
- * @apiError (400: Invalid ISBN) {String} message "Invalid ISBN, use a nonnegative number."
  * @apiError (404: No books matching this ISBN) {String} message "No books found matching this ISBN."
  */
 bookRouter.get(
