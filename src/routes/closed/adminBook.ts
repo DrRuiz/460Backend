@@ -478,7 +478,7 @@ adminBookRouter.delete(
  * @apiError (400: Missing/Bad information) {String} message "Missing or bad information, see documentation."
  * @apiError (400: No valid update values provided) {String} message "No valid update values were passed."
  * 
- * @apiError (404: No book found with that combination of author and title.) {String} message "No book found with given author and title."
+ * @apiError (404: No book found with that combination of author and title) {String} message "No book found with given author and title."
  * @apiError (400: Book already exists) {String} message "Book already exists in database."
  */
 adminBookRouter.put(
@@ -556,7 +556,7 @@ adminBookRouter.put(
                         });
                     } else {
                         response.statusMessage =
-                            'No book found with that combination of author and title.';
+                            'No book found with that combination of author and title';
                         response.status(404).send({
                             message:
                                 'No book found with given author and title.',
@@ -725,7 +725,7 @@ adminBookRouter.put(
             columnName +
             ' = ' +
             columnName +
-            ' + 1 WHERE authors LIKE $1 AND title LIKE $2 RETURNING *';
+            ' + 1, rating_count = rating_count + 1 WHERE authors LIKE $1 AND title LIKE $2 RETURNING *';
         const values = [`%${request.body.author}%`, `%${request.body.title}%`];
 
         pool.query(query, values)
