@@ -1723,12 +1723,11 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/book/isbn/?isbn=9780743273560",
+							"raw": "{{book_url}}/isbn/?isbn=9780743273560",
 							"host": [
-								"{{base_url}}"
+								"{{book_url}}"
 							],
 							"path": [
-								"book",
 								"isbn",
 								""
 							],
@@ -1769,12 +1768,11 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/book/isbn/?isbn=9780743273260",
+							"raw": "{{book_url}}/isbn/?isbn=9780743273260",
 							"host": [
-								"{{base_url}}"
+								"{{book_url}}"
 							],
 							"path": [
-								"book",
 								"isbn",
 								""
 							],
@@ -1815,12 +1813,11 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/book/isbn/?isbn=978074327356",
+							"raw": "{{book_url}}/isbn/?isbn=978074327356",
 							"host": [
-								"{{base_url}}"
+								"{{book_url}}"
 							],
 							"path": [
-								"book",
 								"isbn",
 								""
 							],
