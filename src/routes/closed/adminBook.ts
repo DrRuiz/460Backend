@@ -444,11 +444,13 @@ adminBookRouter.delete(
  * @apiGroup Book
  *
  * @apiBody {String} authors Author's name, required
- * @apiBody {String} original_title Original title of book, optional
  * @apiBody {String} title Book title, required
- * @apiBody {Number} rating The rating that the book will be updated to, required
+ * @apiBody {String} new_title The new title of book, optional
+ * @apiBody {Number} new_year The new publication year of book, optional
+ * @apiBody {String} new_author The new author of book, optional
+ * @apiBody {Number} new_isbn The new isbn of book, optional
  *
- * @apiSuccess (Success 201) {IBook} entry The book with updated rating:
+ * @apiSuccess (Success 201) {IBook} entry The book with updated values:
  * "isbn13: <code>isbn13</code>,
  * authors: <code>authors</code>,
  * publication: <code>publication_year</code>,
@@ -481,7 +483,83 @@ adminBookRouter.delete(
  * @apiError (404: Author not found in database) {String} message "Author not found in database."
  * @apiError (404: Title not found in database) {String} message "Title not found in database."
  */
+adminBookRouter.put(
+    '/changeValues',
+    checkAdmin,
+    //validate request body
+    (request: IJwtRequest, response: Response, next: NextFunction) => {
+        if(isStringProvided(request.body.author) && 
+        isStringProvided(request.body.title) && 
+        (isStringProvided(request.body.new_title) || request.body.new_title == null)&&
+        (isNumberProvided(request.body.new_year) || request.body.new_year == null)&&
+        (isNumberProvided(request.body.new_isbn) || request.body.new_isbn == null)&&
+        (isStringProvided(request.body.new_author) || request.body.new_author == null)) {
+            next();
+        } else {
+            response.statusMessage = 'Missing/Bad information';
+            response.status(400).send({
+                message : 'Missing or bad information, see documentation.'
+            });
+        }
+    },
 
+    (request: IJwtRequest, response: Response) => {
+        let counter = 0;
+        let cols = '';
+        const values = [];
+        if(request.body.new_title != null) {
+            counter++;
+            cols += 'title = $' + counter + ', ';
+            values.push(request.body.new_title);
+        }
+        if (request.body.new_author != null) {
+            counter++;
+            cols += 'authors = $' + counter + ', ';
+            values.push(request.body.new_author);
+        }
+        if (request.body.new_isbn != null) {
+            counter++;
+            cols += 'isbn13 = $' + counter + ', ';
+            values.push(request.body.new_isbn);
+        }
+        if (request.body.new_year != null) {
+            counter++;
+            cols += 'publication_year = $' + counter + ', ';
+            values.push(request.body.new_year);
+        }
+        if (counter == 0) {
+            response.statusMessage = 'No valid update values provided';
+            response.status(400).send({
+                message: 'No valid update values were passed.'
+            })
+        }
+
+        cols = cols.slice(0, -2) + ' ';
+        const query = 'UPDATE books SET ' + cols + 'WHERE authors LIKE $' +  
+                        ++counter + ' AND title LIKE $' +  ++counter + ' RETURNING *'
+        values.push(request.body.author);
+        values.push(request.body.title);
+        pool.query(query, values)
+            .then((result) => {
+                if (result.rowCount > 0) {
+                    response.status(200).send({
+                        entries: result.rows.map(format),
+                    });
+                } else {
+                    response.statusMessage = 'No book found with that combonation of author and title.';
+                    response.status(404).send({
+                        message: 'No book found with given author and title.',
+                    });
+                }
+            })
+            .catch(() => {
+                response.status(500).send({
+                    message: 'Server error - contact support Query:' + query,
+                });
+            });
+
+    },
+);
 
 /**
  * @api {put} /book/addRating Request to add a rating for a book.
@@ -489,7 +567,7 @@ adminBookRouter.delete(
  * @apiDescription Request to add a rating to a book with author name and book title.
  *
  * @apiName putBook
- * @apiGroup Book
+ * @apiGroup adminBook
  *
  * @apiBody {String} author Author's name, required
  * @apiBody {String} original_title Original title of book, optional
