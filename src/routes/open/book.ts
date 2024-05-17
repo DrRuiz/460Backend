@@ -404,7 +404,7 @@ bookRouter.get(
  *
  * @apiDescription Request for all books with an average rating between the min and max values, inclusive.
  *
- * @apiName getAvgRatingRange
+ * @apiName GetAvgRatingRange
  * @apiGroup Book
  *
  * @apiQuery {int} min The minimum average rating to select
@@ -523,7 +523,7 @@ bookRouter.get(
  * }"
  *
  * @apiError (400: Missing information) {String} message "Missing data, refer to documentation."
- * @apiError (404: Book does not exist) {String} message "Book title does not exist in database."
+ * @apiError (404: Book title does not exist) {String} message "Book title not found in database."
  */
 bookRouter.get(
     '/title',
@@ -647,5 +647,80 @@ bookRouter.get(
 );
 
 //max end #############
+
+//Ryan Start ########################
+
+/**
+ * @api {get} /book/isbn Request for the book with a given ISBN
+ *
+ * @apiDescription Request for the book with a given ISBN
+ *
+ * @apiName getBooksISBN
+ * @apiGroup Book
+ *
+ * @apiQuery {int} isbn The ISBN to get the book for (13 digits)
+ *
+ * @apiSuccess {IBook[]} entries Specified entries with the following format:
+ * "isbn13: <code>isbn13</code>,
+ * authors: <code>authors</code>,
+ * publication: <code>publication_year</code>,
+ * original_title: <code>original_title</code>,
+ * title: <code>title</code>,
+ * ratings: {
+ *     average: <code>rating_avg</code>,
+ *     count: <code>rating_count</code>,
+ *     rating_1: <code>rating_1_star</code>,
+ *     rating_2: <code>rating_2_star</code>,
+ *     rating_3: <code>rating_3_star</code>,
+ *     rating_4: <code>rating_4_star</code>,
+ *     rating_5: <code>rating_5_star</code>
+ * },
+ * icons: {
+ *     large: <code>image_url</code>,
+ *     small: <code>image_small_url</code>
+ * }"
+ *
+ *
+ * @apiError (400: Missing/Bad information) {String} message "Missing or bad information, see documentation."
+ * @apiError (404: No books matching this ISBN) {String} message "No books found matching this ISBN."
+ */
+bookRouter.get(
+    '/isbn',
+    (request: Request, response: Response, next: NextFunction) => {
+        if (isNumberProvided(request.query.isbn) && (request.query.isbn.length == 13)) {
+            next();
+        } else {
+            response.statusMessage = 'Missing/Bad information';
+            response.status(400).send({
+                message: 'Missing or bad information, see documentation.',
+            });
+        }
+    },
+
+    (request: Request, response: Response) => {
+        const query = allButId + 'WHERE isbn13 = $1';
+        const values = [request.query.isbn];
+        pool.query(query, values)
+            .then((result) => {
+                if (result.rowCount > 0) {
+                    response.status(200).send({
+                        entries: result.rows.map(format),
+                    });
+                } else {
+                    response.statusMessage = 'No books with this ISBN';
+                    response.status(404).send({
+                        message: 'No books found with this ISBN.',
+                    });
+                }
+            })
+            .catch(() => {
+                response.status(500).send({
+                    message: 'Server error - contact support',
+                });
+            });
+    }
+);
+
+//Ryan End ########################
 
 export { bookRouter };
