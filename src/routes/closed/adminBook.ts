@@ -436,9 +436,9 @@ adminBookRouter.delete(
 //Ryan start ###################
 
 /**
- * @api {put} /bookook/updateRating Request to change the rating for a book.
+ * @api {put} /bookook/changeValues Request to change various values for a book.
  *
- * @apiDescription Request to change the rating of a book with author name and book title.
+ * @apiDescription Request to change various values of a book with author name and book title.
  *
  * @apiName putBook
  * @apiGroup Book
@@ -476,12 +476,10 @@ adminBookRouter.delete(
  * is provided
  * @apiError (403: Invalid Privilege) {String} message "User does not have privilege to access this route."
 
- * @apiError (400: Missing information) {String} message "Missing required information, see documentation."
- * @apiError (400: Invalid ISBN) {String} message "Invalid ISBN, use a nonnegative number."
- * @apiError (400: Invalid rating) {String} message "Invalid rating, use a number 0-5."
+ * @apiError (400: Missing/Bad information) {String} message "Missing or bad information, see documentation."
+ * @apiError (400: No valid update values provided) {String} message "No valid update values were passed."
  * 
- * @apiError (404: Author not found in database) {String} message "Author not found in database."
- * @apiError (404: Title not found in database) {String} message "Title not found in database."
+ * @apiError (404: No book found with that combonation of author and title.) {String} message "No book found with given author and title."
  */
 adminBookRouter.put(
     '/changeValues',
