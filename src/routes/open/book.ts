@@ -721,6 +721,7 @@ bookRouter.get(
             });
     }
 );
+
 /**
  * @api {put} /bookook/addRating Request to add a rating for a book.
  *
@@ -729,7 +730,7 @@ bookRouter.get(
  * @apiName putBook
  * @apiGroup Book
  *
- * @apiBody {String} authors Author's name, required
+ * @apiBody {String} author Author's name, required
  * @apiBody {String} original_title Original title of book, optional
  * @apiBody {String} title Book title, required
  * @apiBody {Number} rating The rating that will be added to the book, required
@@ -754,12 +755,136 @@ bookRouter.get(
  *     small: <code>image_small_url</code>
  * }"
  *
- * @apiError (400: Missing information) {String} message "Missing required information, see documentation."
+ * @apiError (400: Missing/Bad information) {String} message "Missing or bad information, see documentation."
  * @apiError (400: Invalid rating) {String} message "Invalid rating, use a number 0-5."
  *
  * @apiError (404: Author not found in database) {String} message "Author not found in database."
  * @apiError (404: Title not found in database) {String} message "Title not found in database."
+ * @apiError (404: Book and Author do not match) {String} message "Book not written by specified author."
  */
+bookRouter.put(
+    '/addRating',
+    //validate request body
+    (request: Request, response: Response, next: NextFunction) => {
+        if(isStringProvided(request.body.author) && 
+        isStringProvided(request.body.title) && 
+        isNumberProvided(request.body.rating)) {
+            next();
+        } else {
+            response.statusMessage = 'Missing/Bad information';
+            response.status(400).send({
+                message : 'Missing or bad information, see documentation.'
+            });
+        }
+    },
+
+    //validate rating
+    (request: Request, response: Response, next: NextFunction) => {
+        if (request.body.rating >= 1 && request.body.rating <= 5) {
+            next();
+        } else {
+            response.statusMessage = 'Invalid rating';
+            response.status(400).send({
+                message : 'Invalid rating, use a number 0-5.'
+            });
+        }
+    },
+
+    //validate title
+    (request: Request, response: Response, next: NextFunction) => {
+        
+        const query = 'SELECT title FROM books WHERE title LIKE $1';
+        const values = [`%${request.body.title}%`];
+        
+        pool.query(query, values)
+            .then((result) => {
+                if (result.rowCount > 0) {
+                    next();
+                } else {
+                    response.statusMessage = 'Title not found in database';
+                    response.status(404).send({
+                        message: 'Title not found in database.',
+                    });
+                }
+            })
+            .catch(() => {
+                response.status(500).send({
+                    message: 'Server error - contact support',
+                });
+            });
+    },
+
+    //validate author
+    (request: Request, response: Response, next: NextFunction) => {
+        const query = 'SELECT authors FROM books WHERE authors LIKE $1';
+        const values = [`%${request.body.author}%`];
+        pool.query(query, values)
+            .then((result) => {
+                if (result.rowCount > 0) {
+                    next();
+                } else {
+                    response.statusMessage = 'Author not found in database';
+                    response.status(404).send({
+                        message: 'Author not found in database.',
+                    });
+                }
+            })
+            .catch(() => {
+                response.status(500).send({
+                    message: 'Server error - contact support',
+                });
+            });
+    },
+
+    //verify book is written by the author
+    (request: Request, response: Response, next: NextFunction) => {
+        const query = allButId + 'WHERE authors LIKE $1 AND title LIKE $2';
+        const values = [
+            `%${request.body.author}%`,
+            `%${request.body.title}%`,
+        ];
+        pool.query(query, values)
+            .then((result) => {
+                if (result.rowCount > 0) {
+                    next();
+                } else {
+                    response.statusMessage = 'Book and Author do not match';
+                    response.status(404).send({
+                        message: 'Book not written by specified author.',
+                    });
+                }
+            })
+            .catch(() => {
+                response.status(500).send({
+                    message: 'Server error - contact support',
+                });
+            });
+    },
+
+    (request: Request, response: Response) => {
+        const columnName = 'rating_' + request.body.rating + '_star';
+        const query = 'UPDATE books SET ' + columnName + ' = ' +  columnName + 
+        ' + 1 WHERE authors LIKE $1 AND title LIKE $2 RETURNING *';
+        const values = [
+            `%${request.body.author}%`,
+            `%${request.body.title}%`,
+        ];
+        
+        pool.query(query, values)
+            .then((result) => {
+                response.status(200).send({
+                    entries: result.rows.map(format),
+                })
+            })
+            .catch(() => {
+                response.status(500).send({
+                    message: 'Server error - contact support',
+                });
+            });
+    }
+    
+);
+
 //Ryan End ########################
 
 export { bookRouter };
