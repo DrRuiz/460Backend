@@ -119,7 +119,7 @@ function isValidStars(
  *
  * @apiDescription Request to add a book with author name, isbn, publication year, and book title.
  *
- * @apiName postBook
+ * @apiName AddBook
  * @apiGroup AdminBook
  *
  * @apiBody {Number} isbn13 ISBN13 of the book, required
