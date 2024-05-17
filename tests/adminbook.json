@@ -997,6 +997,59 @@
 					"response": []
 				},
 				{
+					"name": "RemoveBooksByISBNInvalid",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response status should be 200\", () => {\r",
+									"    pm.response.to.have.status(400);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Status code name has string\", () => {\r",
+									"    pm.response.to.have.status(\"Invalid ISBN\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Body has message field\", () => {\r",
+									"    pm.expect(response).to.haveOwnProperty(\"message\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Error message should be in this format\", () => {\r",
+									"    pm.expect(response.message).to.eql(\"Invalid ISBN, use a nonnegative number.\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoxLCJpZCI6MSwiaWF0IjoxNzE1NDg5NzQ1LCJleHAiOjE3MTY2OTkzNDV9.O5AURDpINpCx1XdGf9R6EH77ix5J56EgVKlNJeqDOjg"
+							}
+						],
+						"url": {
+							"raw": "localhost:4000/adminBook/isbn/-9780374404150",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"adminBook",
+								"isbn",
+								"-9780374404150"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "RemoveByISBNNoneFound",
 					"event": [
 						{
@@ -1055,7 +1108,7 @@
 			"name": "AddBookRating",
 			"item": [
 				{
-					"name": "adBook/addRating 201 success",
+					"name": "AddRatingSuccess",
 					"event": [
 						{
 							"listen": "test",
@@ -1108,7 +1161,7 @@
 					"response": []
 				},
 				{
-					"name": "adBook/addRating 400 missing",
+					"name": "AddRatingMissingInfo",
 					"event": [
 						{
 							"listen": "test",
@@ -1162,7 +1215,7 @@
 					"response": []
 				},
 				{
-					"name": "adBook/addRating 400 invalid rating",
+					"name": "AddRatingInvalid",
 					"event": [
 						{
 							"listen": "test",
@@ -1214,7 +1267,7 @@
 					"response": []
 				},
 				{
-					"name": "adBook/addRating 404 author not found",
+					"name": "AddRatingAuthorNotFound",
 					"event": [
 						{
 							"listen": "test",
@@ -1268,7 +1321,7 @@
 					"response": []
 				},
 				{
-					"name": "adBook/addRating 404 Book not found",
+					"name": "AddRatingTitleNotFound",
 					"event": [
 						{
 							"listen": "test",
