@@ -432,18 +432,17 @@ adminBookRouter.delete(
 );
 //max end #############
 
-
 //Ryan start ###################
 
 /**
- * @api {put} /bookook/changeValues Request to change various values for a book.
+ * @api {put} /adminBook/changeValues Request to change various values for a book.
  *
  * @apiDescription Request to change various values of a book with author name and book title.
  *
- * @apiName putBook
- * @apiGroup Book
+ * @apiName UpdateBooks
+ * @apiGroup AdminBook
  *
- * @apiBody {String} authors Author's name, required
+ * @apiBody {String} author Author's name, required
  * @apiBody {String} title Book title, required
  * @apiBody {String} new_title The new title of book, optional
  * @apiBody {Number} new_year The new publication year of book, optional
@@ -479,24 +478,31 @@ adminBookRouter.delete(
  * @apiError (400: Missing/Bad information) {String} message "Missing or bad information, see documentation."
  * @apiError (400: No valid update values provided) {String} message "No valid update values were passed."
  * 
- * @apiError (404: No book found with that combonation of author and title.) {String} message "No book found with given author and title."
+ * @apiError (404: No book found with that combination of author and title.) {String} message "No book found with given author and title."
+ * @apiError (400: Book already exists) {String} message "Book already exists in database."
  */
 adminBookRouter.put(
     '/changeValues',
     checkAdmin,
     //validate request body
     (request: IJwtRequest, response: Response, next: NextFunction) => {
-        if(isStringProvided(request.body.author) && 
-        isStringProvided(request.body.title) && 
-        (isStringProvided(request.body.new_title) || request.body.new_title == null)&&
-        (isNumberProvided(request.body.new_year) || request.body.new_year == null)&&
-        (isNumberProvided(request.body.new_isbn) || request.body.new_isbn == null)&&
-        (isStringProvided(request.body.new_author) || request.body.new_author == null)) {
+        if (
+            isStringProvided(request.body.author) &&
+            isStringProvided(request.body.title) &&
+            (isStringProvided(request.body.new_title) ||
+                request.body.new_title == null) &&
+            (isNumberProvided(request.body.new_year) ||
+                request.body.new_year == null) &&
+            (isNumberProvided(request.body.new_isbn) ||
+                request.body.new_isbn == null) &&
+            (isStringProvided(request.body.new_author) ||
+                request.body.new_author == null)
+        ) {
             next();
         } else {
             response.statusMessage = 'Missing/Bad information';
             response.status(400).send({
-                message : 'Missing or bad information, see documentation.'
+                message: 'Missing or bad information, see documentation.',
             });
         }
     },
@@ -505,7 +511,7 @@ adminBookRouter.put(
         let counter = 0;
         let cols = '';
         const values = [];
-        if(request.body.new_title != null) {
+        if (request.body.new_title != null) {
             counter++;
             cols += 'title = $' + counter + ', ';
             values.push(request.body.new_title);
@@ -528,35 +534,52 @@ adminBookRouter.put(
         if (counter == 0) {
             response.statusMessage = 'No valid update values provided';
             response.status(400).send({
-                message: 'No valid update values were passed.'
-            })
-        }
-
-        cols = cols.slice(0, -2) + ' ';
-        const query = 'UPDATE books SET ' + cols + 'WHERE authors LIKE $' +  
-                        ++counter + ' AND title LIKE $' +  ++counter + ' RETURNING *'
-        values.push(request.body.author);
-        values.push(request.body.title);
-        pool.query(query, values)
-            .then((result) => {
-                if (result.rowCount > 0) {
-                    response.status(201).send({
-                        entries: result.rows.map(format),
-                    });
-                } else {
-                    response.statusMessage = 'No book found with that combonation of author and title.';
-                    response.status(404).send({
-                        message: 'No book found with given author and title.',
-                    });
-                }
-            })
-            .catch(() => {
-                response.status(500).send({
-                    message: 'Server error - contact support Query:' + query,
-                });
+                message: 'No valid update values were passed.',
             });
-
-    },
+        } else {
+            cols = cols.slice(0, -2) + ' ';
+            const query =
+                'UPDATE books SET ' +
+                cols +
+                'WHERE authors LIKE $' +
+                ++counter +
+                ' AND title LIKE $' +
+                ++counter +
+                ' RETURNING *';
+            values.push(request.body.author);
+            values.push(request.body.title);
+            pool.query(query, values)
+                .then((result) => {
+                    if (result.rowCount > 0) {
+                        response.status(201).send({
+                            entries: result.rows.map(format),
+                        });
+                    } else {
+                        response.statusMessage =
+                            'No book found with that combination of author and title.';
+                        response.status(404).send({
+                            message:
+                                'No book found with given author and title.',
+                        });
+                    }
+                })
+                .catch((error) => {
+                    if (
+                        error.detail != undefined &&
+                        (error.detail as string).endsWith('already exists.')
+                    ) {
+                        response.statusMessage = 'Book already exists';
+                        response.status(400).send({
+                            message: 'Book already exists in database.',
+                        });
+                    } else {
+                        response.status(500).send({
+                            message: 'Server error - contact support',
+                        });
+                    }
+                });
+        }
+    }
 );
 
 /**
@@ -564,11 +587,10 @@ adminBookRouter.put(
  *
  * @apiDescription Request to add a rating to a book with author name and book title.
  *
- * @apiName putBook
- * @apiGroup adminBook
+ * @apiName AddBookRating
+ * @apiGroup AdminBook
  *
  * @apiBody {String} author Author's name, required
- * @apiBody {String} original_title Original title of book, optional
  * @apiBody {String} title Book title, required
  * @apiBody {Number} rating The rating that will be added to the book, required
  *
@@ -603,14 +625,16 @@ adminBookRouter.put(
     '/addRating',
     //validate request body
     (request: Request, response: Response, next: NextFunction) => {
-        if(isStringProvided(request.body.author) && 
-        isStringProvided(request.body.title) && 
-        isNumberProvided(request.body.rating)) {
+        if (
+            isStringProvided(request.body.author) &&
+            isStringProvided(request.body.title) &&
+            isNumberProvided(request.body.rating)
+        ) {
             next();
         } else {
             response.statusMessage = 'Missing/Bad information';
             response.status(400).send({
-                message : 'Missing or bad information, see documentation.'
+                message: 'Missing or bad information, see documentation.',
             });
         }
     },
@@ -622,17 +646,16 @@ adminBookRouter.put(
         } else {
             response.statusMessage = 'Invalid rating';
             response.status(400).send({
-                message : 'Invalid rating, use a number 0-5.'
+                message: 'Invalid rating, use a number 0-5.',
             });
         }
     },
 
     //validate title
     (request: Request, response: Response, next: NextFunction) => {
-        
         const query = 'SELECT title FROM books WHERE title LIKE $1';
         const values = [`%${request.body.title}%`];
-        
+
         pool.query(query, values)
             .then((result) => {
                 if (result.rowCount > 0) {
@@ -676,10 +699,7 @@ adminBookRouter.put(
     //verify book is written by the author
     (request: Request, response: Response, next: NextFunction) => {
         const query = allButId + 'WHERE authors LIKE $1 AND title LIKE $2';
-        const values = [
-            `%${request.body.author}%`,
-            `%${request.body.title}%`,
-        ];
+        const values = [`%${request.body.author}%`, `%${request.body.title}%`];
         pool.query(query, values)
             .then((result) => {
                 if (result.rowCount > 0) {
@@ -700,18 +720,19 @@ adminBookRouter.put(
 
     (request: Request, response: Response) => {
         const columnName = 'rating_' + request.body.rating + '_star';
-        const query = 'UPDATE books SET ' + columnName + ' = ' +  columnName + 
-        ' + 1 WHERE authors LIKE $1 AND title LIKE $2 RETURNING *';
-        const values = [
-            `%${request.body.author}%`,
-            `%${request.body.title}%`,
-        ];
-        
+        const query =
+            'UPDATE books SET ' +
+            columnName +
+            ' = ' +
+            columnName +
+            ' + 1 WHERE authors LIKE $1 AND title LIKE $2 RETURNING *';
+        const values = [`%${request.body.author}%`, `%${request.body.title}%`];
+
         pool.query(query, values)
             .then((result) => {
                 response.status(201).send({
                     entries: result.rows.map(format),
-                })
+                });
             })
             .catch(() => {
                 response.status(500).send({
@@ -719,7 +740,6 @@ adminBookRouter.put(
                 });
             });
     }
-    
 );
 //Ryan end #####################
 
