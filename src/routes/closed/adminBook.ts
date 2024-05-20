@@ -2,7 +2,6 @@ import express, { NextFunction, Request, Response, Router } from 'express';
 
 import { pool, validationFunctions, format } from '../../core/utilities';
 
-import { checkAdmin } from '../../core/middleware';
 import { IJwtRequest } from '../../core/models';
 
 const adminBookRouter: Router = express.Router();
@@ -162,12 +161,6 @@ function isValidStars(
  *     small: <code>image_small_url</code>
  * }"
  *
- * @apiError (403: Forbidden) {String} message "Token is not valid" when the provided Auth token is
- * invalid for any reason.
- * @apiError (401: Unauthorized) {String} message "Auth token is not supplied" when no Auth token
- * is provided
- * @apiError (403: Invalid Privilege) {String} message "User does not have privilege to access this route."
-
  * @apiError (400: Missing information) {String} message "Missing required information, see documentation."
  * @apiError (400: Invalid ISBN) {String} message "Invalid ISBN, use a nonnegative number."
  * @apiError (400: Invalid year) {String} message "Invalid year, use a number."
@@ -178,7 +171,6 @@ function isValidStars(
  */
 adminBookRouter.post(
     '/addBook',
-    checkAdmin,
     (request: IJwtRequest, response: Response, next: NextFunction) => {
         if (
             (request.body.isbn13 || request.body.isbn13 == 0) &&
@@ -304,18 +296,11 @@ adminBookRouter.post(
  *     small: <code>image_small_url</code>
  * }"
  *
- * @apiError (403: Forbidden) {String} message "Token is not valid" when the provided Auth token is
- * invalid for any reason.
- * @apiError (401: Unauthorized) {String} message "Auth token is not supplied" when no Auth token
- * is provided
- * @apiError (403: Invalid Privilege) {String} message "User does not have privilege to access this route."
- *
  * @apiError (400: Missing information) {String} message "Missing data, refer to documentation."
  * @apiError (404: No books found) {String} message "No books with this author were found to delete."
  */
 adminBookRouter.delete(
     '/author',
-    checkAdmin,
     (request: IJwtRequest, response: Response, next: NextFunction) => {
         if (isStringProvided(request.query.author)) {
             next();
@@ -382,19 +367,12 @@ adminBookRouter.delete(
  *     small: <code>image_small_url</code>
  * }"
  *
- * @apiError (403: Forbidden) {String} message "Token is not valid" when the provided Auth token is
- * invalid for any reason.
- * @apiError (401: Unauthorized) {String} message "Auth token is not supplied" when no Auth token
- * is provided
- * @apiError (403: Invalid Privilege) {String} message "User does not have privilege to access this route."
- *
  * @apiError (400: Invalid ISBN) {String} message "Invalid ISBN, use a nonnegative number."
  * @apiError (404: ISBN number not found in database) {String} message "ISBN number not found in database."
  */
 
 adminBookRouter.delete(
     '/isbn/:isbn',
-    checkAdmin,
     (request: IJwtRequest, response: Response, next: NextFunction) => {
         if (parseInt(request.params.isbn) >= 0) {
             next();
@@ -468,13 +446,7 @@ adminBookRouter.delete(
  *     large: <code>image_url</code>,
  *     small: <code>image_small_url</code>
  * }"
- *
- * @apiError (403: Forbidden) {String} message "Token is not valid" when the provided Auth token is
- * invalid for any reason.
- * @apiError (401: Unauthorized) {String} message "Auth token is not supplied" when no Auth token
- * is provided
- * @apiError (403: Invalid Privilege) {String} message "User does not have privilege to access this route."
-
+ * 
  * @apiError (400: Missing/Bad information) {String} message "Missing or bad information, see documentation."
  * @apiError (400: No valid update values provided) {String} message "No valid update values were passed."
  * 
@@ -483,7 +455,6 @@ adminBookRouter.delete(
  */
 adminBookRouter.put(
     '/changeValues',
-    checkAdmin,
     //validate request body
     (request: IJwtRequest, response: Response, next: NextFunction) => {
         if (
